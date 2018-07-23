@@ -10,7 +10,7 @@ router.get('/serverinfo', async (req, res) => {
   const check = promisify(diskusage.check);
 
   res.json({
-    disk: await check(os.platform() === 'win32' ? 'c:' : '/'),
+    disk: await check(os.platform() === 'win32' ? 'c:' : '/home'),
     nbUsers: await User.count( {} )
   });
 });

@@ -16,10 +16,10 @@ npm install --global --production windows-build-tools
 In the project's directory:
 
 ```bash
-sudo cp app/config/nginx /etc/nginx/sites-available/gaia
-sudo ln -s /etc/nginx/sites-available/gaia /etc/nginx/sites-enabled/gaia
+sudo cp app/config/nginx /etc/nginx/sites-available/gaia-project
+sudo ln -s /etc/nginx/sites-available/gaia-project /etc/nginx/sites-enabled/gaia-project
 # Give proper path for public files
-sudo sed -i -e 's:root .*;:root '`pwd`'/front/dist;:' /etc/nginx/sites-available/gaia
+sudo sed -i -e 's:root .*;:root '`pwd`'/front/dist;:' /etc/nginx/sites-available/gaia-project
 sudo rm /etc/nginx/sites-enabled/default 
 sudo service nginx restart
 ```
