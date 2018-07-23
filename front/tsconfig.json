@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "es2015",
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@lib/*": [
+        "../lib/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "../lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

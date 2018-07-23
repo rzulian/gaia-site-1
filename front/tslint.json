@@ -1,0 +1,19 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "quotemark": [false],
+    "indent": [true, "spaces", 2],
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": false,
+    "semicolon": true,
+    "trailing-comma": false,
+    "arrow-parens": false,
+    "no-console": false,
+    "no-angle-bracket-type-assertion": false
+  }
+}

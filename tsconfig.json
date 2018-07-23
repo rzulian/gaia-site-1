@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
+    "paths": {
+      "@/*": [
+        "app/*"
+      ]
+    },
+    "baseUrl": "."
+  },
+  "include": [
+    "app/**/*.ts",
+    "tests/**/*.ts",
+    "server.ts",
+    "lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
