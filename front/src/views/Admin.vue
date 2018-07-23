@@ -1,6 +1,6 @@
 <template>
   <div class="admin container">
-    <h1>Page admin</h1>
+    <h1>Admin page</h1>
     <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">Server info</h5>
