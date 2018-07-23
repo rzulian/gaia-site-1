@@ -30,7 +30,7 @@
                   </div>
                   <div class="form-group">
                     <label class="sr-only" for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Mot de passe" name="password" v-model="password" required>
+                    <input type="password" class="form-control" id="password" placeholder="Password" name="password" v-model="password" required>
                     <div class="help-block text-right mt-1"><router-link to="/forgotten-password">Forgotten password ?</router-link></div>
                   </div>
                   <input type="hidden" name="referrer" value="<%= req.originalUrl %>">

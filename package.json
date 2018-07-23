@@ -55,6 +55,9 @@
   "scripts": {
     "start": "ts-node server.ts",
     "front": "cd front && npm run build-dev",
+    "prod": "cd front && npm run build",
+    "deploy": "ssh coyotte508@www.00h30.com -p 10022 'cd gaia-site && npm run update'",
+    "update": "git checkout . && git pull && npm install && npm run front",
     "nodemon": "nodemon -w app -w lib -w node_modules -e js,ts --exec npm start"
   }
 }

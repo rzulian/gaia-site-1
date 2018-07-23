@@ -10,7 +10,7 @@
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" v-model="password" required>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" v-model="password" required>
         <div class="text-right mt-1"><router-link to="/forgotten-password"><small>Forgotten password ?</small></router-link></div>
       </div>
       <button type="submit" class="btn btn-primary pull-right">Login</button>

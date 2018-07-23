@@ -169,9 +169,10 @@ userSchema.method('sendConfirmationEmail', function(this: User) {
   return sendmail({
     from: env.noreply,
     to: this.email(),
-    subject: 'Confirm your account - ' + env.title,
+    subject: env.title + " - Confirm your account",
     html: `
-    <p>To finish your registration and confirm your account,
+    <p>Hello, we're delighted to have a new Gaia Project player among us!</p>
+    <p>To finish your registration and confirm your account with us at ${env.domain},
      click <a href='http://${env.domain}/confirm?key=${this.confirmKey()}&user=${this.email()}'>here</a>.</p>
 
     <p>If you didn't create an account with us, ignore this email.</p>`,
@@ -182,7 +183,7 @@ userSchema.method('sendResetEmail', function(this: User, ) {
   return sendmail({
     from: env.noreply,
     to: this.email(),
-    subject: 'Forgotten password - ' + env.title,
+    subject: env.title + ' - Forgotten password',
     html: `
     <p>A password reset was asked for your account,
     click <a href='http://${env.domain}/reset?key=${this.resetKey()}&user=${this.email()}'>here</a> to reset your password.</p>

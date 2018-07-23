@@ -10,11 +10,11 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="signup-password">Password</label>
-          <input type="password" class="form-control" id="signup-password" name="password" placeholder="Mot de passe" v-model="password" required>
+          <input type="password" class="form-control" id="signup-password" name="password" placeholder="Password" v-model="password" required>
         </div>
         <div class="form-group col-md-6">
           <label for="signup-password-confirm">Confirm <span class="d-md-none">password</span></label>
-          <input type="password" class="form-control" id="signup-password-confirm" name="password-confirm" placeholder="Mot de passe" v-model="passwordConfirm" required>
+          <input type="password" class="form-control" id="signup-password-confirm" name="password-confirm" placeholder="Password" v-model="passwordConfirm" required>
         </div>
       </div>
       <div class="form-check">
