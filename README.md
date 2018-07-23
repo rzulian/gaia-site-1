@@ -24,6 +24,8 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo service nginx restart
 ```
 
+You may have a 403 forbidden error regarding js and css files if the folder is under your home folder, then you need to either give more permissions to your home folder or move the project elsewhere.
+
 ## VS Code
 
 It is recommended to open the main project folder & the front folder into two different VS Code insances.

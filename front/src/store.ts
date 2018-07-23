@@ -19,7 +19,10 @@ export default new Vuex.Store({
       state.userLoaded = true;
     },
     error: (state, error: string) => { state.error = error; state.errorIssued = new Date(); },
-    info: (state, info: string) => { state.info = info; state.infoIssued = new Date(); },
+    info: (state, info: string) => {
+      state.info = info; state.infoIssued = new Date();
+      state.error = state.errorIssued = null;
+    },
     removeError: state => state.error = state.errorIssued = null,
     removeInfo: state => state.info = state.infoIssued = null
   },

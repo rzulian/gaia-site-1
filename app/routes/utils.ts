@@ -16,3 +16,11 @@ export function loggedOut(req: Request, res: Response, next: NextFunction) {
     next();
   }
 }
+
+export function isAdmin(req: Request, res: Response, next: NextFunction) {
+  if (!req.user || !req.user.isAdmin()) {
+    next(createError(403, "You need to be admin"));
+  } else {
+    next();
+  }
+}

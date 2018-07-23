@@ -48,11 +48,13 @@
     "@types/passport-local": "^1.0.33",
     "@types/randomstring": "^1.1.6",
     "@types/validator": "^9.4.0",
+    "nodemon": "^1.18.3",
     "ts-node": "^5.0.1",
     "typescript": "^2.8.1"
   },
   "scripts": {
     "start": "ts-node server.ts",
-    "front": "cd front && npm run build-dev"
+    "front": "cd front && npm run build-dev",
+    "nodemon": "nodemon -w app -w lib -w node_modules -e js,ts --exec npm start"
   }
 }

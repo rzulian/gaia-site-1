@@ -11,6 +11,8 @@ import { IAbstractUser } from 'lib/user';
 const Schema = mongoose.Schema;
 
 interface User extends IAbstractUser, mongoose.Document {
+  isAdmin(): boolean;
+
   generateHash(password: string): Promise<string>;
   validPassword(password: string): Promise<boolean>;
   resetPassword(password: string): Promise<any>;
@@ -30,7 +32,6 @@ interface User extends IAbstractUser, mongoose.Document {
   isSocialAccount(): boolean;
   notifyLogin(ip: string): Promise<any>;
   notifyLastIp(ip: string): void;
-  isAdmin(): boolean;
 }
 
 interface UserModel extends mongoose.Model<User> {
