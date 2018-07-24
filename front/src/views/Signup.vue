@@ -3,8 +3,12 @@
     <h1>Create an account</h1>
     <form method="post" @submit.prevent="submit" class="clearfix">
       <div class="form-group">
+        <label for="signup-username">Username</label>
+        <input type="text" class="form-control" id="signup-username" name="username" placeholder="Username" aria-describedby="emailHelp" v-model.trim="username" required>
+      </div>
+      <div class="form-group">
         <label for="signup-email">Email address</label>
-        <input type="email" class="form-control" id="signup-email" name="username" placeholder="Email" aria-describedby="emailHelp" v-model.trim="email" required>
+        <input type="email" class="form-control" id="signup-email" name="email" placeholder="Email" aria-describedby="emailHelp" v-model.trim="email" required>
         <small id="emailHelp" class="form-text text-muted">We will never share your email without <b>explicit</b> consent.</small>
       </div>
       <div class="form-row">
@@ -19,7 +23,7 @@
       </div>
       <div class="form-check">
         <input type="checkbox" name="newsletter" id="signup-newsletter" class="form-check-input" v-model="newsletter">
-        <label class="form-check-label form-text" for="signup-newsletter">Get newsletter, at most one email every two month.</label>
+        <label class="form-check-label form-text" for="signup-newsletter">Get newsletter, one email every two months at most.</label>
       </div>
 
       <input type="hidden" name="action" value="signup">
@@ -47,9 +51,9 @@ export default class Signup extends Vue {
       return;
     }
 
-    const {email, password, newsletter} = this;
+    const {email, password, newsletter, username} = this;
 
-    $.post('/api/account/signup', {email, password, newsletter}).then(
+    $.post('/api/account/signup', {email, username, password, newsletter}).then(
       ({user}: {user: IAbstractUser | null}) => this.$store.commit('updateUser', user),
       err => handleError(err)
     )
@@ -58,6 +62,7 @@ export default class Signup extends Vue {
   password = "";
   passwordConfirm = "";
   email = "";
+  username = "";
   newsletter = false;
 }
 </script>

@@ -1,5 +1,6 @@
 export interface IAbstractUser {
   account: {
+    username: string,
     email: string,
     password: string,
     newsletter: boolean

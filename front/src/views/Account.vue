@@ -1,12 +1,13 @@
 <template>
   <div class="container account">
     <h1>Account</h1>
+    <p v-if="user.account.username">Welcome, <strong>{{user.account.username}}</strong>!</p>
     <form>
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="Email address" v-model="email" disabled required>
         <small v-if="user.security.confirmed">Your account is confirmed</small>
-        <small v-else>You need to confirm your email</small>
+        <small v-else>Your email is not confirmed.</small>
       </div>
       <div class="form-check">
         <input type="checkbox" name="newsletter" id="signup-newsletter" class="form-check-input" v-model="newsletter" @change="updateAccountDebounce">

@@ -51,14 +51,21 @@ passport.use('local-signup', new LocalStrategy({
         throw createError(409, 'Email is already taken');
       }
 
+      const { username } = req.body;
+
+      if (!username) {
+        throw createError(422, 'Specify a username');
+      }
+
       // if there is no user with that email
       // create the user
       const newUser            = new User();
 
       // set the user's local credentials
       newUser.account.email    = email;
+      newUser.account.username = username;
       newUser.account.password = await newUser.generateHash(password);
-      newUser.account.newsletter = !!req.body.newsletter;
+      newUser.account.newsletter = req.body.newsletter === true || req.body.newsletter === 'true';
       newUser.fillInSecurity(req.ip);
 
       // save the user

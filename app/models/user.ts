@@ -36,13 +36,15 @@ interface User extends IAbstractUser, mongoose.Document {
 
 interface UserModel extends mongoose.Model<User> {
   findByEmail(email: string): Promise<User>;
+  findByUsername(name: string): Promise<User>;
   findByUrl(urlComponent: string): Promise<User>;
 }
 
 // define the schema for our user model
 const userSchema = new Schema({
   account: {
-    email: { type: String, unique: true, maxlength: [50, 'Too long email'], lowercase: true },
+    username: {type: String, maxlength: [20, 'Pick a shorter username'], minlength: [2, 'Pick a longer username'], trim: true, unique: true, sparse: true},
+    email: { type: String, unique: true, maxlength: [50, 'Too long email'], trim: true, lowercase: true },
     password: String,
     newsletter: Boolean
   },
@@ -65,7 +67,7 @@ const userSchema = new Schema({
   delete ret.security.confirmKey;
   delete (ret.security.reset || {}).key;
   return ret;
-}}});
+}}, collation: { locale: 'en', strength: 2 } });
 
 // methods ======================
 // generating a hash
@@ -232,8 +234,12 @@ userSchema.method('isAdmin', function(this: User) {
   return this.authority === "admin";
 });
 
-userSchema.static('findByUrl', function(this: UserModel, id: string) {
-  return this.findById(new ObjectId(id));
+userSchema.static('findByUrl', function(this: UserModel, urlComponent: string) {
+  return this.findById(new ObjectId(urlComponent));
+});
+
+userSchema.static('findByUsername', function(this: UserModel, username: string) {
+  return this.findOne({'account.username': username});
 });
 
 userSchema.static('findByEmail', function(this: UserModel, email: string) {

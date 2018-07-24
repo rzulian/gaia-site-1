@@ -51,7 +51,7 @@
           </div>
         </li>
         <li class="nav-item" v-if="user">
-          <router-link class="nav-link" to="/account">{{user.account.email}}</router-link>
+          <router-link class="nav-link" to="/account">{{user.account.username || user.account.email}}</router-link>
         </li>
         <li class="nav-item" v-if="admin">
           <router-link class="nav-link" to="/admin">Admin</router-link>
