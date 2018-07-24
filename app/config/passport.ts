@@ -57,6 +57,10 @@ passport.use('local-signup', new LocalStrategy({
         throw createError(422, 'Specify a username');
       }
 
+      if (await User.findByUsername(username)) {
+        throw createError(422, `Username ${username} is taken`);
+      }
+
       // if there is no user with that email
       // create the user
       const newUser            = new User();
