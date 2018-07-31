@@ -10,6 +10,7 @@ import * as session from 'express-session';
 import * as ConnectMongo from 'connect-mongo';
 import * as morgan from 'morgan';
 import * as createError from 'http-errors';
+import locks from "mongo-locks";
 
 /* Configure passport */
 import './config/passport';
@@ -35,6 +36,8 @@ mongoose.connection.on("error", (err) => {
 mongoose.connection.on("open", async () => {
   console.log("connected to database!");
 });
+
+locks.init(mongoose.connection);
 
 /* App stuff */
 app.use(morgan('dev'));

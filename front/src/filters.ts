@@ -30,3 +30,7 @@ Vue.filter('filesize', (value: number) => {
     }
   }
 });
+
+Vue.filter('pluralize', (count: number, str: string) => {
+  return `${count} ${str}${+count >= 2 ? 's' : ''}`;
+});

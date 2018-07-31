@@ -1,27 +1,18 @@
+import locks from "mongo-locks";
 import * as mongoose from 'mongoose';
-import { ObjectID, ObjectId } from 'bson';
-import { Player } from '@gaia-project/engine';
+import * as assert from 'assert';
+import { ObjectId } from 'bson';
+import { IAbstractGame } from 'lib/game';
+import Engine from '@gaia-project/engine';
+import * as _ from 'lodash';
+import User from "./user";
+
 const Schema = mongoose.Schema;
 
-interface Game extends mongoose.Document {
+interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
   _id: string;
 
-  /** Ids of the players in the website */
-  players: ObjectID[];
-  /** Game data */
-  data: {
-    players: Player[]
-  };
-
-  options: {
-    randomPlayerOrder: boolean;
-    nbPlayers: number;
-  };
-
-  active: boolean;
-
-  updatedAt: Date;
-  createdAt: Date;
+  join(player: ObjectId): Promise<Game>;
 }
 
 export { Game as GameDocument };
@@ -67,4 +58,36 @@ gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId
   return this.find({players: playerId});
 });
 
-export default mongoose.model<Game, GameModel>('Game', gameSchema);
+gameSchema.method("join", async function(this: Game, player: ObjectId) {
+  // Prevent multiple joins being executed at the same time
+  const free = await locks.lock(this._id, "join-game");
+
+  // Once inside the lock, refresh the game
+  const game = await Game.findById(this._id);
+  try {
+    assert(game.active && game.players.length <= game.options.nbPlayers, "This game can't be joined");
+    assert(!game.players.some(id => id.equals(player)), "Player already joined this game");
+
+    game.players.push(player);
+
+    // If all the players have joined, we launch the game!
+    if (game.players.length === game.options.nbPlayers) {
+      if (game.options.randomPlayerOrder) {
+        _.shuffle(game.players);
+      }
+      game.data = JSON.parse(JSON.stringify(new Engine([`init ${game.options.nbPlayers} ${game._id}`])));
+
+      for (let i = 0; i < game.data.players.length; i++) {
+        game.data.players[i].name = (await User.findById(game.players[i], "account.username")).account.username;
+        game.data.players[i].auth = game.players[i].toHexString();
+      }
+    }
+
+    return await game.save();
+  } finally {
+    free();
+  }
+});
+
+const Game = mongoose.model<Game, GameModel>('Game', gameSchema);
+export default Game;

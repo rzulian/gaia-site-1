@@ -1,5 +1,6 @@
 // declare module 'sendmail';
 import { UserDocument } from "./models/user";
+import { GameDocument } from "./models/game";
 
 declare global {
   namespace Express {
@@ -14,6 +15,7 @@ declare global {
       categoryName(cat: string): string;
   
       // user?: User;
+      game?: GameDocument;
       foundUser?: UserDocument;
       body: any;
       ip: string;

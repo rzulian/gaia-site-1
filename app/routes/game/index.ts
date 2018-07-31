@@ -37,4 +37,23 @@ router.post('/new-game', loggedIn, async (req , res) => {
   res.sendStatus(200);
 });
 
+router.param('gameId', async (req, res, next, gameId) => {
+  req.game = await Game.findById(gameId);
+
+  if (!req.game) {
+    throw createError(404, "Game not found");
+  }
+
+  next();
+});
+
+router.get('/:gameId', (req, res) => {
+  res.json(req.game);
+});
+
+router.post('/:gameId/join', loggedIn, async (req, res) => {
+  req.game = await req.game.join(req.user._id);
+  res.json(req.game);
+});
+
 export default router;
