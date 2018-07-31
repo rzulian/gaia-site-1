@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div class="text-center" v-if="!game">
-      <i class="fa fa-spin fa-spinner"></i>
-    </div>
-    <div v-else-if="game.options.nbPlayers !== game.players.length" class="container text-center">
+  <div v-loading="!game">
+    <div v-if="game && game.options.nbPlayers !== game.players.length" class="container text-center">
       <h1>Game {{game._id}}</h1>
       <p>{{game.options.nbPlayers}} players game</p>
       <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
       <button class="btn btn-secondary" v-if="user && game.players.includes(user._id)" disabled>You already joined</button>
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
+    </div>
+    <div v-else-if="game">
+
     </div>
   </div>
 </template>

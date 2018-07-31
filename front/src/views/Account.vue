@@ -4,8 +4,7 @@
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Active games</h5>
-        <span v-if="loadingGames"><i class="fa fa-spin fa-spinner"></i></span>
-        <div v-else>
+        <div v-loading="loadingGames">
           <p v-if="activeGames.length > 0">
             <ul class="list-group">
               <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item">{{game._id}}</router-link>
