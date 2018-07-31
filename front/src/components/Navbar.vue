@@ -7,11 +7,11 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <!-- <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link class="nav-link" to="/about">About</router-link>
         </li>
-      </ul>
+      </ul>-->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item" v-if="!user"><span class="navbar-text">Have an account ?</span></li>
         <li class="nav-item dropdown" v-if="!user">
