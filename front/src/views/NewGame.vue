@@ -41,7 +41,7 @@ import { handleError, handleInfo } from '@/utils';
 
 @Component
 export default class NewGame extends Vue {
-  gameId = "";
+  gameId = Math.random().toString(36).substring(2, 10);
   players = 2;
   join = true;
   randomOrder = true;
