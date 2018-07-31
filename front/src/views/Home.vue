@@ -1,7 +1,6 @@
 <template>
   <div class="home text-center">
-    <h1>Home page</h1>
-    <p>Start of the gaia project</p>
+    <router-link class="btn btn-lg btn-secondary" to="/new-game">New Game</router-link>
   </div>
 </template>
 

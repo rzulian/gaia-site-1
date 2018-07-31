@@ -8,6 +8,7 @@ import Signup from './views/Signup.vue';
 import Login from './views/Login.vue';
 import Account from './views/Account.vue';
 import Admin from './views/Admin.vue';
+import NewGame from './views/NewGame.vue';
 import ResetPassword from './views/ResetPassword.vue';
 import ForgottenPassword from './views/ForgottenPassword.vue';
 import store from './store';
@@ -45,6 +46,11 @@ const router = new Router({
       path: '/admin',
       component: Admin,
       meta: {admin: true},
+    },
+    {
+      path: '/new-game',
+      component: NewGame,
+      meta: {loggedIn: true}
     },
     {
       path: '/confirm',
