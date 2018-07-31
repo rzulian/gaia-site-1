@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { ObjectID } from 'bson';
+import { ObjectID, ObjectId } from 'bson';
 import { Player } from '@gaia-project/engine';
 const Schema = mongoose.Schema;
 
@@ -18,12 +18,16 @@ interface Game extends mongoose.Document {
     nbPlayers: number;
   };
 
+  active: boolean;
+
   updatedAt: Date;
   createdAt: Date;
 }
 
-interface GameModel extends mongoose.Model<Game> {
+export { Game as GameDocument };
 
+export interface GameModel extends mongoose.Model<Game> {
+  findWithPlayer(playerId: ObjectId): mongoose.DocumentQuery<Game[], Game>;
 }
 
 const gameSchema = new Schema({
@@ -38,9 +42,14 @@ const gameSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "User"
     }],
-    default: []
+    default: [],
+    index: true
   },
   data: {},
+  active: {
+    type: Boolean,
+    default: true
+  },
   options: {
     randomPlayerOrder: {
       type: Boolean,
@@ -53,5 +62,9 @@ const gameSchema = new Schema({
     }
   }
 }, {timestamps: true, collation: { locale: 'en', strength: 2 } });
+
+gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
+  return this.find({players: playerId});
+});
 
 export default mongoose.model<Game, GameModel>('Game', gameSchema);

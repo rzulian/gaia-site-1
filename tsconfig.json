@@ -8,7 +8,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
-    "strict": true,
+    "strict": false,
     "strictNullChecks": false,
     "types": [
       "node",

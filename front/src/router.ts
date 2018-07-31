@@ -9,6 +9,7 @@ import Login from './views/Login.vue';
 import Account from './views/Account.vue';
 import Admin from './views/Admin.vue';
 import NewGame from './views/NewGame.vue';
+import Game from './views/Game.vue';
 import ResetPassword from './views/ResetPassword.vue';
 import ForgottenPassword from './views/ForgottenPassword.vue';
 import store from './store';
@@ -78,6 +79,10 @@ const router = new Router({
       component: ForgottenPassword
     },
     {
+      path: '/game/:gameId',
+      component: Game
+    },
+    {
       path: '*',
       component: NotFoundComponent,
     },
@@ -124,6 +129,7 @@ store.subscribe((mutation, state) => {
   if (routing) {
     return;
   }
+  /* Check if the user is still allowed to be on current page */
   if (mutation.type === 'updateUser') {
     guard(router.currentRoute, location => location ? router.push(location) : null);
   }

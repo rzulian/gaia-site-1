@@ -1,5 +1,5 @@
 <template>
-  <div class="not-found">
-    <h1>Uknown path</h1>
+  <div class="not-found container">
+    <h1>Page not found</h1>
   </div>
 </template>

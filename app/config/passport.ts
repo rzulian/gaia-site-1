@@ -7,6 +7,7 @@ import {Strategy as LocalStrategy} from 'passport-local';
 
 // load up the user model
 import { User } from '../models';
+import { UserDocument } from "../models/user";
 
 // =========================================================================
 // passport session setup ==================================================
@@ -15,7 +16,7 @@ import { User } from '../models';
 // passport needs ability to serialize and unserialize users out of session
 
 // used to serialize the user for the session
-passport.serializeUser((user: User, done) => done(null, user.id));
+passport.serializeUser((user: UserDocument, done) => done(null, user.id));
 
 // used to deserialize the user
 passport.deserializeUser((id, done) => {

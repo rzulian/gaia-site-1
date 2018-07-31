@@ -34,6 +34,8 @@ interface User extends IAbstractUser, mongoose.Document {
   notifyLastIp(ip: string): void;
 }
 
+export {User as UserDocument};
+
 interface UserModel extends mongoose.Model<User> {
   findByEmail(email: string): Promise<User>;
   findByUsername(name: string): Promise<User>;
@@ -110,7 +112,7 @@ userSchema.method('changeEmail', async function(this: User, email: string) {
 });
 
 userSchema.method('getLink', function(this: User) {
-  return "/u/" + this.id;
+  return "/u/" + this.account.username;
 });
 
 userSchema.method('generateResetLink', function(this: User) {
