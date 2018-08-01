@@ -2,6 +2,7 @@ import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { User, Game } from '../../models';
 import { loggedIn } from '../utils';
+import * as _ from "lodash";
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
 
   const game = new Game();
 
+  game.creator = req.user._id;
   game.options.nbPlayers = players;
   game.options.randomPlayerOrder = !!randomOrder;
   game._id = gameId;
@@ -47,8 +49,18 @@ router.param('gameId', async (req, res, next, gameId) => {
   next();
 });
 
+// Metadata about the game
 router.get('/:gameId', (req, res) => {
   res.json(req.game);
+});
+
+// Just game data, with 'lastUpdated' as bonus
+router.get('/:gameId/data', (req, res) => {
+  res.json(_.assign(req.game.data, {lastUpdated: req.game.updatedAt}));
+});
+
+router.get('/:gameId/status', (req, res) => {
+  res.json({lastUpdated: req.game.updatedAt});
 });
 
 router.post('/:gameId/join', loggedIn, async (req, res) => {

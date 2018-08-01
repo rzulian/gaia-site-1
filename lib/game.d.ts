@@ -3,6 +3,7 @@ import Engine from "@gaia-project/engine";
 export interface IAbstractGame<T= string> {
   /** Ids of the players in the website */
   players: T[];
+  creator: T;
   /** Game data */
   data: Engine;
 

@@ -8,7 +8,7 @@
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
-      <GameViewer />
+      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" />
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { handleError, handleInfo } from '@/utils';
 import { IGame } from '@lib/game';
 import { IUser } from '@lib/user';
+import api from '@/helpers/api';
 import {Game as GameViewer} from '@gaia-project/viewer';
 
 @Component<Game>({
@@ -31,6 +32,7 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 })
 export default class Game extends Vue {
   game: IGame = null;
+  api = api;
   
   constructor() {
     super();

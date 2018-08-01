@@ -36,6 +36,10 @@ const gameSchema = new Schema({
     default: [],
     index: true
   },
+  creator: {
+    type: Schema.Types.ObjectId,
+    index: true
+  },
   data: {},
   active: {
     type: Boolean,
@@ -52,7 +56,11 @@ const gameSchema = new Schema({
       enum: [2, 3, 4]
     }
   }
-}, {timestamps: true, collation: { locale: 'en', strength: 2 } });
+}, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
+  // No need to load all game data in most cases
+  delete ret.data;
+  return ret;
+}} });
 
 gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
   return this.find({players: playerId});
@@ -75,7 +83,11 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
       if (game.options.randomPlayerOrder) {
         _.shuffle(game.players);
       }
-      game.data = JSON.parse(JSON.stringify(new Engine([`init ${game.options.nbPlayers} ${game._id}`])));
+
+      const engine = new Engine([`init ${game.options.nbPlayers} ${game._id}`]);
+      engine.generateAvailableCommands();
+
+      game.data = JSON.parse(JSON.stringify(engine));
 
       for (let i = 0; i < game.data.players.length; i++) {
         game.data.players[i].name = (await User.findById(game.players[i], "account.username")).account.username;
