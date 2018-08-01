@@ -14,6 +14,7 @@
     "trailing-comma": false,
     "arrow-parens": false,
     "no-console": false,
-    "no-angle-bracket-type-assertion": false
+    "no-angle-bracket-type-assertion": false,
+    "max-line-length": false
   }
 }

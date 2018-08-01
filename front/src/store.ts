@@ -1,10 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { IAbstractUser } from '../../lib/user';
+import {gaiaViewer} from '@gaia-project/viewer';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  modules: {
+    gaiaViewer
+  },
   state: {
     user: null as IAbstractUser | null,
     userLoaded: false as boolean,

@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+// https://stackoverflow.com/questions/51619985/implementing-a-v-loading-directive-where-content-is-replaced-while-data-is-load
+
 Vue.directive('loading', {
   bind(el: HTMLElement, binding: any, vnode: any) {
     if (binding.value) {
