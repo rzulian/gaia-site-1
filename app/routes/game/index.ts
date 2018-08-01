@@ -3,6 +3,8 @@ import Router from 'express-promise-router';
 import { User, Game } from '../../models';
 import { loggedIn } from '../utils';
 import * as _ from "lodash";
+import Engine from '../../../node_modules/@gaia-project/engine';
+import { AssertionError } from 'assert';
 
 const router = Router();
 
@@ -66,6 +68,36 @@ router.get('/:gameId/status', (req, res) => {
 router.post('/:gameId/join', loggedIn, async (req, res) => {
   req.game = await req.game.join(req.user._id);
   res.json(req.game);
+});
+
+router.post('/:gameId/move', loggedIn, async (req, res) => {
+  const {move} = req.body;
+  const game = req.game.data;
+  const auth = req.user.id;
+
+  if (game.availableCommands.length === 0 || game.players[game.availableCommands[0].player].auth !== auth) {
+    res.status(400).json("Not your turn to play");
+    return;
+  }
+
+  if (game.players.some(pl => !pl.auth)) {
+    res.status(400).json("Wait for everybody to join");
+    return;
+  }
+
+  const engine = Engine.fromData(game);
+
+  engine.move(move);
+  if (!engine.availableCommands) {
+    engine.generateAvailableCommands();
+  }
+
+  if (engine.newTurn) {
+    req.game.data = JSON.parse(JSON.stringify(engine));
+    await req.game.save();
+  }
+
+  res.json(_.assign(engine, {lastUpdated: req.game.updatedAt}));
 });
 
 export default router;
