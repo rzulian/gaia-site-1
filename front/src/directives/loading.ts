@@ -7,14 +7,17 @@ Vue.directive('loading', {
     if (binding.value) {
       el.innerHTML = `<div class="text-center"><i class='fa fa-spin fa-spinner'></i> Loading...</div>`;
     }
+    vnode.data.loading = binding.value;
   },
 
   update(el: HTMLElement, binding: any, vnode: any, oldVnode: any) {
     if (binding.value) {
       el.innerHTML = `<div class="text-center"><i class='fa fa-spin fa-spinner'></i> Loading...</div>`;
-    } else {
+    } else if (oldVnode.data.loading) {
       vnode.key += "1";
       vnode.context.$forceUpdate();
     }
+
+    vnode.data.loading = binding.value;
   },
 });
