@@ -122,8 +122,9 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
       engine.generateAvailableCommands();
     }
 
+    game.data = JSON.parse(JSON.stringify(engine));
+
     if (engine.newTurn) {
-      game.data = JSON.parse(JSON.stringify(engine));
       await game.save();
     }
 
