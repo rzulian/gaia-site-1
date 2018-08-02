@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as assert from 'assert';
 import { ObjectId } from 'bson';
 import { IAbstractGame } from 'lib/game';
-import Engine from '@gaia-project/engine';
+import Engine, { Phase } from '@gaia-project/engine';
 import * as _ from 'lodash';
 import User from "./user";
 
@@ -128,6 +128,9 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
     game.data = JSON.parse(JSON.stringify(engine));
 
     if (engine.newTurn) {
+      if (engine.phase === Phase.EndGame) {
+        game.active = false;
+      }
       await game.save();
     }
 
