@@ -53,7 +53,7 @@ router.param('gameId', async (req, res, next, gameId) => {
 
 // Give last 10 active games
 router.get('/active', async (req, res) => {
-  res.json(await Game.find({active: true}).sort('-updatedAt').limit(10).select("-data"));
+  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-updatedAt').limit(10).select(Game.basics()));
 });
 
 // Metadata about the game

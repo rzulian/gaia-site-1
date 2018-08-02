@@ -16,7 +16,7 @@ router.param('userId', async (req, res, next, userId) => {
 });
 
 router.get('/:userId/games/active', loggedIn, async (req , res) => {
-  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true}).select("-data"));
+  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true}).select(Game.basics()));
 });
 
 export default router;

@@ -20,6 +20,9 @@ export { Game as GameDocument };
 
 export interface GameModel extends mongoose.Model<Game> {
   findWithPlayer(playerId: ObjectId): mongoose.DocumentQuery<Game[], Game>;
+
+  /** Basics projection */
+  basics(): string[];
 }
 
 const gameSchema = new Schema({
@@ -68,6 +71,10 @@ gameSchema.index('updatedAt');
 
 gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
   return this.find({players: playerId});
+});
+
+gameSchema.static("basics", () => {
+  return ["players", "options.nbPlayers", "active", "creator", "data.round", "data.phase"];
 });
 
 gameSchema.method("join", async function(this: Game, player: ObjectId) {
