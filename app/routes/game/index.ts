@@ -72,32 +72,11 @@ router.post('/:gameId/join', loggedIn, async (req, res) => {
 
 router.post('/:gameId/move', loggedIn, async (req, res) => {
   const {move} = req.body;
-  const game = req.game.data;
   const auth = req.user.id;
 
-  if (game.availableCommands.length === 0 || game.players[game.availableCommands[0].player].auth !== auth) {
-    res.status(400).json("Not your turn to play");
-    return;
-  }
+  const game = await req.game.move(move, auth);
 
-  if (game.players.some(pl => !pl.auth)) {
-    res.status(400).json("Wait for everybody to join");
-    return;
-  }
-
-  const engine = Engine.fromData(game);
-
-  engine.move(move);
-  if (!engine.availableCommands) {
-    engine.generateAvailableCommands();
-  }
-
-  if (engine.newTurn) {
-    req.game.data = JSON.parse(JSON.stringify(engine));
-    await req.game.save();
-  }
-
-  res.json(_.assign(engine, {lastUpdated: req.game.updatedAt}));
+  res.json(_.assign(game.data, {lastUpdated: req.game.updatedAt}));
 });
 
 export default router;

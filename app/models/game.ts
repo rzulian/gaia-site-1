@@ -13,6 +13,7 @@ interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
   _id: string;
 
   join(player: ObjectId): Promise<Game>;
+  move(move: string, auth: string): Promise<Game>;
 }
 
 export { Game as GameDocument };
@@ -70,9 +71,10 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
   // Prevent multiple joins being executed at the same time
   const free = await locks.lock(this._id, "join-game");
 
-  // Once inside the lock, refresh the game
-  const game = await Game.findById(this._id);
   try {
+    // Once inside the lock, refresh the game
+    const game = await Game.findById(this._id);
+
     assert(game.active && game.players.length <= game.options.nbPlayers, "This game can't be joined");
     assert(!game.players.some(id => id.equals(player)), "Player already joined this game");
 
@@ -96,6 +98,36 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
     }
 
     return await game.save();
+  } finally {
+    free();
+  }
+});
+
+gameSchema.method("move", async function(this: Game, move: string, auth: string) {
+  // Prevent multiple moves being executed at the same time
+  const free = await locks.lock(this._id, "join-game");
+
+  try {
+    // Once inside the lock, refresh the game
+    const game = await Game.findById(this._id);
+    const gameData = game.data;
+
+    assert(game.players.length === game.options.nbPlayers, "Wait for everybody to join");
+    assert(gameData.availableCommands.length > 0 && gameData.players[gameData.availableCommands[0].player].auth === auth, "It's the turn of " + gameData.players[gameData.availableCommands[0].player].name);
+
+    const engine = Engine.fromData(gameData);
+
+    engine.move(move);
+    if (!engine.availableCommands) {
+      engine.generateAvailableCommands();
+    }
+
+    if (engine.newTurn) {
+      game.data = JSON.parse(JSON.stringify(engine));
+      await game.save();
+    }
+
+    return game;
   } finally {
     free();
   }
