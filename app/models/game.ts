@@ -63,6 +63,9 @@ const gameSchema = new Schema({
   return ret;
 }} });
 
+// To sort games by last played
+gameSchema.index('updatedAt');
+
 gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
   return this.find({players: playerId});
 });

@@ -7,9 +7,33 @@
       </div>
     </div>  
     <br/>
+    <div v-loading="loadingGames">
+      <h4>Active games</h4>
+      <ul v-if="games.length > 0" class="list-group col-md-6 offset-md-3">
+        <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item">{{game._id}}</router-link>
+      </ul>
+    </div>
+    <br/>
     <router-link class="btn btn-lg btn-secondary" to="/new-game">New Game</router-link>
   </div>
 </template>
+
+<script lang="ts">
+import $ from 'jquery';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { handleError } from '@/utils';
+
+@Component<Home>({
+  created() {
+    $.get('/api/game/active').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
+  }
+})
+export default class Home extends Vue {
+  games = [];
+  loadingGames = true;
+}
+</script>
+
 
 <style lang="scss" scoped>
   .card {
