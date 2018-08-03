@@ -24,7 +24,7 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo service nginx restart
 ```
 
-You may have a 403 forbidden error regarding js and css files if the folder is under your home folder, then you need to either give more permissions to your home folder or move the project elsewhere.
+You may have a 403 forbidden error regarding js and css files if the folder is under your home folder, then you need to either give more permissions to your home folder or move the project elsewhere. You can give nginx permissions like this: `sudo usermod -G <your-user-name> -a 'www-data'`
 
 ## VS Code
 
