@@ -7,5 +7,5 @@ export default {
   minPasswordLength: process.env.minPasswordLength || 6,
   sessionSecret: process.env.sessionSecret || 'Quel est donc le secret mystère du succès de Gaia Project?!',
   port: +process.env.port || 50801,
-  dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@gaia-project.00h30.com:27019/admin'
+  dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@www.gaiaform.io:27017/admin'
 };
