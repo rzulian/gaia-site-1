@@ -3,7 +3,7 @@
     <form @submit.prevent="createGame">
       <div class="form-group">
         <label for="gameId">Game Id</label>
-        <input class="form-control" id="gameId" type="text" maxlength="20" name="gameId" v-model.trim="gameId" placeholder="Game ID" aria-label="Game ID" required> 
+        <input class="form-control" id="gameId" type="text" maxlength="25" name="gameId" v-model.trim="gameId" placeholder="Game ID" aria-label="Game ID" required> 
         <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
       </div>
 
@@ -41,7 +41,7 @@ import { handleError, handleInfo } from '@/utils';
 
 @Component
 export default class NewGame extends Vue {
-  gameId = Math.random().toString(36).substring(2, 10);
+  gameId = randomId();
   players = 2;
   join = true;
   randomOrder = true;
@@ -54,8 +54,19 @@ export default class NewGame extends Vue {
   }
 }
 
-</script>
+const adjectives = ["blue", "sweet", "red", "yellow", "green", "brown", "princely", "wavely", "stunning", "inquiring", "menacing", "whirly", "curious", "wizardly", "gentle", "blunt",
+  "rumbly", "watery", "fiery", "quick", "playful", "bionic", "costly", "cheap", "decisive", "bash", "bold", "timid", "large", "sturdy", "strong", "pink", "red", "gray", 
+  "piling", "telling", "inspiring", "vengeful", "flashing", "swift", "polite", "dark", "bright", "modern"];
 
+const nouns = ["jeans", "dreams", "ground", "picture", "front", "lie", "surface", "rule", "dance", "peace", "future", "wall", "farm", "operation", "pressure", "property", "morning", "amount" ,
+  "piece", "beauty", "trade", "fear", "demand", "wonder", "list", "judge", "paint", "secretary", "heart", "union", "island", "drink", "story", "experiment", "stay", "paper", "space", 
+  "desire", "sign", "visit", "supply", "officer", "doubt", "wish", "horse", "station", "food", "character"];
+
+function randomId() {
+  return adjectives[ Math.floor(Math.random() * adjectives.length) ] + "-" + nouns[ Math.floor(Math.random() * nouns.length) ] + "-" + Math.ceil(Math.random() * 9999);
+}
+
+</script>
 
 <style lang="scss" scoped>
   

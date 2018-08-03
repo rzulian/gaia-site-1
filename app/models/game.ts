@@ -30,7 +30,7 @@ const gameSchema = new Schema({
     type: String,
     trim: true,
     minlength: [2, "A game id must be at least 2 characters"],
-    maxlength: [20, "A game id must be at most 20 characters"]
+    maxlength: [25, "A game id must be at most 25 characters"]
   },
   players: {
     type: [{
