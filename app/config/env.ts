@@ -1,4 +1,4 @@
-const domain = process.env.domain || "gaia-project.00h30.com";
+const domain = process.env.domain || "gaiaform.io";
 
 export default {
   domain,
