@@ -1,10 +1,8 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
-import { User, Game } from '../../models';
+import { Game } from '../../models';
 import { loggedIn } from '../utils';
 import * as _ from "lodash";
-import Engine from '../../../node_modules/@gaia-project/engine';
-import { AssertionError } from 'assert';
 
 const router = Router();
 
