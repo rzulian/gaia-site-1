@@ -7,11 +7,21 @@
       </div>
     </div>  
     <br/>
-    <div v-loading="loadingGames">
-      <h4>Active games</h4>
-      <ul v-if="games.length > 0" class="list-group col-md-6 offset-md-3">
-        <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item">{{game._id}}</router-link>
-      </ul>
+    <div class="row">
+      <div class="col-md-6" v-loading="loadingGames">
+        <h4>Active games</h4>
+        <ul v-if="games.length > 0" class="list-group">
+          <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p</router-link>
+        </ul>
+        <p v-else>All games are finished!</p>
+      </div>
+      <div class="col-md-6 mt-3 mt-md-0" v-loading="loadingOpenGames">
+        <h4>Open games</h4>
+        <ul v-if="openGames.length > 0" class="list-group">
+          <router-link :to="`/game/${game._id}`" v-for="game in openGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p</router-link>
+        </ul>
+        <p v-else>No open game. Why not create a new one?</p>
+      </div>
     </div>
     <br/>
     <router-link class="btn btn-lg btn-secondary" to="/new-game">New Game</router-link>
@@ -25,12 +35,15 @@ import { handleError } from '@/utils';
 
 @Component<Home>({
   created() {
-    $.get('/api/game/active').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
+    $.get('/api/game/active?count=5').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
+    $.get('/api/game/open?count=5').then(games => this.openGames = games, handleError).always(() => this.loadingOpenGames = false);
   }
 })
 export default class Home extends Vue {
   games = [];
+  openGames = [];
   loadingGames = true;
+  loadingOpenGames = true;
 }
 </script>
 

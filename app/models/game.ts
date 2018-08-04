@@ -62,7 +62,9 @@ const gameSchema = new Schema({
   }
 }, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
   // No need to load all game data in most cases
-  delete ret.data;
+  if (ret.data) {
+    ret.data = _.pick(ret.data, ["round", "phase", "players.faction"]);
+  }
   return ret;
 }} });
 
