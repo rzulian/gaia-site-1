@@ -28,6 +28,12 @@
           Randomize player order
         </label>
       </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="unlisted" v-model="unlisted">
+        <label class="form-check-label" for="unlisted">
+          Unlisted (won't show in Open games). Check if you don't want strangers joining your game.
+        </label>
+      </div>
       
       <button class="btn btn-secondary pull-right" type="submit">New game</button>
     </form>
@@ -45,9 +51,10 @@ export default class NewGame extends Vue {
   players = 2;
   join = true;
   randomOrder = true;
+  unlisted = false;
 
   createGame() {
-    $.post('/api/game/new-game', {gameId: this.gameId, players: this.players, join: this.join, randomOrder: this.randomOrder}).then(
+    $.post('/api/game/new-game', {gameId: this.gameId, players: this.players, join: this.join, randomOrder: this.randomOrder, unlisted: this.unlisted}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     )

@@ -9,8 +9,9 @@ const router = Router();
 router.post('/new-game', loggedIn, async (req , res) => {
   const {gameId} = req.body;
   const players = + req.body.players;
-  const join = !!(req.body.join === "true");
-  const randomOrder = !!(req.body.randomOrder === "true");
+  const join = req.body.join === "true";
+  const randomOrder = req.body.randomOrder === "true";
+  const unlisted = req.body.unlisted === "true";
 
   if (!/^[A-z0-9-]+$/.test(gameId)) {
     throw createError(400, "Wrong format for game id");
@@ -27,7 +28,8 @@ router.post('/new-game', loggedIn, async (req , res) => {
 
   game.creator = req.user._id;
   game.options.nbPlayers = players;
-  game.options.randomPlayerOrder = !!randomOrder;
+  game.options.randomPlayerOrder = randomOrder;
+  game.options.unlisted = unlisted;
   game._id = gameId;
 
   if (join) {
@@ -55,7 +57,7 @@ router.get('/active', async (req, res) => {
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({active: true, data: {$exists: false}}).sort('-updatedAt').limit(Math.min(req.query.count, 20)).select(Game.basics()));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-updatedAt').limit(Math.min(req.query.count, 20)).select(Game.basics().concat(["options.unlisted"])));
 });
 
 // Metadata about the game

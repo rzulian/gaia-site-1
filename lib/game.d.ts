@@ -10,6 +10,7 @@ export interface IAbstractGame<T= string> {
   options: {
     randomPlayerOrder: boolean;
     nbPlayers: number;
+    unlisted: boolean;
   };
 
   active: boolean;
