@@ -1,9 +1,20 @@
 <template>
   <div v-loading="!game">
-    <div v-if="game && game.options.nbPlayers !== game.players.length" class="container text-center">
+    <div v-if="game && open" class="container text-center">
       <h1>Game {{game._id}}</h1>
       <p>{{game.options.nbPlayers}} players game</p>
       <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
+      <div v-loading="!players" class="mb-2">
+        <div v-if="players">
+          <p>
+            Creator: {{players.find(pl => pl.id === game.creator).name}}
+          </p>
+          <p v-if="game.players.length > 0">
+            Players: <br/>
+            <span v-for="player in game.players">- {{players.find(pl => pl.id === player).name}} <br/></span>
+          </p>
+        </div>
+      </div>
       <button class="btn btn-secondary" v-if="user && game.players.includes(user._id)" disabled>You already joined</button>
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
@@ -24,7 +35,20 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 
 @Component<Game>({
   created() {
-    $.get(`/api/game/${this.gameId}`).then(game => this.game = game, handleError);
+    $.get(`/api/game/${this.gameId}`).then(game => {
+      this.game = game;
+
+      if (this.open) {
+        $.get(`/api/game/${this.gameId}/players`).then(players => {
+          this.players = players;
+        }, handleError);
+      }
+    }, handleError);
+  },
+  computed: {
+    open() {
+      return this.game.options.nbPlayers !== this.game.players.length;
+    }
   },
   components: {
     GameViewer
@@ -33,6 +57,7 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 export default class Game extends Vue {
   game: IGame = null;
   api = api;
+  players: Array<{id: string, name: string}> = null;
   
   constructor() {
     super();

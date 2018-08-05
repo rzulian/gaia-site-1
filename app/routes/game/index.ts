@@ -1,6 +1,6 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
-import { Game } from '../../models';
+import { Game, User } from '../../models';
 import { loggedIn } from '../utils';
 import * as _ from "lodash";
 
@@ -68,6 +68,12 @@ router.get('/:gameId', (req, res) => {
 // Just game data, with 'lastUpdated' as bonus
 router.get('/:gameId/data', (req, res) => {
   res.json(_.assign(req.game.data, {lastUpdated: req.game.updatedAt}));
+});
+
+router.get('/:gameId/players', async (req, res) => {
+  const ids = req.game.players.concat(req.game.creator);
+  const users = await User.find({_id: {$in: ids}}).select("account.username");
+  res.json(users.map(user => ({id: user.id, name: user.account.username})));
 });
 
 router.get('/:gameId/status', (req, res) => {
