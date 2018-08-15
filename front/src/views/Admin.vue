@@ -23,9 +23,18 @@
             <label for="email-confirm">Resend confirmation email</label>
             <form @submit.prevent="resend(emailConfirm)">
               <div class="input-group">
-                <input type="email" class="form-control" placeholder="Email" id="name" v-model="emailConfirm" required>
+                <input type="email" class="form-control" placeholder="Email" id="email-confirm" v-model="emailConfirm" required>
                 <div class="input-group-append">
                   <button class="btn btn-primary" type="submit" >Resend</button>
+                </div>
+              </div>
+            </form>
+            <label for="username" class="mt-3">Log in as another user</label>
+            <form @submit.prevent="login(username)">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Username" id="username" v-model="username" required>
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit" >Log in as</button>
                 </div>
               </div>
             </form>
@@ -45,6 +54,7 @@ import { handleError, handleInfo } from '@/utils';
 export default class Admin extends Vue {
   serverInfo: { disk: {availabe: number, total: number}, nbUsers: number } | null = null;
   emailConfirm = "";
+  username = "";
   
   constructor() {
     super();
@@ -62,6 +72,13 @@ export default class Admin extends Vue {
   resend(email: string) {
     $.post('/api/admin/resend-confirmation', {email}).then(
       info => handleInfo("Email sent!"),
+      handleError
+    )
+  }
+
+  login(username: string) {
+    $.post('/api/admin/login-as', {username}).then(
+      ({user}) => this.$store.commit("updateUser", user),
       handleError
     )
   }

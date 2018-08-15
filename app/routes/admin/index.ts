@@ -31,4 +31,15 @@ router.post('/resend-confirmation', async (req , res) => {
   res.sendStatus(200);
 });
 
+router.post('/login-as', async (req, res) => {
+  const {username} = req.body;
+  const user = await User.findByUsername(username);
+
+  if (!user) {
+    throw createError(404, "User not found: " + username);
+  }
+
+  res.json({user});
+});
+
 export default router;
