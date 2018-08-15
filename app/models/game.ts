@@ -44,6 +44,10 @@ const gameSchema = new Schema({
     type: Schema.Types.ObjectId,
     index: true
   },
+  currentPlayer: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  },
   data: {},
   active: {
     type: Boolean,
@@ -77,7 +81,7 @@ gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId
 });
 
 gameSchema.static("basics", () => {
-  return ["players", "options.nbPlayers", "active", "creator", "data.round", "data.phase"];
+  return ["players", "currentPlayer", "options.nbPlayers", "active", "creator", "data.round", "data.phase"];
 });
 
 gameSchema.method("join", async function(this: Game, player: ObjectId) {
@@ -108,6 +112,8 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
         game.data.players[i].name = (await User.findById(game.players[i], "account.username")).account.username;
         game.data.players[i].auth = game.players[i].toHexString();
       }
+
+      game.currentPlayer = game.players[0];
     }
 
     return await game.save();
@@ -140,6 +146,9 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
     if (engine.newTurn) {
       if (engine.phase === Phase.EndGame) {
         game.active = false;
+        game.currentPlayer = null;
+      } else {
+        game.currentPlayer = new ObjectId(engine.player(engine.playerToMove).auth);
       }
       await game.save();
     }
