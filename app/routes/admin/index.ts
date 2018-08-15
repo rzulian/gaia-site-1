@@ -39,6 +39,10 @@ router.post('/login-as', async (req, res) => {
     throw createError(404, "User not found: " + username);
   }
 
+  const login = promisify(req.login.bind(req));
+
+  await login(user);
+
   res.json({user});
 });
 
