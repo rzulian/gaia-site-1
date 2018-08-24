@@ -7,7 +7,10 @@
         <div v-loading="loadingGames">
           <p v-if="activeGames.length > 0">
             <ul class="list-group">
-              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item">{{game._id}}</router-link>
+              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item">{{game._id}}
+               <span v-if="user._id === game.currentPlayer" class="list-group-item-action" style="background: lightgreen; color:black"> Your turn! </span>
+              </router-link>
+             
             </ul>
           </p>
           <p v-else>
