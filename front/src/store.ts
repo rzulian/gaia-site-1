@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { IAbstractUser } from '../../lib/user';
 import {gaiaViewer} from '@gaia-project/viewer';
+import $ from 'jquery';
 
 Vue.use(Vuex);
 

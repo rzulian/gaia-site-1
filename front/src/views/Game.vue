@@ -19,7 +19,7 @@
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
-      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" />
+      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
     </div>
   </div>
 </template>
@@ -45,13 +45,24 @@ import {Game as GameViewer} from '@gaia-project/viewer';
       }
     }, handleError);
 
-    this.subscription = (this.$store as any).subscribeAction(({type, payload}) => {
+    this.actionSubscription = (this.$store as any).subscribeAction(({type, payload}) => {
       if (type !== 'gaiaViewer/playerClick') {
         return;
       }
 
       this.$router.push({path: '/user/' + encodeURIComponent(payload.name)});
     });
+    this.mutationSubscription = (this.$store as any).subscribe(({type, payload}) => {
+      if (type === 'updateUser') {
+        setTimeout(() => this.$refs.viewer.updateFavicon());
+        return;
+      }
+    });
+  },
+  // Restore regular favicon when leaving game
+  beforeRouteLeave(to, from, next) {
+    $("#favicon-gp").attr("href", "/favicon.png");
+    next();
   },
   computed: {
     open() {
@@ -60,13 +71,22 @@ import {Game as GameViewer} from '@gaia-project/viewer';
   },
   components: {
     GameViewer
+  },
+  destroyed() {
+    if (this.actionSubscription) {
+      this.actionSubscription();
+    }
+    if (this.mutationSubscription) {
+      this.mutationSubscription();
+    }
   }
 })
 export default class Game extends Vue {
   game: IGame = null;
   api = api;
   players: Array<{id: string, name: string}> = null;
-  private subscription: () => {} = null;
+  private actionSubscription: () => {} = null;
+  private mutationSubscription: () => {} = null;
   
   constructor() {
     super();
