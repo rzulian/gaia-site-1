@@ -27,7 +27,7 @@ const app = express();
 
 /* Configuration */
 (<any> mongoose).Promise = global.Promise; // native promises
-mongoose.connect(env.dbUrl, <any> {dbName: 'gaia-project'});
+mongoose.connect(env.dbUrl, <any> {dbName: 'gaia-project', useNewUrlParser: true});
 
 mongoose.connection.on("error", (err) => {
   console.error(err);

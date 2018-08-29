@@ -1,7 +1,7 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { Game, User } from '../../models';
-import { loggedIn } from '../utils';
+import { loggedIn, queryCount } from '../utils';
 import * as _ from "lodash";
 
 const router = Router();
@@ -53,11 +53,15 @@ router.param('gameId', async (req, res, next, gameId) => {
 
 // Give last 10 active games
 router.get('/active', async (req, res) => {
-  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-updatedAt').limit(Math.min(req.query.count, 20)).select(Game.basics()));
+  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-updatedAt').limit(queryCount(req)).select(Game.basics()));
+});
+
+router.get('/closed', async (req, res) => {
+  res.json(await Game.find({active: false}).sort('-updatedAt').limit(queryCount(req)).select(Game.basics()));
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-updatedAt').limit(Math.min(req.query.count, 20)).select(Game.basics().concat(["options.unlisted"])));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-updatedAt').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted"])));
 });
 
 // Metadata about the game

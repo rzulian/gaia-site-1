@@ -77,7 +77,7 @@ const gameSchema = new Schema({
 gameSchema.index('updatedAt');
 
 gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
-  return this.find({players: playerId});
+  return this.find({players: playerId}).sort('-updatedAt');
 });
 
 gameSchema.static("basics", () => {

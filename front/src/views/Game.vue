@@ -11,7 +11,7 @@
           </p>
           <p v-if="game.players.length > 0">
             Players: <br/>
-            <span v-for="player in game.players">- {{players.find(pl => pl.id === player).name}} <br/></span>
+            <span v-for="player in game.players" :key="player">- {{players.find(pl => pl.id === player).name}} <br/></span>
           </p>
         </div>
       </div>
@@ -44,6 +44,14 @@ import {Game as GameViewer} from '@gaia-project/viewer';
         }, handleError);
       }
     }, handleError);
+
+    this.subscription = (this.$store as any).subscribeAction(({type, payload}) => {
+      if (type !== 'gaiaViewer/playerClick') {
+        return;
+      }
+
+      this.$router.push({path: '/user/' + encodeURIComponent(payload.name)});
+    });
   },
   computed: {
     open() {
@@ -58,6 +66,7 @@ export default class Game extends Vue {
   game: IGame = null;
   api = api;
   players: Array<{id: string, name: string}> = null;
+  private subscription: () => {} = null;
   
   constructor() {
     super();

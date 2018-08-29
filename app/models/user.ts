@@ -7,6 +7,7 @@ import * as randomstring from 'randomstring';
 import env from '../config/env';
 import { ObjectId } from 'bson';
 import { IAbstractUser } from 'lib/user';
+import * as _ from "lodash";
 
 const Schema = mongoose.Schema;
 
@@ -17,6 +18,8 @@ interface User extends IAbstractUser, mongoose.Document {
   validPassword(password: string): Promise<boolean>;
   resetPassword(password: string): Promise<any>;
   email(): string;
+  // Filtered user for public consumption
+  publicInfo(): User;
   changeEmail(email: string): Promise<any>;
   getLink(): string;
   generateResetLink(): Promise<any>;
@@ -112,7 +115,11 @@ userSchema.method('changeEmail', async function(this: User, email: string) {
 });
 
 userSchema.method('getLink', function(this: User) {
-  return "/u/" + this.account.username;
+  return "/user/" + this.account.username;
+});
+
+userSchema.method('publicInfo', function(this: User) {
+  return _.pick(this, ["_id", "account.username"]);
 });
 
 userSchema.method('generateResetLink', function(this: User) {

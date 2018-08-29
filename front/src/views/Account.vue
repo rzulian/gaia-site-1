@@ -7,15 +7,15 @@
         <div v-loading="loadingGames">
           <p v-if="activeGames.length > 0">
             <ul class="list-group">
-              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item">{{game._id}}
+              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}
                <span v-if="user._id === game.currentPlayer" class="list-group-item-action" style="background: lightgreen; color:black"> Your turn! </span>
               </router-link>
-             
             </ul>
           </p>
           <p v-else>
             No active games. <router-link to="/new-game">Launch a new game</router-link>.
           </p> 
+          <router-link :to="`/user/${encodeURIComponent(user.account.username)}`">See list of all your games</router-link>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@ import $ from 'jquery';
 
 @Component<Account>({
   created() {
-    $.get(`/api/user/${this.user._id}/games/active`).then(list => this.activeGames = list, handleError).always(() => this.loadingGames = false);
+    $.get(`/api/user/${this.user._id}/games/active?count=5`).then(list => this.activeGames = list, handleError).always(() => this.loadingGames = false);
   }
 })
 export default class Account extends Vue {

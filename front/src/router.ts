@@ -12,6 +12,7 @@ import NewGame from './views/NewGame.vue';
 import Game from './views/Game.vue';
 import ResetPassword from './views/ResetPassword.vue';
 import ForgottenPassword from './views/ForgottenPassword.vue';
+import User from './views/User.vue';
 import store from './store';
 import { handleError, handleInfo } from '@/utils';
 
@@ -81,6 +82,10 @@ const router = new Router({
     {
       path: '/game/:gameId',
       component: Game
+    },
+    {
+      path: '/user/:userName',
+      component: User
     },
     {
       path: '*',
