@@ -3,6 +3,7 @@ import { GameApi } from '@gaia-project/viewer';
 
 const api: GameApi = {
   loadGame(gameId: string) {
+    console.log("call to load game API");
     return $.get(`${window.location.origin}/api/game/${gameId}/data`) as any;
   },
   checkStatus(gameId: string) {

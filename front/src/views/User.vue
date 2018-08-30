@@ -1,23 +1,23 @@
 <template>
-  <div class="container account" v-loading="!user">
+  <v-loading div class="container account" :loading="!user">
     <h1>{{user ? user.account.username : ""}}</h1>
     <div class="row">
-      <div class="col-md-6" v-loading="loadingGames">
+      <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
         <ul v-if="activeGames.length > 0" class="list-group">
           <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p</router-link>
         </ul>
         <p v-else>No ongoing games</p>
-      </div>
-      <div class="col-md-6 mt-3 mt-md-0" v-loading="loadingGames">
+      </v-loading>
+      <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingGames">
         <h4>Finished games</h4>
         <ul v-if="closedGames.length > 0" class="list-group">
           <router-link :to="`/game/${game._id}`" v-for="game in closedGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p</router-link>
         </ul>
         <p v-else>No finished game.</p>
-      </div>
+      </v-loading>
     </div>
-  </div>
+  </v-loading>
 </template>
 
 <script lang="ts">

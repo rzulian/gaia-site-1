@@ -1,10 +1,10 @@
 <template>
-  <div v-loading="!game">
+  <v-loading :loading="!game">
     <div v-if="game && open" class="container text-center">
       <h1>Game {{game._id}}</h1>
       <p>{{game.options.nbPlayers}} players game</p>
       <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
-      <div v-loading="!players" class="mb-2">
+      <v-loading :loading="!players" class="mb-2">
         <div v-if="players">
           <p>
             Creator: {{players.find(pl => pl.id === game.creator).name}}
@@ -14,14 +14,14 @@
             <span v-for="player in game.players" :key="player">- {{players.find(pl => pl.id === player).name}} <br/></span>
           </p>
         </div>
-      </div>
+      </v-loading>
       <button class="btn btn-secondary" v-if="user && game.players.includes(user._id)" disabled>You already joined</button>
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
       <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
     </div>
-  </div>
+  </v-loading>
 </template>
 
 <script lang="ts">

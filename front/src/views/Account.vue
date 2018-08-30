@@ -4,7 +4,7 @@
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Active games</h5>
-        <div v-loading="loadingGames">
+        <v-loading :loading="loadingGames">
           <p v-if="activeGames.length > 0">
             <ul class="list-group">
               <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}
@@ -16,7 +16,7 @@
             No active games. <router-link to="/new-game">Launch a new game</router-link>.
           </p> 
           <router-link :to="`/user/${encodeURIComponent(user.account.username)}`">See list of all your games</router-link>
-        </div>
+        </v-loading>
       </div>
     </div>
     <div class="card">

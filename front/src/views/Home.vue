@@ -8,20 +8,20 @@
     </div>  
     <br/>
     <div class="row">
-      <div class="col-md-6" v-loading="loadingGames">
+      <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
         <ul v-if="games.length > 0" class="list-group">
           <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p</router-link>
         </ul>
         <p v-else>All games are finished!</p>
-      </div>
-      <div class="col-md-6 mt-3 mt-md-0" v-loading="loadingOpenGames">
+      </v-loading>
+      <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingOpenGames">
         <h4>Open games</h4>
         <ul v-if="openGames.length > 0" class="list-group">
           <router-link :to="`/game/${game._id}`" v-for="game in openGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p</router-link>
         </ul>
         <p v-else>No open game. Why not create a new one?</p>
-      </div>
+      </v-loading>
     </div>
     <br/>
     <router-link class="btn btn-lg btn-secondary" to="/new-game">New Game</router-link>

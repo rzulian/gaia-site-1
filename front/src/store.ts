@@ -20,6 +20,7 @@ export default new Vuex.Store({
   },
   mutations: {
     updateUser: (state, user: IAbstractUser | null) => {
+      console.log("update user");
       state.user = user;
       state.userLoaded = true;
     },
