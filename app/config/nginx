@@ -3,6 +3,11 @@ upstream gaia_api {
   keepalive 8;
 }
 
+upstream gaia_chat {
+  server 127.0.0.1:50802;
+  keepalive 8;
+}
+
 upstream gaia_front {
   server 127.0.0.1:8612;
   keepalive 8;
@@ -24,6 +29,13 @@ server {
 
   location /api {
     try_files $uri $uri/ @proxy;
+  }
+
+  location /chat/ {
+    proxy_pass http://gaia_chat;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
   }
 
   error_page 502 = @static;

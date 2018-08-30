@@ -28,7 +28,8 @@
     "passport-local": "^1.0.0",
     "randomstring": "^1.1.5",
     "sendmail": "^1.4.1",
-    "validator": "^9.4.1"
+    "validator": "^9.4.1",
+    "ws": "^6.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
@@ -50,6 +51,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/randomstring": "^1.1.6",
     "@types/validator": "^9.4.0",
+    "@types/ws": "^6.0.0",
     "nodemon": "^1.18.3",
     "ts-node": "^5.0.1",
     "typescript": "^2.8.1"

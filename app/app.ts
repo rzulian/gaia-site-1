@@ -15,6 +15,7 @@ import locks from "mongo-locks";
 /* Configure passport */
 import './config/passport';
 import env from './config/env';
+import './config/db';
 
 const MongoStore = ConnectMongo(session);
 
@@ -26,16 +27,6 @@ import { AssertionError } from 'assert';
 const app = express();
 
 /* Configuration */
-(<any> mongoose).Promise = global.Promise; // native promises
-mongoose.connect(env.dbUrl, <any> {dbName: 'gaia-project', useNewUrlParser: true});
-
-mongoose.connection.on("error", (err) => {
-  console.error(err);
-});
-
-mongoose.connection.on("open", async () => {
-  console.log("connected to database!");
-});
 
 locks.init(mongoose.connection);
 

@@ -13,3 +13,8 @@ if (cluster.isMaster && env.isProduction) {
   require('./app/app');
 }
 
+// Whichever the case, run only one chat service
+if (cluster.isMaster) {
+  // tslint:disable-next-line no-var-requires
+  require('./app/chat');
+}
