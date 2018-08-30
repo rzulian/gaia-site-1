@@ -58,8 +58,8 @@ const router = new Router({
       path: '/confirm',
       beforeEnter(to, from, next) {
         $.post('/api/account/confirm', {key: to.query.key, email: to.query.user}).then(
-          ({user}) => {
-            store.commit('updateUser', user);
+          (data) => {
+            store.commit('updateUser', data);
             handleInfo('Your account has been confirmed');
             next('/account');
           },
@@ -102,7 +102,7 @@ router.beforeEach(async (to, from, next) => {
   if (!store.state.userLoaded) {
     routing = true;
     await $.get('/api/account').then(
-      ({user}) => store.commit('updateUser', user),
+      (data) => store.commit('updateUser', data),
       err => handleError(err)
     );
     routing = false;

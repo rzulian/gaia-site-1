@@ -21,6 +21,7 @@
     <div v-else-if="game">
       <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
     </div>
+    <ChatRoom v-if="game" :room="gameId" />
   </v-loading>
 </template>
 
@@ -31,6 +32,7 @@ import { handleError, handleInfo } from '@/utils';
 import { IGame } from '@lib/game';
 import { IUser } from '@lib/user';
 import api from '@/helpers/api';
+import ChatRoom from '../components/ChatRoom.vue';
 import {Game as GameViewer} from '@gaia-project/viewer';
 
 @Component<Game>({
@@ -70,7 +72,8 @@ import {Game as GameViewer} from '@gaia-project/viewer';
     }
   },
   components: {
-    GameViewer
+    GameViewer,
+    ChatRoom
   },
   destroyed() {
     if (this.actionSubscription) {

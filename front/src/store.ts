@@ -12,6 +12,7 @@ export default new Vuex.Store({
   },
   state: {
     user: null as IAbstractUser | null,
+    sessionID: null as string | null,
     userLoaded: false as boolean,
     error: null as string | null,
     info: null as string | null,
@@ -19,9 +20,14 @@ export default new Vuex.Store({
     infoIssued: null as Date | null
   },
   mutations: {
-    updateUser: (state, user: IAbstractUser | null) => {
-      console.log("update user");
-      state.user = user;
+    updateUser: (state, data: {user: IAbstractUser, sessionID: string} | null ) => {
+      if (data) {
+        state.user = data.user;
+        state.sessionID = data.sessionID;
+      } else {
+        state.user = null;
+        state.sessionID = null;
+      }
       state.userLoaded = true;
     },
     error: (state, error: string) => { state.error = error; state.errorIssued = new Date(); },

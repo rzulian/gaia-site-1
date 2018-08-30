@@ -12,6 +12,6 @@ import { handleError, handleInfo } from '@/utils';
 @Component
 export default class VLoading extends Vue {
   @Prop()
-  loading: boolean = true;
+  loading: boolean;
 }
 </script>

@@ -34,7 +34,7 @@ export default class Login extends Vue {
 
   login() {
     $.post('/api/account/login', {email: this.email, password: this.password}).then(
-      ({user}: {user: IAbstractUser | null}) => this.$store.commit('updateUser', user),
+      data => this.$store.commit('updateUser', data),
       err => handleError(err)
     )
   }

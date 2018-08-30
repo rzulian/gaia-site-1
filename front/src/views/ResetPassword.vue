@@ -47,9 +47,9 @@ export default class ResetPassword extends Vue {
     }
 
     $.post('/api/account/reset', {email: this.email, resetKey: this.key, password: this.password}).then(
-      ({user}) => {
+      data => {
         handleInfo('Your password was reset');
-        this.$store.commit('updateUser', user);
+        this.$store.commit('updateUser', data);
       },
       err => handleError(err)
     )

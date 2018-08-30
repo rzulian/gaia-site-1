@@ -77,8 +77,8 @@ export default class Navbar extends Vue {
 
   login() {
     $.post('/api/account/login', {email: this.email, password: this.password}).then(
-      ({user}: {user: IAbstractUser | null}) => { 
-        this.$store.commit('updateUser', user); 
+      (data: {user: IAbstractUser | null, sessionID: string}) => { 
+        this.$store.commit('updateUser', data); 
         this.hideDropdown();
       },
       err => handleError(err)

@@ -54,7 +54,7 @@ export default class Signup extends Vue {
     const {email, password, newsletter, username} = this;
 
     $.post('/api/account/signup', {email, username, password, newsletter}).then(
-      ({user}: {user: IAbstractUser | null}) => this.$store.commit('updateUser', user),
+      data => this.$store.commit('updateUser', data),
       err => handleError(err)
     )
   }

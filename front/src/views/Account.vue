@@ -77,7 +77,7 @@ export default class Account extends Vue {
         newsletter: this.newsletter
       }
     }).then(
-      ({user}) => this.$store.commit('updateUser', user),
+      data => this.$store.commit('updateUser', data),
       err => handleError(err)
     );
   }

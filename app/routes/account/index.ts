@@ -9,21 +9,21 @@ import { promisify } from 'util';
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.json({user: req.user});
+  res.json({user: req.user, sessionID: req.sessionID});
 });
 
 router.post('/', loggedIn, async (req, res) => {
   _.merge(req.user, _.pick(req.body, ['account.newsletter']));
   await req.user.save();
-  res.json({user: req.user});
+  res.json({user: req.user, sessionID: req.sessionID});
 });
 
 router.post('/signup', loggedOut, passport.authenticate('local-signup'), (req, res) => {
-  res.json({user: req.user});
+  res.json({user: req.user, sessionID: req.sessionID});
 });
 
 router.post('/login', loggedOut, passport.authenticate('local-login'), (req, res) => {
-  res.json({user: req.user});
+  res.json({user: req.user, sessionID: req.sessionID});
 });
 
 router.post('/signout', (req, res) => {
@@ -44,11 +44,11 @@ router.post('/confirm', async (req, res, next) => {
 
   await login(user);
 
-  res.json({user});
+  res.json({user, sessionID: req.sessionID});
 });
 
 router.post('/reset', loggedOut, passport.authenticate('local-reset'), (req, res) => {
-  res.json({user: req.user});
+  res.json({user: req.user, sessionID: req.sessionID});
 });
 
 router.post('/forget', loggedOut, async (req, res) => {

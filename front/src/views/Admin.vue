@@ -78,7 +78,7 @@ export default class Admin extends Vue {
 
   login(username: string) {
     $.post('/api/admin/login-as', {username}).then(
-      ({user}) => this.$store.commit("updateUser", user),
+      data => this.$store.commit("updateUser", data),
       handleError
     )
   }
