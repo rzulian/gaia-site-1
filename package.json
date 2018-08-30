@@ -60,6 +60,6 @@
     "prod": "cd front && npm run build",
     "deploy": "ssh coyotte508@www.gaiaform.io 'cd gaia-site && npm run update'",
     "update": "git checkout . && git pull && yarn install && npm run front",
-    "nodemon": "nodemon -w app -w lib -w node_modules -e js,ts --exec npm start"
+    "nodemon": "nodemon -w app -w lib -w node_modules -w server.ts -e js,ts --exec npm start"
   }
 }

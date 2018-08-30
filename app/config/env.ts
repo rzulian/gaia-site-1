@@ -1,3 +1,4 @@
+import * as os from 'os';
 const domain = process.env.domain || "gaiaform.io";
 
 export default {
@@ -7,5 +8,7 @@ export default {
   minPasswordLength: process.env.minPasswordLength || 6,
   sessionSecret: process.env.sessionSecret || 'Quel est donc le secret mystère du succès de Gaia Project?!',
   port: +process.env.port || 50801,
-  dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@gaiaform.io:27017/admin'
+  dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@gaiaform.io:27017/admin',
+  isProduction: process.env.NODE_ENV === 'production',
+  threads: process.env.threads || os.cpus().length
 };
