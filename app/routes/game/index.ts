@@ -1,8 +1,9 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
-import { Game, User } from '../../models';
+import { Game, User, Chat } from '../../models';
 import { loggedIn, queryCount } from '../utils';
 import * as _ from "lodash";
+import * as assert from "assert";
 
 const router = Router();
 
@@ -78,6 +79,15 @@ router.get('/:gameId/players', async (req, res) => {
   const ids = req.game.players.concat(req.game.creator);
   const users = await User.find({_id: {$in: ids}}).select("account.username");
   res.json(users.map(user => ({id: user.id, name: user.account.username})));
+});
+
+router.post('/:gameId/chat', async (req, res) => {
+  assert(req.user && req.game.players.some(pl => pl.equals(req.user._id)), "You must be a player of the game to chat!");
+
+  const doc = new Chat({room: req.game._id, source: req.user._id, text: req.body.message});
+  await doc.save();
+
+  res.sendStatus(200);
 });
 
 router.get('/:gameId/status', (req, res) => {
