@@ -7,6 +7,7 @@ interface ChatDocument extends mongoose.Document {
   room: ObjectId;
   source: ObjectId;
   text: string;
+  type: string;
 }
 
 const chatSchema = new Schema({
@@ -24,6 +25,12 @@ const chatSchema = new Schema({
     type: String,
     minlength: [1, "You can't send empty messages"],
     maxlength: [300, "You can't send messages too long"]
+  },
+  type: {
+    type: String,
+    required: true,
+    default: "text",
+    enum: ["text", "emoji"]
   }
 }, {
   // We only keep 100MB of chat logs
