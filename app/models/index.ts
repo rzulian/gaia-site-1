@@ -1,5 +1,5 @@
 import User from './user';
 import Game from './game';
-import Chat from './chat';
+import ChatMessage from './chatmessage';
 
-export { User, Game, Chat };
+export { User, Game, ChatMessage };

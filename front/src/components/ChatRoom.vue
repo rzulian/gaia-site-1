@@ -1,5 +1,16 @@
 <template>
   <div>
+    <beautiful-chat
+      :title="room"
+      :participants="participants"
+      :onMessageWasSent="onMessageWasSent"
+      :messageList="messageList"
+      :newMessagesCount="newMessagesCount"
+      :isOpen="isChatOpen"
+      :close="closeChat"
+      :open="openChat"
+      :showEmoji="true"
+      :showFile="false" />
   </div>
 </template>
 
@@ -37,12 +48,44 @@ export default class ChatRoom extends Vue {
   @Prop()
   room: string;
 
-  mutationSubscription: () => {} = null;
+  @Prop({default: () => []})
+  participants: Array<{id: string, name: string, imageUrl: string}>;
 
   get user() {
     return this.$store.state.user;
   }
 
-  ws: WebSocket = null;
+  newMessage (message) {
+    if (message.length > 0) {
+      this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
+      this.onMessageWasSent(message)
+    }
+  }
+  
+  onMessageWasSent (message) {
+    this.messageList = [...this.messageList, message]
+  }
+  
+  openChat () {
+    this.isChatOpen = true
+    this.newMessagesCount = 0
+  }
+  
+  closeChat () {
+    this.isChatOpen = false
+  }
+
+  /*** Private variables ***/
+  private mutationSubscription: () => {} = null;
+  private ws: WebSocket = null;
+  private isChatOpen: boolean = false;
+  private newMessagesCount = 0;
+  private messageList = [];
 }
 </script>
+
+<style lang="scss">
+  .sc-chat-window, .sc-launcher {
+    z-index: 3;
+  }
+</style>

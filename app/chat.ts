@@ -4,8 +4,8 @@ import delay from "delay";
 import * as _ from "lodash";
 
 import {Server} from 'ws';
-import { Chat } from './models';
-import { ObjectID } from '../node_modules/@types/bson';
+import { ChatMessage } from './models';
+import { ObjectID } from 'bson';
 
 const wss = new Server({port: env.chatPort});
 
@@ -23,7 +23,7 @@ wss.on("connection", ws => {
     }
 
     // Show only last 100 messages
-    const roomMessages = await Chat.find({room: data.room}).lean(true).sort("-id").limit(100);
+    const roomMessages = await ChatMessage.find({room: data.room}).lean(true).sort("-id").limit(100);
 
     ws.send(JSON.stringify(roomMessages));
   });
@@ -41,7 +41,7 @@ let lastChecked = Date.now();
 async function run() {
   while (1) {
     // Find new messages
-    const messages = await Chat.find({_id: {$gte: ObjectID.createFromTime(lastChecked / 1000)}}).lean();
+    const messages = await ChatMessage.find({_id: {$gte: ObjectID.createFromTime(lastChecked / 1000)}}).lean();
     const messagesPerRooms = _.groupBy(messages, msg => msg.room.toString());
 
     for (const ws of wss.clients) {

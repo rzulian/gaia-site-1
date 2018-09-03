@@ -1,5 +1,6 @@
 import './libs';
 import BootstrapVue from 'bootstrap-vue';
+import Chat from '@gaia-project/vue-beautiful-chat';
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -13,6 +14,7 @@ import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
+Vue.use(Chat);
 // Global component
 Vue.component("v-loading", VLoading);
 

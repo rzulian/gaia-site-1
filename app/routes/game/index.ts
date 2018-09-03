@@ -1,6 +1,6 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
-import { Game, User, Chat } from '../../models';
+import { Game, User, ChatMessage } from '../../models';
 import { loggedIn, queryCount } from '../utils';
 import * as _ from "lodash";
 import * as assert from "assert";
@@ -84,7 +84,7 @@ router.get('/:gameId/players', async (req, res) => {
 router.post('/:gameId/chat', async (req, res) => {
   assert(req.user && req.game.players.some(pl => pl.equals(req.user._id)), "You must be a player of the game to chat!");
 
-  const doc = new Chat({room: req.game._id, source: req.user._id, text: req.body.message, type: req.body.messageType});
+  const doc = new ChatMessage({room: req.game._id, source: req.user._id, text: req.body.message, type: req.body.messageType});
   await doc.save();
 
   res.sendStatus(200);

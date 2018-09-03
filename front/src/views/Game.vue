@@ -21,7 +21,7 @@
     <div v-else-if="game">
       <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
     </div>
-    <ChatRoom v-if="game" :room="gameId" />
+    <ChatRoom v-if="game" :room="gameId" :participants="chatParticipants" />
   </v-loading>
 </template>
 
@@ -69,6 +69,15 @@ import {Game as GameViewer} from '@gaia-project/viewer';
   computed: {
     open() {
       return this.game.options.nbPlayers !== this.game.players.length;
+    },
+    chatParticipants() {
+      if (this.open) {
+        return this.players;
+      }
+      return this.$store.state.gaiaViewer.data.players.map(pl => ({
+        id: pl.auth,
+        name: pl.name
+      }));
     }
   },
   components: {

@@ -3,16 +3,16 @@ import { ObjectId } from 'bson';
 
 const Schema = mongoose.Schema;
 
-interface ChatDocument extends mongoose.Document {
-  room: ObjectId;
+interface ChatMessageDocument extends mongoose.Document {
+  room: string;
   source: ObjectId;
   text: string;
   type: string;
 }
 
-const chatSchema = new Schema({
+const chatMessageSchema = new Schema({
   room: {
-    type: Schema.Types.ObjectId,
+    type: String,
     index: true,
     required: true
   },
@@ -37,4 +37,4 @@ const chatSchema = new Schema({
   capped: 100 * 1024 * 1024
 });
 
-export default mongoose.model<ChatDocument>("chat", chatSchema);
+export default mongoose.model<ChatMessageDocument>("ChatMessage", chatMessageSchema);
