@@ -145,10 +145,7 @@ export default class ChatRoom extends Vue {
   }
 
   clearWs(ws: WebSocket) {
-    delete ws.onclose;
-    delete ws.onerror;
-    delete ws.onmessage;
-    delete ws.onopen;
+    ws.onclose = ws.onerror = ws.onmessage = ws.onopen = undefined;
     ws.close();
   }
   
