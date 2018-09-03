@@ -6,6 +6,7 @@ import { IAbstractGame } from 'lib/game';
 import Engine, { Phase } from '@gaia-project/engine';
 import * as _ from 'lodash';
 import User from "./user";
+import { ChatMessage } from ".";
 
 const Schema = mongoose.Schema;
 
@@ -97,8 +98,10 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
 
     game.players.push(player);
 
+    const start = game.players.length === game.options.nbPlayers;
+
     // If all the players have joined, we launch the game!
-    if (game.players.length === game.options.nbPlayers) {
+    if (start) {
       if (game.options.randomPlayerOrder) {
         _.shuffle(game.players);
       }
@@ -116,7 +119,13 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
       game.currentPlayer = game.players[0];
     }
 
-    return await game.save();
+    await game.save();
+
+    if (start) {
+      ChatMessage.create({room: game.id, type: "system", data: {text: "Game started"}});
+    }
+
+    return game;
   } finally {
     free();
   }
@@ -136,6 +145,8 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
 
     const engine = Engine.fromData(gameData);
 
+    const oldRound = engine.round;
+
     engine.move(move);
     if (!engine.availableCommands) {
       engine.generateAvailableCommands();
@@ -147,8 +158,14 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
       if (engine.phase === Phase.EndGame) {
         game.active = false;
         game.currentPlayer = null;
+
+        ChatMessage.create({room: game.id, type: "system", data: {text: "Game ended"}});
       } else {
         game.currentPlayer = new ObjectId(engine.player(engine.playerToMove).auth);
+
+        if (engine.round > oldRound && engine.round > 0) {
+          ChatMessage.create({room: game.id, type: "system", data: {text: "Round " + engine.round}});
+        }
       }
       await game.save();
     }

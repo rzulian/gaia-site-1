@@ -25,7 +25,15 @@ wss.on("connection", ws => {
     // Show only last 100 messages
     const roomMessages = await ChatMessage.find({room: data.room}).lean(true).sort("-id").limit(100);
 
-    ws.send(JSON.stringify(roomMessages));
+    for (const msg of roomMessages) {
+      delete msg.room;
+    }
+
+    ws.send(JSON.stringify({
+      room: data.room,
+      command: 'messageList',
+      messages: roomMessages
+    }));
   });
 
   ws.on("close", () => {
@@ -33,7 +41,7 @@ wss.on("connection", ws => {
   });
 });
 
-let lastChecked = Date.now();
+let lastChecked: ObjectID = ObjectID.createFromTime(Math.floor(Date.now() / 1000));
 
 /**
  * Check periodically for new messages in db and send them to clients
@@ -41,16 +49,26 @@ let lastChecked = Date.now();
 async function run() {
   while (1) {
     // Find new messages
-    const messages = await ChatMessage.find({_id: {$gte: ObjectID.createFromTime(lastChecked / 1000)}}).lean();
+    const messages = await ChatMessage.find({_id: {$gt: lastChecked}}).lean();
     const messagesPerRooms = _.groupBy(messages, msg => msg.room.toString());
+
+    for (const msg of messages) {
+      delete msg.room;
+    }
 
     for (const ws of wss.clients) {
       if ((ws as any).room in messagesPerRooms) {
-        ws.send(JSON.stringify(messagesPerRooms[(ws as any).room]));
+        ws.send(JSON.stringify({
+          room: (ws as any).room,
+          messages: messagesPerRooms[(ws as any).room],
+          command: 'newMessages'
+        }));
       }
     }
 
-    lastChecked = Date.now();
+    if (messages.length > 0) {
+      lastChecked = messages[messages.length - 1]._id;
+    }
 
     await delay(50);
   }

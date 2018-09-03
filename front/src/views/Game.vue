@@ -21,7 +21,7 @@
     <div v-else-if="game">
       <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
     </div>
-    <ChatRoom v-if="game" :room="gameId" :participants="chatParticipants" />
+    <ChatRoom v-if="game" :room="gameId" :participants="chatParticipants" :me="user ? user._id : null" />
   </v-loading>
 </template>
 

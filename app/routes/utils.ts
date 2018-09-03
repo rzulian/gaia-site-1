@@ -11,7 +11,7 @@ export function loggedIn(req: Request, res: Response, next: NextFunction) {
 
 export function loggedOut(req: Request, res: Response, next: NextFunction) {
   if (req.user) {
-    next(createError(401, "You need to be logged in"));
+    next(createError(401, "You need to be logged out"));
   } else {
     next();
   }

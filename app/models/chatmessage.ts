@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 interface ChatMessageDocument extends mongoose.Document {
   room: string;
-  source: ObjectId;
+  author: ObjectId;
   text: string;
   type: string;
 }
@@ -16,21 +16,22 @@ const chatMessageSchema = new Schema({
     index: true,
     required: true
   },
-  source: {
+  author: {
     type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    ref: "User"
   },
-  text: {
-    type: String,
-    minlength: [1, "You can't send empty messages"],
-    maxlength: [300, "You can't send messages too long"]
+  data: {
+    text: {
+      type: String,
+      minlength: [1, "You can't send empty messages"],
+      maxlength: [300, "You can't send messages too long"]
+    }
   },
   type: {
     type: String,
     required: true,
     default: "text",
-    enum: ["text", "emoji"]
+    enum: ["text", "emoji", "system"]
   }
 }, {
   // We only keep 100MB of chat logs
