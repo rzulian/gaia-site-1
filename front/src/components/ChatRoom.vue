@@ -191,4 +191,10 @@ interface Message {
   .sc-message-list {
     padding: 20px 0 !important;
   }
+
+  .sc-message {
+    a.chatLink {
+      color: inherit !important;
+    }
+  }
 </style>
