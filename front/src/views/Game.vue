@@ -72,11 +72,12 @@ import {Game as GameViewer} from '@gaia-project/viewer';
     },
     chatParticipants() {
       if (this.open) {
-        return this.players;
+        return this.players.map(pl => ({id: pl.id, name: pl.name, imageUrl: '/images/factions/icons/random.svg'}));
       }
       return this.$store.state.gaiaViewer.data.players.map(pl => ({
         id: pl.auth,
-        name: pl.name
+        name: pl.name,
+        imageUrl: `/images/factions/icons/${pl.faction ? pl.faction + '.svg' : 'random.svg'}`
       }));
     }
   },

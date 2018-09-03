@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@gaia-project/viewer": "^1.4.11",
-    "@gaia-project/vue-beautiful-chat": "^2.0.2",
+    "@gaia-project/vue-beautiful-chat": "^2.0.3",
     "bootstrap-vue": "^2.0.0-rc.11",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
