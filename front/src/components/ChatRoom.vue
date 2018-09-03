@@ -91,7 +91,9 @@ export default class ChatRoom extends Vue {
     messages = messages.map(msg => this.transformedMessage(msg));
 
     this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + messages.length;
-    this.messageList = [...this.messageList, ...messages];
+
+    // Limit the number of messages shown
+    this.messageList = [...this.messageList, ...messages].slice(0, 200);
   }
 
   transformedMessage(message: Message) : Message {
