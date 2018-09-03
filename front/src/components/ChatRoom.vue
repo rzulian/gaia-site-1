@@ -121,8 +121,8 @@ export default class ChatRoom extends Vue {
     }
 
     const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws';
-    console.log("connecting to websocket", `${protocol}://${window.location.host}:50802/chat`);
-    this.ws = new WebSocket(`${protocol}://${window.location.host}:50802/chat`);
+    console.log("connecting to websocket", `${protocol}://${window.location.host}/chat`);
+    this.ws = new WebSocket(`${protocol}://${window.location.host}/chat`);
     
     this.ws.onclose = this.ws.onerror = () => {
       console.log("websocket closed");
