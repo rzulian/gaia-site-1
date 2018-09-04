@@ -112,7 +112,7 @@ router.post('/:gameId/move', loggedIn, async (req, res) => {
 
   const game = await req.game.move(move, auth);
 
-  res.json(_.assign(game.data, {lastUpdated: req.game.updatedAt, nextMoveDeadline: req.game.nextMoveDeadline}));
+  res.json(_.assign(game.data, {lastUpdated: game.updatedAt, nextMoveDeadline: game.nextMoveDeadline}));
 });
 
 router.delete('/:gameId', isAdmin, async (req, res) => {

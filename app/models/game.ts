@@ -168,11 +168,14 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
       engine.generateAvailableCommands();
     }
 
-    game.data = JSON.parse(JSON.stringify(engine));
-
     if (engine.newTurn) {
       game.afterMove(engine, oldRound);
       game.autoMove(engine);
+    }
+
+    game.data = JSON.parse(JSON.stringify(engine));
+
+    if (engine.newTurn) {
       await game.save();
     }
 
