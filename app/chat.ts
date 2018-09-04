@@ -15,6 +15,9 @@ wss.on("error", err => console.error(err));
 wss.on("connection", ws => {
   console.log("new websocket connected");
 
+  (ws as any).isAlive = true;
+  ws.on('pong', () => (ws as any).isAlive = true);
+
   ws.on("message", async (message) => {
     const data = JSON.parse(message.toString());
 
@@ -39,7 +42,24 @@ wss.on("connection", ws => {
   ws.on("close", () => {
     console.log("websocket closed");
   });
+
+  ws.on("error", () => {
+    console.log("websocket error");
+  });
 });
+
+// Check if sockets are alive, close them otherwise
+const interval = setInterval(function ping() {
+  for (const ws of wss.clients) {
+    if ((ws as any).isAlive === false) {
+      ws.terminate();
+    }
+
+    (ws as any).isAlive = false;
+    ws.ping(() => {});
+  }
+}, 30000);
+
 
 let lastChecked: ObjectID = ObjectID.createFromTime(Math.floor(Date.now() / 1000));
 
