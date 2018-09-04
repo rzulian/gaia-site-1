@@ -5,6 +5,7 @@ export interface IAbstractGame<T= string> {
   players: T[];
   creator: T;
   currentPlayer: T;
+  nextMoveDeadline: Date;
   /** Game data */
   data: Engine;
 
@@ -12,6 +13,7 @@ export interface IAbstractGame<T= string> {
     randomPlayerOrder: boolean;
     nbPlayers: number;
     unlisted: boolean;
+    timePerMove: number;
   };
 
   active: boolean;

@@ -13,10 +13,14 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const join = req.body.join === "true";
   const randomOrder = req.body.randomOrder === "true";
   const unlisted = req.body.unlisted === "true";
+  const timePerMove = +req.body.timePerMove;
+
+  assert(timePerMove && !isNaN(timePerMove), "Wrong amount of time per move");
 
   if (!/^[A-z0-9-]+$/.test(gameId)) {
     throw createError(400, "Wrong format for game id");
   }
+
   if (![2, 3, 4].includes(players)) {
     throw createError(400, "Wrong number of players");
   }
@@ -31,6 +35,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.nbPlayers = players;
   game.options.randomPlayerOrder = randomOrder;
   game.options.unlisted = unlisted;
+  game.options.timePerMove = timePerMove;
   game._id = gameId;
 
   if (join) {

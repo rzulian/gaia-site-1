@@ -15,12 +15,19 @@ interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
 
   join(player: ObjectId): Promise<Game>;
   move(move: string, auth: string): Promise<Game>;
+  setCurrentPlayer(player: ObjectId): void;
+  checkMoveDeadline(): Promise<void>;
+  /** Update current player, game status & next move deadline */
+  afterMove(engine: Engine, oldRound: number);
+  /** Handle dropped players' moves */
+  autoMove(engine: Engine);
 }
 
 export { Game as GameDocument };
 
 export interface GameModel extends mongoose.Model<Game> {
   findWithPlayer(playerId: ObjectId): mongoose.DocumentQuery<Game[], Game>;
+  checkMoveDeadlines(): Promise<void>;
 
   /** Basics projection */
   basics(): string[];
@@ -48,6 +55,10 @@ const gameSchema = new Schema({
   currentPlayer: {
     type: Schema.Types.ObjectId,
     ref: "User"
+  },
+  nextMoveDeadline: {
+    type: Date,
+    index: true
   },
   data: {},
   active: {
@@ -121,7 +132,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
         game.data.players[i].auth = game.players[i].toHexString();
       }
 
-      game.currentPlayer = game.players[0];
+      game.setCurrentPlayer(game.players[0]);
     }
 
     await game.save();
@@ -138,7 +149,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
 
 gameSchema.method("move", async function(this: Game, move: string, auth: string) {
   // Prevent multiple moves being executed at the same time
-  const free = await locks.lock(this._id, "join-game");
+  const free = await locks.lock(this._id, "move-game");
 
   try {
     // Once inside the lock, refresh the game
@@ -160,18 +171,8 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
     game.data = JSON.parse(JSON.stringify(engine));
 
     if (engine.newTurn) {
-      if (engine.phase === Phase.EndGame) {
-        game.active = false;
-        game.currentPlayer = null;
-
-        ChatMessage.create({room: game.id, type: "system", data: {text: "Game ended"}});
-      } else {
-        game.currentPlayer = new ObjectId(engine.player(engine.playerToMove).auth);
-
-        if (engine.round > oldRound && engine.round > 0) {
-          ChatMessage.create({room: game.id, type: "system", data: {text: "Round " + engine.round}});
-        }
-      }
+      game.afterMove(engine, oldRound);
+      game.autoMove(engine);
       await game.save();
     }
 
@@ -181,5 +182,100 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
   }
 });
 
+gameSchema.method('afterMove', function(this: Game, engine: Engine, oldRound: number) {
+  if (engine.phase === Phase.EndGame) {
+    this.active = false;
+    this.setCurrentPlayer(null);
+
+    ChatMessage.create({room: this.id, type: "system", data: {text: "Game ended"}});
+  } else {
+    this.setCurrentPlayer(new ObjectId(engine.player(engine.playerToMove).auth));
+
+    if (engine.round > oldRound && engine.round > 0) {
+      ChatMessage.create({room: this.id, type: "system", data: {text: "Round " + engine.round}});
+    }
+  }
+});
+
+gameSchema.method('autoMove', function(this: Game, engine: Engine) {
+  while (this.active && engine.player(engine.playerToMove).dropped) {
+    const oldRound = engine.round;
+
+    engine.autoPass();
+
+    this.afterMove(engine, oldRound);
+  }
+});
+
+gameSchema.method('setCurrentPlayer', function(this: Game, player: ObjectId) {
+  if (this.currentPlayer && this.currentPlayer.equals(player)) {
+    return;
+  }
+  this.currentPlayer = player;
+
+  if (!this.options.timePerMove) {
+    this.options.timePerMove = 7 * 24 * 3600;
+  }
+
+  if (this.currentPlayer) {
+    this.nextMoveDeadline = new Date(Date.now() + this.options.timePerMove * 1000);
+  }
+});
+
+gameSchema.static('checkMoveDeadlines', async function(this: GameModel) {
+  const gamesToCheck = await this.find({
+    active: true,
+    nextMoveDeadline: {$lt: new Date()}
+  }).select("active nextMoveDeadline");
+
+  for (const game of gamesToCheck) {
+    game.checkMoveDeadline().catch(err => console.error(err));
+  }
+});
+
+gameSchema.static('checkMoveDeadline', async function(this: Game) {
+  // Prevent multiple moves being executed at the same time
+  const free = await locks.lock(this._id, "move-game");
+
+  try {
+    // Once inside the lock, refresh the game
+    const game = await Game.findById(this._id);
+
+    if (!game.active || !game.nextMoveDeadline) {
+      return;
+    }
+
+    if ((new Date()) <= game.nextMoveDeadline) {
+      return;
+    }
+
+    const engine = Engine.fromData(game.data);
+
+    const pl = engine.player(engine.playerToMove);
+    pl.dropped = true;
+    await ChatMessage.create({_id: game.id, type: "system", data: {text: `${pl.name} dropped for inactivity`}});
+
+    if (engine.round <= 0) {
+      ChatMessage.create({_id: game.id, type: "system", data: {text: "Game cancelled"}});
+      game.active = false;
+    } else {
+      game.autoMove(engine);
+    }
+
+    game.data = JSON.parse(JSON.stringify(engine));
+    await game.save();
+
+    return game;
+  } finally {
+    free();
+  }
+});
+
 const Game = mongoose.model<Game, GameModel>('Game', gameSchema);
 export default Game;
+
+/* Check move deadlines every 10 seconds - only on one thread of the server */
+import * as cluster from "cluster";
+if (cluster.isMaster) {
+  setInterval(() => Game.checkMoveDeadlines(), 10000);
+}

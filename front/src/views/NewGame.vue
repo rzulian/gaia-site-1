@@ -7,15 +7,27 @@
         <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
       </div>
 
-      <div class="form-group">
-        <label for="players">Number of players</label>
-        <select v-model="players" id="players" class="form-control">
-          <option :value="2">2 players</option>
-          <option :value="3">3 players</option>
-          <option :value="4">4 players</option>
-        </select>
-      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="players">Number of players</label>
+          <select v-model="players" id="players" class="form-control">
+            <option :value="2">2 players</option>
+            <option :value="3">3 players</option>
+            <option :value="4">4 players</option>
+          </select>
+        </div>
 
+        <div class="form-group col-md-6">
+          <label for="timePerMove">Time per move</label>
+          <select v-model="timePerMove" id="timePerMove" class="form-control">
+            <option :value="15*60">15 minutes</option>
+            <option :value="12*3600">12 hours</option>
+            <option :value="24*3600">24 hours</option>
+            <option :value="48*3600">48 hours</option>
+            <option :value="7*24*3600">1 week</option>
+          </select>
+        </div>
+      </div>
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="join" v-model="join">
         <label class="form-check-label" for="join">
@@ -52,9 +64,10 @@ export default class NewGame extends Vue {
   join = true;
   randomOrder = true;
   unlisted = false;
+  timePerMove = 24*3600;
 
   createGame() {
-    $.post('/api/game/new-game', {gameId: this.gameId, players: this.players, join: this.join, randomOrder: this.randomOrder, unlisted: this.unlisted}).then(
+    $.post('/api/game/new-game', {gameId: this.gameId, players: this.players, join: this.join, randomOrder: this.randomOrder, unlisted: this.unlisted, timePerMove: this.timePerMove}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     )
