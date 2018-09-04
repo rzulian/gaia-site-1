@@ -58,7 +58,7 @@ const gameSchema = new Schema({
   },
   nextMoveDeadline: {
     type: Date,
-    index: true
+    sparse: true
   },
   data: {},
   active: {
@@ -222,6 +222,8 @@ gameSchema.method('setCurrentPlayer', function(this: Game, player: ObjectId) {
 
   if (this.currentPlayer) {
     this.nextMoveDeadline = new Date(Date.now() + this.options.timePerMove * 1000);
+  } else {
+    this.nextMoveDeadline = undefined;
   }
 });
 
