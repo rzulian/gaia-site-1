@@ -3,6 +3,7 @@
     <div v-if="game && open" class="container text-center">
       <h1>Game {{game._id}}</h1>
       <p>{{game.options.nbPlayers}} players game</p>
+      <p>{{timePerMove}} per move</p>
       <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
       <v-loading :loading="!players" class="mb-2">
         <div v-if="players">
@@ -79,6 +80,13 @@ import {Game as GameViewer} from '@gaia-project/viewer';
         name: pl.name,
         imageUrl: `/images/factions/icons/${pl.faction ? pl.faction + '.svg' : 'random.svg'}`
       }));
+    },
+    timePerMove() {
+      switch (this.game.options.timePerMove) {
+        case 15*60: return "15 minutes";
+        case 7*24*3600: return "7 days";
+        default: return (this.game.options.timePerMove / 3600) + " hours";
+      }
     }
   },
   components: {

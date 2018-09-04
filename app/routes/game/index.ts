@@ -67,7 +67,7 @@ router.get('/closed', async (req, res) => {
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-updatedAt').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted"])));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-updatedAt').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove"])));
 });
 
 // Metadata about the game
