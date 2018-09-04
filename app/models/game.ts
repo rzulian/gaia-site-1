@@ -64,7 +64,12 @@ const gameSchema = new Schema({
       default: 2,
       enum: [2, 3, 4]
     },
-    unlisted: Boolean
+    unlisted: Boolean,
+    timePerMove: {
+      type: Number,
+      default: 7 * 24 * 3600,
+      enum: [15 * 60, 12 * 3600, 24 * 3600, 48 * 3600, 7 * 24 * 3600]
+    }
   }
 }, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
   // No need to load all game data in most cases

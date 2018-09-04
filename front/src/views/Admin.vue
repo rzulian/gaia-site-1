@@ -15,6 +15,20 @@
             </p>
           </div>
         </div>
+        <div class="card mt-3">
+          <div class="card-body">
+            <h5 class="card-title">Game management</h5>
+            <label for="gameId">Delete game</label>
+            <form @submit.prevent="deleteGame(gameId)">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Game ID" id="gameId" v-model="gameId" required>
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit" >Delete</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
       <div class="col-md-6">
         <div class="card mt-3">
@@ -55,6 +69,7 @@ export default class Admin extends Vue {
   serverInfo: { disk: {availabe: number, total: number}, nbUsers: number } | null = null;
   emailConfirm = "";
   username = "";
+  gameId = "";
   
   constructor() {
     super();
@@ -72,6 +87,13 @@ export default class Admin extends Vue {
   resend(email: string) {
     $.post('/api/admin/resend-confirmation', {email}).then(
       info => handleInfo("Email sent!"),
+      handleError
+    )
+  }
+
+  deleteGame(gameId: string) {
+    $.ajax(`/api/game/${gameId}`, {method: "delete"}).then(
+      info => handleInfo("Game deleted!"),
       handleError
     )
   }

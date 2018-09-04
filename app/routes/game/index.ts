@@ -1,7 +1,7 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { Game, User, ChatMessage } from '../../models';
-import { loggedIn, queryCount } from '../utils';
+import { loggedIn, queryCount, isAdmin } from '../utils';
 import * as _ from "lodash";
 import * as assert from "assert";
 
@@ -108,6 +108,12 @@ router.post('/:gameId/move', loggedIn, async (req, res) => {
   const game = await req.game.move(move, auth);
 
   res.json(_.assign(game.data, {lastUpdated: req.game.updatedAt}));
+});
+
+router.delete('/:gameId', isAdmin, async (req, res) => {
+  await req.game.remove();
+
+  res.sendStatus(200);
 });
 
 export default router;
