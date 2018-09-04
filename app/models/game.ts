@@ -238,7 +238,7 @@ gameSchema.static('checkMoveDeadlines', async function(this: GameModel) {
   }
 });
 
-gameSchema.static('checkMoveDeadline', async function(this: Game) {
+gameSchema.method('checkMoveDeadline', async function(this: Game) {
   // Prevent multiple moves being executed at the same time
   const free = await locks.lock(this._id, "move-game");
 
@@ -258,10 +258,10 @@ gameSchema.static('checkMoveDeadline', async function(this: Game) {
 
     const pl = engine.player(engine.playerToMove);
     pl.dropped = true;
-    await ChatMessage.create({_id: game.id, type: "system", data: {text: `${pl.name} dropped for inactivity`}});
+    await ChatMessage.create({room: game.id, type: "system", data: {text: `${pl.name} dropped for inactivity`}});
 
     if (engine.round <= 0) {
-      ChatMessage.create({_id: game.id, type: "system", data: {text: "Game cancelled"}});
+      ChatMessage.create({room: game.id, type: "system", data: {text: "Game cancelled"}});
       game.active = false;
     } else {
       game.autoMove(engine);
