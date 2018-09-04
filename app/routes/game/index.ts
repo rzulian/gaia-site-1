@@ -75,9 +75,9 @@ router.get('/:gameId', (req, res) => {
   res.json(req.game);
 });
 
-// Just game data, with 'lastUpdated' as bonus
+// Just game data, with 'lastUpdated' and 'nextMoveDeadline' as bonus
 router.get('/:gameId/data', (req, res) => {
-  res.json(_.assign(req.game.data, {lastUpdated: req.game.updatedAt}));
+  res.json(_.assign(req.game.data, {lastUpdated: req.game.updatedAt, nextMoveDeadline: req.game.nextMoveDeadline}));
 });
 
 router.get('/:gameId/players', async (req, res) => {
@@ -112,7 +112,7 @@ router.post('/:gameId/move', loggedIn, async (req, res) => {
 
   const game = await req.game.move(move, auth);
 
-  res.json(_.assign(game.data, {lastUpdated: req.game.updatedAt}));
+  res.json(_.assign(game.data, {lastUpdated: req.game.updatedAt, nextMoveDeadline: req.game.nextMoveDeadline}));
 });
 
 router.delete('/:gameId', isAdmin, async (req, res) => {
