@@ -27,6 +27,7 @@ export { Game as GameDocument };
 
 export interface GameModel extends mongoose.Model<Game> {
   findWithPlayer(playerId: ObjectId): mongoose.DocumentQuery<Game[], Game>;
+  findWithPlayersTurn(playerId: ObjectId): mongoose.DocumentQuery<Game[], Game>;
   checkMoveDeadlines(): Promise<void>;
 
   /** Basics projection */
@@ -60,6 +61,10 @@ const gameSchema = new Schema({
     type: Date,
     sparse: true
   },
+  lastMove: {
+    type: Date,
+    index: true
+  },
   data: {},
   active: {
     type: Boolean,
@@ -90,11 +95,12 @@ const gameSchema = new Schema({
   return ret;
 }} });
 
-// To sort games by last played
-gameSchema.index('updatedAt');
-
 gameSchema.static("findWithPlayer", function(this: GameModel, playerId: ObjectId) {
-  return this.find({players: playerId}).sort('-updatedAt');
+  return this.find({players: playerId}).sort('-lastMove');
+});
+
+gameSchema.static("findWithPlayersTurn", function(this: GameModel, playerId: ObjectId) {
+  return this.find({players: playerId, active: true, currentPlayer: playerId}).sort('-lastMove');
 });
 
 gameSchema.static("basics", () => {
@@ -103,7 +109,7 @@ gameSchema.static("basics", () => {
 
 gameSchema.method("join", async function(this: Game, player: ObjectId) {
   // Prevent multiple joins being executed at the same time
-  const free = await locks.lock(this._id, "join-game");
+  const free = await locks.lock("join-game", this._id);
 
   try {
     // Once inside the lock, refresh the game
@@ -149,7 +155,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
 
 gameSchema.method("move", async function(this: Game, move: string, auth: string) {
   // Prevent multiple moves being executed at the same time
-  const free = await locks.lock(this._id, "move-game");
+  const free = await locks.lock("move-game", this._id);
 
   try {
     // Once inside the lock, refresh the game
@@ -225,22 +231,27 @@ gameSchema.method('setCurrentPlayer', function(this: Game, player: ObjectId) {
   } else {
     this.nextMoveDeadline = undefined;
   }
+  this.lastMove = new Date();
 });
 
 gameSchema.static('checkMoveDeadlines', async function(this: GameModel) {
-  const gamesToCheck = await this.find({
-    active: true,
-    nextMoveDeadline: {$lt: new Date()}
-  }).select("active nextMoveDeadline");
+  try {
+    const gamesToCheck = await this.find({
+      active: true,
+      nextMoveDeadline: {$lt: new Date()}
+    }).select("active nextMoveDeadline");
 
-  for (const game of gamesToCheck) {
-    game.checkMoveDeadline().catch(err => console.error(err));
+    for (const game of gamesToCheck) {
+      game.checkMoveDeadline().catch(err => console.error(err));
+    }
+  } catch (err) {
+    console.error(err);
   }
 });
 
 gameSchema.method('checkMoveDeadline', async function(this: Game) {
   // Prevent multiple moves being executed at the same time
-  const free = await locks.lock(this._id, "move-game");
+  const free = await locks.lock("move-game", this._id);
 
   try {
     // Once inside the lock, refresh the game
@@ -273,6 +284,18 @@ gameSchema.method('checkMoveDeadline', async function(this: Game) {
     return game;
   } finally {
     free();
+  }
+});
+
+gameSchema.post("save", async (game: Game) => {
+  try {
+    if (game.active && game.currentPlayer) {
+      const user = await User.findById(game.currentPlayer);
+
+      await user.updateGameNotification();
+    }
+  } catch (err) {
+    console.error(err);
   }
 });
 

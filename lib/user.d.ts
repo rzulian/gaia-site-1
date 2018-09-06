@@ -27,6 +27,9 @@ export interface IAbstractUser {
       issued: Date
     }
   };
+  meta: {
+    nextGameNotification: Date
+  };
   authority: string;
 }
 

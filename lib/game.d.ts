@@ -18,6 +18,7 @@ export interface IAbstractGame<T= string> {
 
   active: boolean;
 
+  lastMove: Date;
   updatedAt: Date;
   createdAt: Date;
 }

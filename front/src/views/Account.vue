@@ -34,6 +34,23 @@
             <input type="checkbox" name="newsletter" id="signup-newsletter" class="form-check-input" v-model="newsletter" @change="updateAccountDebounce">
             <label class="form-check-label form-text" for="signup-newsletter">Receive news by email, at most one email every two months</label>
           </div>
+          <div class="form-row align-items-center">
+            <div class="col-auto">
+              <div class="form-check">
+                <input type="checkbox" name="game-notification" id="game-notification" class="form-check-input" v-model="gameNotification" @change="updateAccountDebounce">
+                <label class="form-check-label form-text" for="game-notification">Receive an email when it's your turn after a delay of </label>
+              </div>
+            </div>
+            <div class="col-auto">
+              <select class="form-control form-control-sm" v-model="gameNotificationDelay" @change="gameNotification = true; updateAccountDebounce();">
+                <option :value="10*60">10 minutes</option>
+                <option :value="30*60">30 minutes</option>
+                <option :value="2*3600">2 hours</option>
+                <option :value="6*3600">6 hours</option>
+                <option :value="12*3600">12 hours</option>
+              </select>
+            </div>
+          </div>
         </form>
       </div>
     </div>
@@ -45,6 +62,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { IUser } from '@lib/user';
 import { handleError } from '@/utils';
 import debounce from 'lodash.debounce';
+import get from 'lodash.get';
 import $ from 'jquery';
 
 @Component<Account>({
@@ -57,12 +75,16 @@ export default class Account extends Vue {
   email: string = '';
   newsletter: boolean = false;
   loadingGames = true;
+  gameNotification: boolean = false;
+  gameNotificationDelay: number = 30*60;
 
   constructor() {
     super();
 
     this.email = this.user.account.email;
-    this.newsletter = !!this.user.setings.mailing.newsletter;
+    this.newsletter = !!get(this, 'user.settings.mailing.newsletter');
+    this.gameNotification = !!get(this, 'user.settings.mailing.game.activated');
+    this.gameNotificationDelay = get(this, 'user.settings.mailing.game.delay') || 30*60;
     this.updateAccount.bind(this);
   }
 
@@ -75,7 +97,11 @@ export default class Account extends Vue {
     $.post('/api/account', {
       settings: {
         mailing: {
-          newsletter: this.newsletter
+          newsletter: this.newsletter,
+          game: {
+            activated: this.gameNotification,
+            delay: this.gameNotificationDelay
+          }
         }
       }
     }).then(
@@ -91,5 +117,13 @@ export default class Account extends Vue {
 <style lang="scss">
   .list-group-item.current-turn {
     background: lightgreen;
+
+    &:hover, &:focus {
+      background: darken($color: lightgreen, $amount: 5%);
+    }
+
+    &:active {
+      background: darken($color: lightgreen, $amount: 10%);
+    }
   }
 </style>

@@ -1,3 +1,4 @@
+import locks from "mongo-locks";
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import * as Sendmail from 'sendmail';
@@ -8,6 +9,7 @@ import env from '../config/env';
 import { ObjectId } from 'bson';
 import { IAbstractUser } from 'lib/user';
 import * as _ from "lodash";
+import { Game } from ".";
 
 const Schema = mongoose.Schema;
 
@@ -31,6 +33,8 @@ interface User extends IAbstractUser, mongoose.Document {
   confirmed(): boolean;
   sendConfirmationEmail(): Promise<any>;
   sendResetEmail(): Promise<any>;
+  sendGameNotificationEmail(): Promise<any>;
+  updateGameNotification(): Promise<void>;
   fillInSecurity(ip: string): void;
   isSocialAccount(): boolean;
   notifyLogin(ip: string): Promise<any>;
@@ -73,6 +77,9 @@ const userSchema = new Schema({
       key: String,
       issued: Date
     }
+  },
+  meta: {
+    nextGameNotification: Date
   },
   authority: String,
 }, { toJSON: {transform: (doc, ret) => {
@@ -198,7 +205,7 @@ userSchema.method('sendConfirmationEmail', function(this: User) {
   });
 });
 
-userSchema.method('sendResetEmail', function(this: User, ) {
+userSchema.method('sendResetEmail', function(this: User) {
   return sendmail({
     from: env.noreply,
     to: this.email(),
@@ -209,6 +216,88 @@ userSchema.method('sendResetEmail', function(this: User, ) {
 
     <p>If this didn't come from you, ignore this email.</p>`,
   });
+});
+
+userSchema.method('sendGameNotificationEmail', async function(this: User) {
+  const free = await locks.lock("game-notification", this.id);
+  try {
+    // Inside the lock, reload the user
+    const user = await User.findById(this.id);
+
+    if (!user.settings.mailing.game.activated) {
+      user.meta.nextGameNotification = undefined;
+      await user.save();
+      return;
+    }
+
+    if (!user.meta.nextGameNotification) {
+      return;
+    }
+
+    if (user.meta.nextGameNotification > new Date()) {
+      return;
+    }
+
+    const activeGames = await Game.findWithPlayersTurn(user.id).select('-data').lean(true);
+
+    if (activeGames.length === 0) {
+      user.meta.nextGameNotification = undefined;
+      await user.save();
+      return;
+    }
+
+    /* Check the oldest game where it's your turn */
+    let lastMove: Date = new Date();
+    for (const game of activeGames) {
+      if (!game.lastMove) {
+        continue;
+      }
+      if (game.lastMove < lastMove) {
+        lastMove = game.lastMove;
+      }
+    }
+
+    /* Test if we're sending the notification too early */
+    const notificationDate = new Date(lastMove.getTime() + (user.settings.mailing.game.delay || 30 * 60) * 1000);
+
+    if (notificationDate > new Date()) {
+      user.meta.nextGameNotification = notificationDate;
+      await user.save();
+      return;
+    }
+
+    const gameString = activeGames.length > 1 ? `${activeGames.length} games` : 'one game';
+
+    // Send email
+    sendmail({
+      from: env.noreply,
+      to: this.email(),
+      subject: `Your turn - ${gameString}`,
+      html: `
+      <p>It's your turn on ${gameString},
+      click <a href='http://${env.domain}/account'>here</a> to check it out.</p>
+
+      <p>You can also change your email settings <a href='http://${env.domain}/account'>here</a> with a simple click.</p>`,
+    });
+
+    user.meta.nextGameNotification = undefined;
+    await user.save();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    free();
+  }
+});
+
+userSchema.method('updateGameNotification', async function(this: User) {
+  if (!this.settings.mailing.game.activated) {
+    return;
+  }
+  const date = new Date(Date.now() + (this.settings.mailing.game.delay || 30 * 60) * 1000);
+  if (!this.meta.nextGameNotification || this.meta.nextGameNotification > date) {
+    this.meta.nextGameNotification = date;
+    await this.save();
+  }
 });
 
 userSchema.method('fillInSecurity', function(this: User, ip: string) {
@@ -267,3 +356,19 @@ const User = mongoose.model<User, UserModel>('User', userSchema);
 
 // create the model for users and expose it to our app
 export default User;
+
+/* Check move deadlines every 10 seconds - only on one thread of the server */
+import * as cluster from "cluster";
+if (cluster.isMaster && env.automatedEmails) {
+  setInterval(async () => {
+    try {
+      const toEmail = await User.find({'meta.nextGameNotification': {$lte: new Date()}});
+
+      for (const user of toEmail) {
+        user.sendGameNotificationEmail().catch(err => console.error(err));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, 60000);
+}
