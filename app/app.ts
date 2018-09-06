@@ -28,8 +28,6 @@ const app = express();
 
 /* Configuration */
 
-locks.init(mongoose.connection);
-
 /* App stuff */
 app.use(morgan('dev'));
 

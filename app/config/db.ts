@@ -1,3 +1,4 @@
+import locks from 'mongo-locks';
 import * as mongoose from "mongoose";
 import env from "./env";
 
@@ -11,3 +12,5 @@ mongoose.connection.on("error", (err) => {
 mongoose.connection.on("open", async () => {
   console.log("connected to database!");
 });
+
+locks.init(mongoose.connection);
