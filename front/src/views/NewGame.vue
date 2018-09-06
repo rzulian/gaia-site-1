@@ -8,7 +8,7 @@
       </div>
 
       <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
           <label for="players">Number of players</label>
           <select v-model="players" id="players" class="form-control">
             <option :value="2">2 players</option>
@@ -17,14 +17,24 @@
           </select>
         </div>
 
-        <div class="form-group col-md-6">
-          <label for="timePerMove">Time per move</label>
+        <div class="form-group col-md-4">
+          <label for="timePerGame">Time per player per game</label>
+          <select v-model="timePerGame" id="timePerGame" class="form-control">
+            <option :value="24*3600">1 day</option>
+            <option :value="3*24*3600">3 days</option>
+            <option :value="5*24*3600">5 days</option>
+            <option :value="15*24*3600">15 days</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="timePerMove">Additional time per move</label>
           <select v-model="timePerMove" id="timePerMove" class="form-control">
+            <option :value="5*60">5 minutes</option>
             <option :value="15*60">15 minutes</option>
-            <option :value="12*3600">12 hours</option>
-            <option :value="24*3600">24 hours</option>
-            <option :value="48*3600">48 hours</option>
-            <option :value="7*24*3600">1 week</option>
+            <option :value="3600">1 hour</option>
+            <option :value="2*3600">2 hours</option>
+            <option :value="6*3600">6 hours</option>
           </select>
         </div>
       </div>
@@ -64,10 +74,12 @@ export default class NewGame extends Vue {
   join = true;
   randomOrder = true;
   unlisted = false;
-  timePerMove = 24*3600;
+  timePerMove = 15*60;
+  timePerGame = 5 * 24 * 3600;
 
   createGame() {
-    $.post('/api/game/new-game', {gameId: this.gameId, players: this.players, join: this.join, randomOrder: this.randomOrder, unlisted: this.unlisted, timePerMove: this.timePerMove}).then(
+    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame} = this;
+    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     )

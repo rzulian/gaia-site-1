@@ -83,10 +83,18 @@ const gameSchema = new Schema({
     unlisted: Boolean,
     timePerMove: {
       type: Number,
-      default: 7 * 24 * 3600,
-      enum: [15 * 60, 12 * 3600, 24 * 3600, 48 * 3600, 7 * 24 * 3600]
+      default: 15 * 60,
+      min: 0,
+      max: 12 * 3600
+    },
+    timePerGame: {
+      type: Number,
+      default: 15 * 24 * 3600,
+      enum: [24 * 3600, 3 * 24 * 3600, 5 * 24 * 3600, 15 * 24 * 3600]
     }
-  }
+  },
+  // TODO: If another array is added, change players to {_id: playerId, remainingTime: number, ...}
+  remainingTime: [Number]
 }, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
   // No need to load all game data in most cases
   if (ret.data) {
@@ -137,6 +145,9 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
         game.data.players[i].name = (await User.findById(game.players[i], "account.username")).account.username;
         game.data.players[i].auth = game.players[i].toHexString();
       }
+
+      // TODO: remove OR condition when migration is over
+      game.remainingTime = game.players.map(pl => game.options.timePerGame || 15 * 24 * 3600);
 
       game.setCurrentPlayer(game.players[0]);
     }
@@ -220,14 +231,30 @@ gameSchema.method('setCurrentPlayer', function(this: Game, player: ObjectId) {
   if (this.currentPlayer && this.currentPlayer.equals(player)) {
     return;
   }
-  this.currentPlayer = player;
 
+  // TODO: Remove when migration over
   if (!this.options.timePerMove) {
     this.options.timePerMove = 7 * 24 * 3600;
   }
 
+  // TODO: Remove when migration over
+  if (this.remainingTime.length === 0) {
+    this.remainingTime = this.players.map(pl => (this.options.timePerGame || 15 * 24 * 3600));
+  }
+
+  if (this.currentPlayer && this.lastMove) {
+    const diff = Math.floor((Date.now() - this.lastMove.getTime()) / 1000);
+    const idx = this.players.findIndex(pl => pl.equals(this.currentPlayer));
+
+    this.remainingTime[idx] = Math.min(this.options.timePerGame, this.remainingTime[idx] - diff + this.options.timePerMove);
+    this.markModified('remainingTime');
+  }
+
+  this.currentPlayer = player;
+
   if (this.currentPlayer) {
-    this.nextMoveDeadline = new Date(Date.now() + this.options.timePerMove * 1000);
+    const idx = this.players.findIndex(pl => pl.equals(this.currentPlayer));
+    this.nextMoveDeadline = new Date(Date.now() + this.remainingTime[idx] * 1000);
   } else {
     this.nextMoveDeadline = undefined;
   }
@@ -284,6 +311,18 @@ gameSchema.method('checkMoveDeadline', async function(this: Game) {
     return game;
   } finally {
     free();
+  }
+});
+
+gameSchema.pre("validate", async function(this: Game) {
+  if (!this.options.timePerMove) {
+    this.options.timePerMove = 15 * 60;
+  } else if (this.options.timePerMove > 12 * 3600) {
+    this.options.timePerMove = 12 * 3600;
+  }
+
+  if (!this.options.timePerGame) {
+    this.options.timePerGame = 15 * 24 * 3600;
   }
 });
 

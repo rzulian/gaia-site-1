@@ -18,7 +18,7 @@
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingOpenGames">
         <h4>Open games</h4>
         <ul v-if="openGames.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in openGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p <span class="small"> ({{timePerMove(game)}})</span></router-link>
+          <router-link :to="`/game/${game._id}`" v-for="game in openGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p <span class="small"> ({{timePerGame(game)}})</span></router-link>
         </ul>
         <p v-else>No open game. Why not create a new one?</p>
       </v-loading>
@@ -46,11 +46,10 @@ export default class Home extends Vue {
   loadingGames = true;
   loadingOpenGames = true;
 
-  timePerMove(game: IAbstractGame) {
-    switch (game.options.timePerMove) {
-      case 15*60: return "15 minutes";
-      case 7*24*3600: return "7 days";
-      default: return (game.options.timePerMove / 3600) + " hours";
+  timePerGame(game: IAbstractGame) {
+    switch (game.options.timePerGame) {
+      case 24*3600: return "1 day";
+      default: return (game.options.timePerGame / (24*3600)) + " days";
     }
   }
 }

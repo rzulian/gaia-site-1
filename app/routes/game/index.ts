@@ -14,8 +14,10 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const randomOrder = req.body.randomOrder === "true";
   const unlisted = req.body.unlisted === "true";
   const timePerMove = +req.body.timePerMove;
+  const timePerGame = +req.body.timePerGame;
 
   assert(timePerMove && !isNaN(timePerMove), "Wrong amount of time per move");
+  assert(timePerGame && !isNaN(timePerGame), "Wrong amount of time per game");
 
   if (!/^[A-z0-9-]+$/.test(gameId)) {
     throw createError(400, "Wrong format for game id");
@@ -36,6 +38,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.randomPlayerOrder = randomOrder;
   game.options.unlisted = unlisted;
   game.options.timePerMove = timePerMove;
+  game.options.timePerGame = timePerGame;
   game._id = gameId;
 
   if (join) {
@@ -67,7 +70,7 @@ router.get('/closed', async (req, res) => {
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-lastMove').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove"])));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-lastMove').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
 });
 
 // Metadata about the game
