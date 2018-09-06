@@ -2,8 +2,17 @@ export interface IAbstractUser {
   account: {
     username: string,
     email: string,
-    password: string,
-    newsletter: boolean
+    password: string
+  };
+  settings: {
+    mailing: {
+      newsletter: boolean,
+      game: {
+        /** Delay before sending a notification, in seconds */
+        delay: number,
+        activated: boolean
+      } 
+    }
   };
   security: {
     lastIp: string,

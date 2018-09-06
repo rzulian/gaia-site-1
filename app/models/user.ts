@@ -50,8 +50,16 @@ const userSchema = new Schema({
   account: {
     username: {type: String, maxlength: [20, 'Pick a shorter username'], minlength: [2, 'Pick a longer username'], trim: true, unique: true, sparse: true},
     email: { type: String, unique: true, maxlength: [50, 'Too long email'], trim: true, lowercase: true },
-    password: String,
-    newsletter: Boolean
+    password: String
+  },
+  settings: {
+    mailing: {
+      newsletter: Boolean,
+      game: {
+        delay: Number,
+        activated: Boolean
+      }
+    }
   },
   security: {
     lastIp: { type: String, index: true },

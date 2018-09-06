@@ -70,7 +70,7 @@ passport.use('local-signup', new LocalStrategy({
       newUser.account.email    = email;
       newUser.account.username = username;
       newUser.account.password = await newUser.generateHash(password);
-      newUser.account.newsletter = req.body.newsletter === true || req.body.newsletter === 'true';
+      newUser.settings.mailing.newsletter = req.body.newsletter === true || req.body.newsletter === 'true';
       newUser.fillInSecurity(req.ip);
 
       // save the user

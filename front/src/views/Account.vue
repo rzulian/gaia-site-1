@@ -62,7 +62,7 @@ export default class Account extends Vue {
     super();
 
     this.email = this.user.account.email;
-    this.newsletter = !!this.user.account.newsletter;
+    this.newsletter = !!this.user.setings.mailing.newsletter;
     this.updateAccount.bind(this);
   }
 
@@ -73,8 +73,10 @@ export default class Account extends Vue {
   updateAccount() {
     console.log(this, this.newsletter);
     $.post('/api/account', {
-      account: {
-        newsletter: this.newsletter
+      settings: {
+        mailing: {
+          newsletter: this.newsletter
+        }
       }
     }).then(
       data => this.$store.commit('updateUser', data),
