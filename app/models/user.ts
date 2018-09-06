@@ -272,12 +272,14 @@ userSchema.method('sendGameNotificationEmail', async function(this: User) {
     sendmail({
       from: env.noreply,
       to: this.email(),
-      subject: `Your turn - ${gameString}`,
+      subject: `Your turn`,
       html: `
-      <p>It's your turn on ${gameString},
-      click <a href='http://${env.domain}/account'>here</a> to check it out.</p>
+      <p>Hello ${this.account.username}</p>
 
-      <p>You can also change your email settings <a href='http://${env.domain}/account'>here</a> with a simple click.</p>`,
+      <p>It's your turn on ${gameString},
+      click <a href='http://${env.domain}/user/${encodeURIComponent(this.account.username)}'>here</a> to see your active games.</p>
+
+      <p>You can also change your email settings and unsubscribe <a href='http://${env.domain}/account'>here</a> with a simple click.</p>`,
     });
 
     user.meta.nextGameNotification = undefined;
