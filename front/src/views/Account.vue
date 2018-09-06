@@ -7,8 +7,8 @@
         <v-loading :loading="loadingGames">
           <p v-if="activeGames.length > 0">
             <ul class="list-group">
-              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}
-                <span v-if="user._id === game.currentPlayer" style="background: lightgreen"> Your turn! </span>
+              <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'current-turn': user._id === game.currentPlayer}]">
+                {{game._id}} - R{{game.data.round}}
               </router-link>
             </ul>
           </p>
@@ -85,3 +85,9 @@ export default class Account extends Vue {
   updateAccountDebounce = debounce(this.updateAccount, 800, {leading: true});
 }
 </script>
+
+<style lang="scss">
+  .list-group-item.current-turn {
+    background: lightgreen;
+  }
+</style>

@@ -5,7 +5,9 @@
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
         <ul v-if="activeGames.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p <span v-if="user._id === game.currentPlayer" style="background: lightgreen"> {{user.account.username}}'s turn! </span></router-link>
+          <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'current-turn': user._id === game.currentPlayer}]">
+            {{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p
+          </router-link>
         </ul>
         <p v-else>No ongoing games</p>
       </v-loading>
