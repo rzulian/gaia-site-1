@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-fixed-top mb-3" id="navbar">
-    <router-link class="navbar-brand" to="/">Gaia Project</router-link>
+    <router-link class="navbar-brand" to="/">Gaia Form</router-link>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menu déroulant de navigation">
       <span class="navbar-toggler-icon"></span>
