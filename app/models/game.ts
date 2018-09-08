@@ -133,7 +133,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
     // If all the players have joined, we launch the game!
     if (start) {
       if (game.options.randomPlayerOrder) {
-        _.shuffle(game.players);
+        game.players = _.shuffle(game.players);
       }
 
       const engine = new Engine([`init ${game.options.nbPlayers} ${game._id}`]);
