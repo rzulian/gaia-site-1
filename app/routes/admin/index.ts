@@ -3,8 +3,10 @@ import * as os from 'os';
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { promisify } from 'util';
-import { User } from '../../models';
+import { User, Invite } from '../../models';
 import { isAdmin } from '../utils';
+import * as validator from 'validator';
+import * as assert from 'assert';
 
 const router = Router();
 
@@ -44,6 +46,19 @@ router.post('/login-as', async (req, res) => {
   await login(user);
 
   res.json({user});
+});
+
+router.post('/invite', async (req, res) => {
+  const {email} = req.body;
+
+  assert(validator.isEmail(email), "Wrong email format");
+
+  const invite = new Invite({email});
+  await invite.save();
+
+  await invite.sendEmail();
+
+  res.sendStatus(200);
 });
 
 export default router;
