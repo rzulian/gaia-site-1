@@ -15,7 +15,9 @@ export default {
   threads: process.env.threads || os.cpus().length,
   /** Is the computer able to send emails? If not, let the main server send the emails */
   automatedEmails: process.env.automatedEmails || false,
+  useMailgun: process.env.useMailgun === undefined ? true : process.env.useMailgun,
   mailgunApiKey: process.env.mailgunApiKey || '82797ed417ebb2eb4b885009b5c7c7a3-f45b080f-014b63ae',
-  emailDomain: process.env.emailDomain || `mg.${domain}`,
+  mailgunHost: process.env.mailgunHost || 'api.eu.mailgun.net',
+  emailDomain: process.env.emailDomain || `mg-eu.${domain}`,
   newsletterDomain: process.env.newsletterDomain || `newsletter.${domain}`
 };
