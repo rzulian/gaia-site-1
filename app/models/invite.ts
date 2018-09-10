@@ -41,4 +41,4 @@ inviteSchema.method('sendEmail', function(this: InviteDocument) {
   });
 });
 
-export default mongoose.model<InviteDocument>("InviteSchema", inviteSchema);
+export default mongoose.model<InviteDocument>("Invite", inviteSchema);
