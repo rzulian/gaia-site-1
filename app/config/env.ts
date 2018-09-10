@@ -14,5 +14,8 @@ export default {
   isProduction: process.env.NODE_ENV === 'production',
   threads: process.env.threads || os.cpus().length,
   /** Is the computer able to send emails? If not, let the main server send the emails */
-  automatedEmails: process.env.automatedEmails || false
+  automatedEmails: process.env.automatedEmails || false,
+  mailgunApiKey: process.env.mailgunApiKey || '82797ed417ebb2eb4b885009b5c7c7a3-f45b080f-014b63ae',
+  emailDomain: process.env.emailDomain || `mg.${domain}`,
+  newsletterDomain: process.env.newsletterDomain || `newsletter.${domain}`
 };

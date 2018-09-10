@@ -1,8 +1,6 @@
 import * as mongoose from 'mongoose';
 import * as crypto from 'crypto';
-import {env} from '../config';
-import * as Sendmail from 'sendmail';
-const sendmail = Sendmail();
+import {env, sendmail} from '../config';
 
 const Schema = mongoose.Schema;
 

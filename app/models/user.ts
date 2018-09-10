@@ -1,11 +1,9 @@
 import locks from "mongo-locks";
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcryptjs';
-import * as Sendmail from 'sendmail';
-const sendmail = Sendmail();
 import * as assert from 'assert';
 import * as randomstring from 'randomstring';
-import env from '../config/env';
+import {env, sendmail} from '../config';
 import { ObjectId } from 'bson';
 import { IAbstractUser } from 'lib/user';
 import * as _ from "lodash";
