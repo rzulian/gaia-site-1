@@ -34,7 +34,17 @@
         <div class="card mt-3">
           <div class="card-body">
             <h5 class="card-title">User management</h5>
-            <label for="email-confirm">Resend confirmation email</label>
+            
+            <label for="invitedEmail">Invite new user</label>
+            <form @submit.prevent="invite(invitedEmail)">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="Email" id="invitedEmail" v-model="invitedEmail" required>
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit" >Invite</button>
+                </div>
+              </div>
+            </form>
+            <label for="email-confirm" class="mt-3">Resend confirmation email</label>
             <form @submit.prevent="resend(emailConfirm)">
               <div class="input-group">
                 <input type="email" class="form-control" placeholder="Email" id="email-confirm" v-model="emailConfirm" required>
@@ -69,6 +79,7 @@ export default class Admin extends Vue {
   serverInfo: { disk: {availabe: number, total: number}, nbUsers: number } | null = null;
   emailConfirm = "";
   username = "";
+  invitedEmail = "";
   gameId = "";
   
   constructor() {
@@ -87,6 +98,13 @@ export default class Admin extends Vue {
   resend(email: string) {
     $.post('/api/admin/resend-confirmation', {email}).then(
       info => handleInfo("Email sent!"),
+      handleError
+    )
+  }
+
+  invite(email: string) {
+    $.post('/api/admin/invite', {email}).then(
+      info => handleInfo("Invite sent!"),
       handleError
     )
   }

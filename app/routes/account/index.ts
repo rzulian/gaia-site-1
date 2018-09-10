@@ -1,10 +1,12 @@
 import * as _ from 'lodash';
 import * as passport from 'passport';
+import { env } from '../../config';
 import Router from 'express-promise-router';
 import { loggedOut, loggedIn } from '../utils';
-import { User } from '../../models';
+import { User, Invite } from '../../models';
 import * as createError from 'http-errors';
 import { promisify } from 'util';
+import { NextFunction, Request, Response } from 'express';
 
 const router = Router();
 
@@ -18,7 +20,7 @@ router.post('/', loggedIn, async (req, res) => {
   res.json({user: req.user, sessionID: req.sessionID});
 });
 
-router.post('/signup', loggedOut, passport.authenticate('local-signup'), (req, res) => {
+router.post('/signup', loggedOut, checkInvite, passport.authenticate('local-signup'), (req, res) => {
   res.json({user: req.user, sessionID: req.sessionID});
 });
 
@@ -64,5 +66,26 @@ router.post('/forget', loggedOut, async (req, res) => {
 
   res.send('ok');
 });
+
+async function checkInvite(req: Request, res: Response, next: NextFunction) {
+  if (!env.inviteOnly) {
+    next();
+    return;
+  }
+
+  const {email, inviteCode} = req.body;
+
+  if (!inviteCode) {
+    next(createError(401, "Please specify an invite code"));
+  }
+
+  const invite = await Invite.findOne({email, code: inviteCode});
+
+  if (!invite) {
+    next(createError(401, "No matching invitation, you cannot create an account"));
+  }
+
+  next();
+}
 
 export default router;

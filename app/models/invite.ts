@@ -26,7 +26,7 @@ const inviteSchema = new Schema({
 });
 
 inviteSchema.method('sendEmail', function(this: InviteDocument) {
-  const url = `http://${env.domain}/confirm?code=${encodeURIComponent(this.code)}&user=${this.email}`;
+  const url = `http://${env.domain}/signup?code=${encodeURIComponent(this.code)}&user=${this.email}`;
 
   return sendmail({
     from: env.noreply,
@@ -34,7 +34,7 @@ inviteSchema.method('sendEmail', function(this: InviteDocument) {
     subject: "Invitation to play Gaia Project online",
     html: `
     <p>Hello, you've been invited to create an account at ${env.domain}!</p>
-    <p>This will allow you to play gaia-project online with other registered members. We're not able to launch full-scale for quite a long time, so invites are precious.</p> 
+    <p>This will allow you to play gaia-project online with other registered members. We're not able to launch full-scale for quite a long time, so invites are precious.</p>
     <p>To create your account, click <a href='${url}'>here</a>.</p>
 
     <p>This email should really not be sent to the wrong person. But you can complain at ${env.contact} if it was.</p>`,

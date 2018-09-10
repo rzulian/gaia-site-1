@@ -6,6 +6,7 @@ export default {
   noreply: process.env.noreply || `Gaia Project <no-reply@${domain}>`,
   contact: process.env.contact || `Gaia Project <contact@${domain}>`,
   title: process.env.title || 'Gaia Project',
+  inviteOnly: process.env.inviteOnly || false,
   minPasswordLength: process.env.minPasswordLength || 6,
   sessionSecret: process.env.sessionSecret || 'Quel est donc le secret mystère du succès de Gaia Project?!',
   port: +process.env.port || 50801,

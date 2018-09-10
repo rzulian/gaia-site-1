@@ -41,3 +41,11 @@ another domain, but you need to add it to /etc/hosts as a local domain.
 
 You also need to setup nginx, and maybe remove the /etc/nginx/sites-enabled/default!
 
+## Environment
+
+Most of the configurable environment variables are shown in `app/config/env.ts`. You just need to create a `.env` file at the root of the project
+with the changed environement variables.
+
+For client changes, you need to create **another** `.env` file in the front folder. Client environment variables:
+
+- VUE_APP_inviteOnly : Make the UI only allow new accounts from invitations
