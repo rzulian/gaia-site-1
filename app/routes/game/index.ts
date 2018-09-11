@@ -92,7 +92,9 @@ router.get('/:gameId/players', async (req, res) => {
 router.post('/:gameId/chat', loggedIn, async (req, res) => {
   assert(req.user && req.game.players.some(pl => pl.equals(req.user._id)), "You must be a player of the game to chat!");
   assert(req.body.type === 'text' || req.body.type === 'emoji');
-  assert(_.get(req, 'body.data.text'));
+
+  const text = _.get(req, 'body.data.text', '').trim();
+  assert(text.length > 0, "Empty chat message");
 
   const doc = new ChatMessage({room: req.game._id, author: req.user._id, data: {text: req.body.data.text}, type: req.body.type});
   await doc.save();

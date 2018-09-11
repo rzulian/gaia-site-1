@@ -103,6 +103,10 @@ export default class ChatRoom extends Vue {
       message.data.meta = `${date.getFullYear()}-${cv(date.getMonth()+1)}-${cv(date.getDate())} ${cv(date.getHours())}:${cv(date.getMinutes())}`;
     }
 
+    if (message.type === "emoji") {
+      message.data.emoji = message.data.text;
+    }
+
     if (message.author === this.me) {
       message.author = 'me';
     }
@@ -111,6 +115,11 @@ export default class ChatRoom extends Vue {
   }
 
   sendMessage(msg: Message) {
+    if (msg.data.emoji) {
+      msg.data.text = msg.data.emoji;
+      delete msg.data.emoji;
+    }
+    
     $.post(`/api/game/${this.room}/chat`, msg).then(
       () => {}, // Mark message as delivered? by adding meta: 'Delivered'
       err => handleError(err)
@@ -181,8 +190,9 @@ interface Message {
   meta?: string,
   text: string,
   data?: {
-    meta: string,
-    text: string
+    meta?: string,
+    text: string,
+    emoji?: string
   }
 }
 </script>
