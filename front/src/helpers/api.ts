@@ -1,19 +1,22 @@
 import * as $ from 'jquery';
 import { GameApi } from '@gaia-project/viewer';
+import Engine from '@gaia-project/engine';
 
 const api: GameApi = {
-  loadGame(gameId: string) {
-    return $.get(`${window.location.origin}/api/game/${gameId}/data`) as any;
+  async loadGame(gameId: string) {
+    const data = await $.get(`${window.location.origin}/api/game/${gameId}/data`) as any;
+    return Engine.fromData(data);
   },
   checkStatus(gameId: string) {
     return $.get(`${window.location.origin}/api/game/${gameId}/status`) as any;
   },
-  addMove(gameId: string, move: string) {
-    return $.post(`${window.location.origin}/api/game/${gameId}/move`,  {move}) as any;
+  async addMove(gameId: string, move: string) {
+    const data = await $.post(`${window.location.origin}/api/game/${gameId}/move`,  {move}) as any;
+
+    return Engine.fromData(data);
   },
-  replay(moves: string[]) {
-    // Todo: new Engine(moves)
-    throw new Error("not implemented");
+  async replay(moves: string[]) {
+    return new Engine(moves);
   }
 };
 
