@@ -20,7 +20,7 @@
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
-      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{noFactionFill}" />
+      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{'no-faction-fill': noFactionFill}" />
     </div>
     <ChatRoom v-if="game && (!open || players)" :room="gameId" :participants="chatParticipants" :me="user ? user._id : null" />
   </v-loading>

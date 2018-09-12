@@ -1,7 +1,7 @@
 <template>
   <div class="container account">
     <h1>Account</h1>
-    <div class="card mb-3">
+    <div class="card">
       <div class="card-body">
         <h5 class="card-title">Active games</h5>
         <v-loading :loading="loadingGames">
@@ -19,7 +19,7 @@
         </v-loading>
       </div>
     </div>
-    <div class="card">
+    <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">Settings</h5>
         <p v-if="user.account.username">Username: <strong>{{user.account.username}}</strong></p>
@@ -54,7 +54,7 @@
         </form>
       </div>
     </div>
-    <div class="card">
+    <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">Game Settings</h5>
         <form>
@@ -106,7 +106,6 @@ export default class Account extends Vue {
   }
 
   updateAccount() {
-    console.log(this, this.newsletter);
     $.post('/api/account', {
       settings: {
         mailing: {
@@ -115,6 +114,9 @@ export default class Account extends Vue {
             activated: this.gameNotification,
             delay: this.gameNotificationDelay
           }
+        },
+        game: {
+          noFactionFill: this.noFactionFill
         }
       }
     }).then(
