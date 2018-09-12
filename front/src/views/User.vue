@@ -6,7 +6,7 @@
         <h4>Active games</h4>
         <ul v-if="activeGames.length > 0" class="list-group">
           <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'current-turn': user._id === game.currentPlayer}]">
-            {{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p
+            {{game._id}} - <span v-if="game.data">R{{game.data.round}}</span><span v-else>{{game.players.length}}/{{game.options.nbPlayers}} players</span>
           </router-link>
         </ul>
         <p v-else>No ongoing games</p>
