@@ -4,7 +4,7 @@ const domain = process.env.domain || "gaiaform.io";
 export default {
   domain,
   noreply: process.env.noreply || `Gaia Project <no-reply@${domain}>`,
-  contact: process.env.contact || `Gaia Project <contact@${domain}>`,
+  contact: process.env.contact || `contact@${domain}`,
   title: process.env.title || 'Gaia Project',
   inviteOnly: process.env.inviteOnly || false,
   minPasswordLength: process.env.minPasswordLength || 6,
