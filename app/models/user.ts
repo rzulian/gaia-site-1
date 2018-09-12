@@ -63,7 +63,8 @@ const userSchema = new Schema({
       }
     },
     game: {
-      noFactionFill: Boolean
+      noFactionFill: Boolean,
+      researchIllustrations: Boolean
     }
   },
   security: {
