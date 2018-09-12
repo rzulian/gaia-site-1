@@ -12,6 +12,9 @@ export interface IAbstractUser {
         delay: number,
         activated: boolean
       } 
+    },
+    game: {
+      noFactionFill: boolean
     }
   };
   security: {

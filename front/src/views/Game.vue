@@ -20,7 +20,7 @@
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
-      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" />
+      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{noFactionFill}" />
     </div>
     <ChatRoom v-if="game && (!open || players)" :room="gameId" :participants="chatParticipants" :me="user ? user._id : null" />
   </v-loading>
@@ -28,6 +28,7 @@
 
 <script lang="ts">
 import $ from 'jquery';
+import get from 'lodash.get';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { handleError, handleInfo } from '@/utils';
 import { IGame } from '@lib/game';
@@ -119,6 +120,10 @@ export default class Game extends Vue {
   
   constructor() {
     super();
+  }
+
+  get noFactionFill() {
+    return get(this.user, 'settings.game.noFactionFill');
   }
 
   get user(): IUser {

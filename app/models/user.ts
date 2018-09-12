@@ -61,6 +61,9 @@ const userSchema = new Schema({
         delay: Number,
         activated: Boolean
       }
+    },
+    game: {
+      noFactionFill: Boolean
     }
   },
   security: {

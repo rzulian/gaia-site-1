@@ -54,6 +54,17 @@
         </form>
       </div>
     </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Game Settings</h5>
+        <form>
+          <div class="form-check">
+            <input type="checkbox" name="noFactionFill" id="noFactionFill" class="form-check-input" v-model="noFactionFill" @change="updateAccountDebounce">
+            <label class="form-check-label form-text" for="noFactionFill">Planets keep their original color when being occupied</label>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,6 +86,7 @@ export default class Account extends Vue {
   email: string = '';
   newsletter: boolean = false;
   loadingGames = true;
+  noFactionFill :boolean = false;
   gameNotification: boolean = false;
   gameNotificationDelay: number = 30*60;
 
@@ -82,6 +94,7 @@ export default class Account extends Vue {
     super();
 
     this.email = this.user.account.email;
+    this.noFactionFill = !!get(this, 'user.settings.game.noFactionFill');
     this.newsletter = !!get(this, 'user.settings.mailing.newsletter');
     this.gameNotification = !!get(this, 'user.settings.mailing.game.activated');
     this.gameNotificationDelay = get(this, 'user.settings.mailing.game.delay') || 30*60;

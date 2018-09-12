@@ -25,8 +25,6 @@ server {
 
   location / {
     try_files $uri $uri/ @front;
-
-    error_page 502 = @static;
   }
 
   location /api {
@@ -62,5 +60,7 @@ server {
 
     proxy_pass http://gaia_front;
     proxy_redirect off;
+
+    error_page 502 = @static;
   }
 }

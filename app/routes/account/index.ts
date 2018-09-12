@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', loggedIn, async (req, res) => {
-  _.merge(req.user, _.pick(req.body, ['settings.mailing']));
+  _.merge(req.user, _.pick(req.body, ['settings']));
   await req.user.save();
   res.json({user: req.user, sessionID: req.sessionID});
 });
