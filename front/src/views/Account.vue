@@ -62,7 +62,7 @@
             <input type="checkbox" name="noFactionFill" id="noFactionFill" class="form-check-input" v-model="noFactionFill" @change="updateAccountDebounce">
             <label class="form-check-label form-text" for="noFactionFill">Planets keep their original color when being occupied</label>
           </div>
-          <div class="form-check" v-show="false">
+          <div class="form-check">
             <input type="checkbox" name="researchIllustrations" id="researchIllustrations" class="form-check-input" v-model="researchIllustrations" @change="updateAccountDebounce">
             <label class="form-check-label form-text" for="researchIllustrations">Show resource illustrations in research track (WIP)</label>
           </div>
