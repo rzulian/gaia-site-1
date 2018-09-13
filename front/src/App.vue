@@ -5,6 +5,7 @@
     <main class="container-fluid">
       <router-view/>
     </main>
+    <Footer />
   </div>
 </template>
 
@@ -12,11 +13,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue';
 import Alert from '@/components/Alert.vue';
+import Footer from '@/components/Footer.vue';
 
 @Component({
   components: {
     Navbar,
-    Alert
+    Alert,
+    Footer
   },
 })
 export default class App extends Vue {
