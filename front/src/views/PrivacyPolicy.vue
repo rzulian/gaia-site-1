@@ -19,5 +19,16 @@
     </p>
 
     <p>To request the removal of your user data, please send us an email using our email address in the footer.</p>
+
+    <h2>Cookies</h2>
+
+    <p>
+      We do not use any cookies for unauthenticated users. There is only a single cookie for authenticated users, containing a reference to their session.
+      Logging out will remove that cookie.
+    </p>
+
+    <p>
+      There is no third-party service like analytics or advertising on the website. We do not plan on adding third-party scripts on the website.
+    </p>
   </div>
 </template>
