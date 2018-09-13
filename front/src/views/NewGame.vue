@@ -74,7 +74,7 @@ export default class NewGame extends Vue {
   join = true;
   randomOrder = true;
   unlisted = false;
-  timePerMove = 15*60;
+  timePerMove = 2*3600;
   timePerGame = 5 * 24 * 3600;
 
   createGame() {
