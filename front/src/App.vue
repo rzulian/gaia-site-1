@@ -5,6 +5,7 @@
     <main class="container-fluid">
       <router-view/>
     </main>
+    <div style="flex-grow: 1" />
     <Footer />
   </div>
 </template>
@@ -34,6 +35,10 @@ export default class App extends Vue {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>
