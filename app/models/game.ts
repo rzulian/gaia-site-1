@@ -181,9 +181,7 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
     const oldRound = engine.round;
 
     engine.move(move);
-    if (!engine.availableCommands) {
-      engine.generateAvailableCommands();
-    }
+    engine.generateAvailableCommandsIfNeeded();
 
     if (engine.newTurn) {
       game.afterMove(engine, oldRound);
@@ -218,13 +216,27 @@ gameSchema.method('afterMove', function(this: Game, engine: Engine, oldRound: nu
 });
 
 gameSchema.method('autoMove', function(this: Game, engine: Engine) {
-  while (this.active && engine.player(engine.playerToMove).dropped) {
-    const oldRound = engine.round;
+  let modified: boolean;
+  do {
+    modified = false;
+    let oldRound = engine.round;
+    
+    while (this.active && engine.player(engine.playerToMove).dropped) {
+      engine.autoPass();
 
-    engine.autoPass();
+      this.afterMove(engine, oldRound);
+      modified = true;
+      oldRound = engine.round;
+    }
 
-    this.afterMove(engine, oldRound);
-  }
+    oldRound = engine.round;
+
+    while (engine.autoChargePower()) {
+      this.afterMove(engine, oldRound);
+      modified = true;
+      oldRound = engine.round;
+    }
+  } while (modified);
 });
 
 gameSchema.method('setCurrentPlayer', function(this: Game, player: ObjectId) {
