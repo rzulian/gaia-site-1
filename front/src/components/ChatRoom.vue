@@ -11,6 +11,7 @@
       :open="openChat"
       :colors="colors"
       :showEmoji="true"
+      :alwaysScrollToBottom="true"
       :showFile="false" />
   </div>
 </template>
