@@ -51,6 +51,12 @@
         </label>
       </div>
       <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="advancedRules" v-model="advancedRules">
+        <label class="form-check-label" for="advancedRules">
+          Advanced rules. Last player rotates sectors
+        </label>
+      </div>
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" id="unlisted" v-model="unlisted">
         <label class="form-check-label" for="unlisted">
           Unlisted (won't show in Open games). Check if you don't want strangers joining your game.
@@ -74,12 +80,13 @@ export default class NewGame extends Vue {
   join = true;
   randomOrder = true;
   unlisted = false;
+  advancedRules = false;
   timePerMove = 2*3600;
   timePerGame = 5 * 24 * 3600;
 
   createGame() {
-    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame} = this;
-    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame}).then(
+    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules} = this;
+    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     )

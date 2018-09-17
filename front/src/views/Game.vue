@@ -1,19 +1,32 @@
 <template>
   <v-loading :loading="!game">
-    <div v-if="game && open" class="container text-center">
-      <h1>Game {{game._id}}</h1>
-      <p>{{game.options.nbPlayers}} players game</p>
-      <p>{{timePerGame}} per player, with an additional {{timePerMove}} per move</p>
-      <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
-      <v-loading :loading="!players" class="mb-2">
+    <div v-if="game && open" class="col-md-6 offset-md-3">
+      <h1 class="mb-3">Open game</h1>
+      <p>Game <i>{{game._id}}</i>, created by <v-loading :loading="!players" class="d-inline">{{players.find(pl => pl.id === game.creator).name}}</v-loading></p>
+      
+      <span>{{timePerGame}} per player, with an additional {{timePerMove}} per move</span><br>
+
+      
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="random-player-order" v-model="game.options.randomPlayerOrder" disabled>
+        <label class="form-check-label" for="random-player-order">
+          Randomize player order
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="advancedRules" v-model="game.options.advancedRules" disabled>
+        <label class="form-check-label" for="advancedRules">
+          Advanced rules. Last player rotates sectors.
+        </label>
+      </div>
+    
+      <v-loading :loading="!players" class="my-3">
         <div v-if="players">
-          <p>
-            Creator: {{players.find(pl => pl.id === game.creator).name}}
-          </p>
           <p v-if="game.players.length > 0">
             Players: <br/>
             <span v-for="player in game.players" :key="player">- {{players.find(pl => pl.id === player).name}} <br/></span>
           </p>
+          <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
         </div>
       </v-loading>
       <button class="btn btn-secondary" v-if="user && game.players.includes(user._id)" disabled>You already joined</button>

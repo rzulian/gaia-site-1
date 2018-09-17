@@ -75,6 +75,10 @@ const gameSchema = new Schema({
       type: Boolean,
       default: true
     },
+    advancedRules: {
+      type: Boolean,
+      default: false
+    },
     nbPlayers: {
       type: Number,
       default: 2,
@@ -220,7 +224,7 @@ gameSchema.method('autoMove', function(this: Game, engine: Engine) {
   do {
     modified = false;
     let oldRound = engine.round;
-    
+
     while (this.active && engine.player(engine.playerToMove).dropped) {
       engine.autoPass();
 
@@ -303,6 +307,8 @@ gameSchema.method('checkMoveDeadline', async function(this: Game) {
     if ((new Date()) <= game.nextMoveDeadline) {
       return;
     }
+
+    console.log("move deadline expired for game", game.id);
 
     const engine = Engine.fromData(game.data);
 

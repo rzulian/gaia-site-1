@@ -11,6 +11,7 @@ export interface IAbstractGame<T= string> {
 
   options: {
     randomPlayerOrder: boolean;
+    advancedRules: boolean;
     nbPlayers: number;
     unlisted: boolean;
     timePerMove: number;

@@ -13,6 +13,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const join = req.body.join === "true";
   const randomOrder = req.body.randomOrder === "true";
   const unlisted = req.body.unlisted === "true";
+  const advancedRules = req.body.advancedRules === "true";
   const timePerMove = +req.body.timePerMove;
   const timePerGame = +req.body.timePerGame;
 
@@ -39,6 +40,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.unlisted = unlisted;
   game.options.timePerMove = timePerMove;
   game.options.timePerGame = timePerGame;
+  game.options.advancedRules = advancedRules;
   game._id = gameId;
 
   if (join) {
