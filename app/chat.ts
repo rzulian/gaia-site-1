@@ -26,7 +26,7 @@ wss.on("connection", ws => {
     }
 
     // Show only last 100 messages
-    const roomMessages = await ChatMessage.find({room: data.room}).lean(true).sort("-id").limit(100);
+    const roomMessages = await ChatMessage.find({room: data.room}).lean(true).sort("-_id").limit(100);
 
     for (const msg of roomMessages) {
       delete msg.room;
@@ -35,7 +35,7 @@ wss.on("connection", ws => {
     ws.send(JSON.stringify({
       room: data.room,
       command: 'messageList',
-      messages: roomMessages
+      messages: roomMessages.reverse()
     }));
   });
 
