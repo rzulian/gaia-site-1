@@ -140,7 +140,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
         game.players = _.shuffle(game.players);
       }
 
-      const engine = new Engine([`init ${game.options.nbPlayers} ${game._id}`]);
+      const engine = new Engine([`init ${game.options.nbPlayers} ${game._id}`], {advancedRules: !!game.options.advancedRules});
       engine.generateAvailableCommands();
 
       game.data = JSON.parse(JSON.stringify(engine));
