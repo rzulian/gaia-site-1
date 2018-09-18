@@ -16,7 +16,7 @@
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="advancedRules" v-model="game.options.advancedRules" disabled>
         <label class="form-check-label" for="advancedRules">
-          Advanced rules. Last player rotates sectors.
+          Last player rotates sectors before faction selection
         </label>
       </div>
     
