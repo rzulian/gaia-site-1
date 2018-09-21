@@ -84,7 +84,8 @@ const userSchema = new Schema({
     }
   },
   meta: {
-    nextGameNotification: Date
+    nextGameNotification: Date,
+    lastGameNotification: Date
   },
   authority: String,
 }, { toJSON: {transform: (doc, ret) => {
@@ -243,6 +244,13 @@ userSchema.method('sendGameNotificationEmail', async function(this: User) {
       return;
     }
 
+    /* check if lastMove was present at the time of the last notification */
+    const count = await Game.count({currentPlayer: user._id, lastMove: {$lt: user.meta.lastGameNotification}}).limit(1);
+
+    if (count > 0) {
+      return;
+    }
+
     const activeGames = await Game.findWithPlayersTurn(user.id).select('-data').lean(true);
 
     if (activeGames.length === 0) {
@@ -287,7 +295,9 @@ userSchema.method('sendGameNotificationEmail', async function(this: User) {
       <p>You can also change your email settings and unsubscribe <a href='http://${env.domain}/account'>here</a> with a simple click.</p>`,
     });
 
-    user.meta.nextGameNotification = new Date(Date.now() + (user.settings.mailing.game.delay || 30 * 60) * 1000);;
+    user.meta.nextGameNotification = undefined;
+    user.meta.lastGameNotification = new Date(Date.now());
+
     await user.save();
   } catch (err) {
     console.error(err);

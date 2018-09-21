@@ -32,7 +32,8 @@ export interface IAbstractUser {
     }
   };
   meta: {
-    nextGameNotification: Date
+    nextGameNotification: Date,
+    lastGameNotification: Date
   };
   authority: string;
 }
