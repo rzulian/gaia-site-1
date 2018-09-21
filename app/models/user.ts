@@ -287,7 +287,7 @@ userSchema.method('sendGameNotificationEmail', async function(this: User) {
       <p>You can also change your email settings and unsubscribe <a href='http://${env.domain}/account'>here</a> with a simple click.</p>`,
     });
 
-    user.meta.nextGameNotification = undefined;
+    user.meta.nextGameNotification = new Date(Date.now() + (this.settings.mailing.game.delay || 30 * 60) * 1000);
     await user.save();
   } catch (err) {
     console.error(err);
