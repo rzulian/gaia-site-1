@@ -245,7 +245,7 @@ userSchema.method('sendGameNotificationEmail', async function(this: User) {
     }
 
     /* check if lastMove was present at the time of the last notification */
-    const count = await Game.count({currentPlayer: user._id, lastMove: {$lt: user.meta.lastGameNotification}}).limit(1);
+    const count = await Game.count({currentPlayer: user._id, active: true, lastMove: {$lt: user.meta.lastGameNotification}}).limit(1);
 
     if (count > 0) {
       return;
