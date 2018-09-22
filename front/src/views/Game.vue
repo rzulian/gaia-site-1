@@ -33,7 +33,7 @@
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
     </div>
     <div v-else-if="game">
-      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{'no-faction-fill': noFactionFill, 'hide-research-track-resources': !researchIllustrations}" />
+      <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{'no-faction-fill': noFactionFill, 'hide-research-track-resources': false}" />
     </div>
     <ChatRoom v-if="game && (!open || players)" :room="gameId" :participants="chatParticipants" :me="user ? user._id : null" />
   </v-loading>
@@ -137,10 +137,6 @@ export default class Game extends Vue {
 
   get noFactionFill() {
     return get(this.user, 'settings.game.noFactionFill');
-  }
-
-  get researchIllustrations() {
-    return get(this.user, 'settings.game.researchIllustrations');
   }
 
   get user(): IUser {

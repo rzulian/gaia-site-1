@@ -14,8 +14,7 @@ export interface IAbstractUser {
       } 
     },
     game: {
-      noFactionFill: boolean,
-      researchIllustrations: boolean
+      noFactionFill: boolean
     }
   };
   security: {

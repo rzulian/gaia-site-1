@@ -62,10 +62,6 @@
             <input type="checkbox" name="noFactionFill" id="noFactionFill" class="form-check-input" v-model="noFactionFill" @change="updateAccountDebounce">
             <label class="form-check-label form-text" for="noFactionFill">Planets keep their original color when being occupied</label>
           </div>
-          <div class="form-check">
-            <input type="checkbox" name="researchIllustrations" id="researchIllustrations" class="form-check-input" v-model="researchIllustrations" @change="updateAccountDebounce">
-            <label class="form-check-label form-text" for="researchIllustrations">Show resource illustrations in research track (WIP)</label>
-          </div>
         </form>
       </div>
     </div>
@@ -91,7 +87,6 @@ export default class Account extends Vue {
   newsletter: boolean = false;
   loadingGames = true;
   noFactionFill :boolean = false;
-  researchIllustrations: boolean = false;
   gameNotification: boolean = false;
   gameNotificationDelay: number = 30*60;
 
@@ -101,7 +96,6 @@ export default class Account extends Vue {
     this.email = this.user.account.email;
     this.noFactionFill = !!get(this, 'user.settings.game.noFactionFill');
     this.newsletter = !!get(this, 'user.settings.mailing.newsletter');
-    this.researchIllustrations = !!get(this, 'user.settings.game.researchIllustrations');
     this.gameNotification = !!get(this, 'user.settings.mailing.game.activated');
     this.gameNotificationDelay = get(this, 'user.settings.mailing.game.delay') || 30*60;
     this.updateAccount.bind(this);
@@ -122,8 +116,7 @@ export default class Account extends Vue {
           }
         },
         game: {
-          noFactionFill: this.noFactionFill,
-          researchIllustrations: this.researchIllustrations
+          noFactionFill: this.noFactionFill
         }
       }
     }).then(
