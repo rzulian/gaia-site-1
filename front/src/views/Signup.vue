@@ -35,7 +35,7 @@
       </div>
       <div class="form-check">
         <input type="checkbox" name="newsletter" id="signup-newsletter" class="form-check-input" v-model="newsletter">
-        <label class="form-check-label form-text" for="signup-newsletter">Get newsletter, one email every two months at most.</label>
+        <label class="form-check-label form-text" for="signup-newsletter">Get newsletter, up to six emails per year.</label>
       </div>
 
       <input type="hidden" name="action" value="signup">

@@ -32,7 +32,7 @@
           </div>
           <div class="form-check">
             <input type="checkbox" name="newsletter" id="signup-newsletter" class="form-check-input" v-model="newsletter" @change="updateAccountDebounce">
-            <label class="form-check-label form-text" for="signup-newsletter">Receive news by email, at most one email every two months</label>
+            <label class="form-check-label form-text" for="signup-newsletter">Get newsletter, up to six emails per year.</label>
           </div>
           <div class="form-row align-items-center">
             <div class="col-auto">
