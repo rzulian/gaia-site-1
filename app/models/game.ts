@@ -153,7 +153,7 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
       // TODO: remove OR condition when migration is over
       game.remainingTime = game.players.map(pl => game.options.timePerGame || 15 * 24 * 3600);
 
-      game.setCurrentPlayer(new ObjectId(engine.player(engine.playerToMove).auth));
+      game.setCurrentPlayer(new ObjectId(game.data.players[engine.playerToMove].auth));
     }
 
     await game.save();
