@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-fixed-top mb-md-3 mb-1" id="navbar">
-    <router-link class="navbar-brand" to="/">Gaia Project</router-link>
+    <router-link class="navbar-brand" to="/"><span @click="navbarClick">Gaia Project</span></router-link>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menu déroulant de navigation">
       <span class="navbar-toggler-icon"></span>
@@ -83,6 +83,10 @@ export default class Navbar extends Vue {
       },
       err => handleError(err)
     );
+  }
+
+  navbarClick() {
+    this.$store.dispatch("logoClick");
   }
 
   signout() {

@@ -36,8 +36,17 @@ import { IAbstractGame } from '@lib/game';
 
 @Component<Home>({
   created() {
-    $.get('/api/game/active?count=5').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
-    $.get('/api/game/open?count=5').then(games => this.openGames = games, handleError).always(() => this.loadingOpenGames = false);
+    this.loadGames();
+    this.subscription = this.$store.subscribeAction(({type}) => {
+      if (type !== 'logoClick' || this.loadingGames || this.loadingOpenGames) {
+        return;
+      }
+
+      this.loadGames();
+    });
+  },
+  destroyed() {
+    this.subscription();
   }
 })
 export default class Home extends Vue {
@@ -45,12 +54,20 @@ export default class Home extends Vue {
   openGames = [];
   loadingGames = true;
   loadingOpenGames = true;
+  subscription: any = null;
 
   timePerGame(game: IAbstractGame) {
     switch (game.options.timePerGame) {
       case 24*3600: return "1 day";
       default: return (game.options.timePerGame / (24*3600)) + " days";
     }
+  }
+
+  loadGames() {
+    this.loadingGames = this.loadingOpenGames = true;
+
+    $.get('/api/game/active?count=5').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
+    $.get('/api/game/open?count=5').then(games => this.openGames = games, handleError).always(() => this.loadingOpenGames = false);
   }
 }
 </script>

@@ -39,7 +39,7 @@ export default new Vuex.Store({
     removeInfo: state => state.info = state.infoIssued = null
   },
   actions: {
-
+    logoClick() {}
   },
   getters: {
     admin: state => !!state.user && state.user.authority === 'admin',
