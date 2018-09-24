@@ -33,6 +33,10 @@ router.get('/:userId/games/active', async (req , res) => {
   res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true}).limit(queryCount(req)).select(Game.basics()));
 });
 
+router.get('/:userId/games/current-turn', async (req , res) => {
+  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true, currentPlayer: req.foundUser._id}).limit(queryCount(req)).select(Game.basics()));
+});
+
 router.get('/:userId/games/closed', async (req , res) => {
   res.json(await Game.findWithPlayer(req.foundUser._id).where({active: false}).limit(queryCount(req)).select(Game.basics()));
 });

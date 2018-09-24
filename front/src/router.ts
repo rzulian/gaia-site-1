@@ -76,6 +76,20 @@ const router = new Router({
       }
     },
     {
+      path: '/next-game',
+      beforeEnter(to, from, next) {
+        if (store.state.activeGames.length > 0) {
+          const activeGames = store.state.activeGames;
+          const currentIdx = activeGames.indexOf(from.params.gameId);
+          const gameId = activeGames[(currentIdx + 1) % activeGames.length];
+
+          next('/game/' + gameId);
+        } else {
+          next('/account');
+        }
+      }
+    },
+    {
       path: '/reset',
       component: ResetPassword,
       meta: {loggedOut: true}

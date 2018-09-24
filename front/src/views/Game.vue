@@ -69,17 +69,6 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 
       this.$router.push({path: '/user/' + encodeURIComponent(payload.name)});
     });
-    this.mutationSubscription = (this.$store as any).subscribe(({type, payload}) => {
-      if (type === 'updateUser') {
-        setTimeout(() => this.$refs.viewer.updateFavicon());
-        return;
-      }
-    });
-  },
-  // Restore regular favicon when leaving game
-  beforeRouteLeave(to, from, next) {
-    $("#favicon-gp").attr("href", "/favicon.png");
-    next();
   },
   computed: {
     open() {
@@ -119,9 +108,6 @@ import {Game as GameViewer} from '@gaia-project/viewer';
     if (this.actionSubscription) {
       this.actionSubscription();
     }
-    if (this.mutationSubscription) {
-      this.mutationSubscription();
-    }
   }
 })
 export default class Game extends Vue {
@@ -129,7 +115,6 @@ export default class Game extends Vue {
   api = api;
   players: Array<{id: string, name: string}> = null;
   private actionSubscription: () => {} = null;
-  private mutationSubscription: () => {} = null;
   
   constructor() {
     super();

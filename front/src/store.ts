@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { IAbstractUser } from '../../lib/user';
 import {gaiaViewer} from '@gaia-project/viewer';
-import $ from 'jquery';
 
 Vue.use(Vuex);
 
@@ -17,7 +16,8 @@ export default new Vuex.Store({
     error: null as string | null,
     info: null as string | null,
     errorIssued: null as Date | null,
-    infoIssued: null as Date | null
+    infoIssued: null as Date | null,
+    activeGames: [] as string[]
   },
   mutations: {
     updateUser: (state, data: {user: IAbstractUser, sessionID: string} | null ) => {
@@ -27,6 +27,7 @@ export default new Vuex.Store({
       } else {
         state.user = null;
         state.sessionID = null;
+        state.activeGames = [];
       }
       state.userLoaded = true;
     },
@@ -36,7 +37,20 @@ export default new Vuex.Store({
       state.error = state.errorIssued = null;
     },
     removeError: state => state.error = state.errorIssued = null,
-    removeInfo: state => state.info = state.infoIssued = null
+    removeInfo: state => state.info = state.infoIssued = null,
+    activeGames: (state, games: string[]) => state.activeGames = games,
+    removeActiveGame: (state, gameId: string) => {
+      if (state.activeGames.indexOf(gameId) === -1) {
+        return;
+      }
+      state.activeGames = state.activeGames.filter(game => game !== gameId);
+    },
+    addActiveGame: (state, gameId: string) => {
+      if (state.activeGames.indexOf(gameId) !== -1) {
+        return;
+      }
+      state.activeGames = [...state.activeGames, gameId];
+    }
   },
   actions: {
     logoClick() {}

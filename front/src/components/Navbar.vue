@@ -1,6 +1,9 @@
 <template>
   <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-fixed-top mb-md-3 mb-1" id="navbar">
     <router-link class="navbar-brand" to="/"><span @click="navbarClick">Gaia Project</span></router-link>
+    <router-link :class="['btn', 'btn-sm', 'mr-auto', {'btn-success': activeGames.length > 0, 'btn-secondary': activeGames.length === 0}]" style="border-radius: 50%; padding: 0.1rem 0.5rem; margin-top: 0.1rem" to="/next-game" v-if="user" title="Jump to next active game">
+      {{activeGames.length}}
+    </router-link>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menu déroulant de navigation">
       <span class="navbar-toggler-icon"></span>
@@ -70,10 +73,42 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { IAbstractUser } from '@lib/user';
 import { handleError } from '@/utils';
 
-@Component
+@Component({
+  created() {
+    this.interval = setInterval(() => this.refreshActiveGames(), 20000);
+    this.mutationSubscription = (this.$store as any).subscribe(({type, payload}) => {
+      if (type === 'updateUser') {
+        if (this.user && !this.hasUser) {
+          this.refreshActiveGames();
+        }
+      }
+    });
+
+    if (this.activeGames.length > 0) {
+      $("#favicon-site").attr("href", "/favicon-active.png");
+    } else {
+      $("#favicon-site").attr("href", "/favicon.png");
+    }
+  },
+  destroyed() {
+    clearInterval(this.interval);
+    this.mutationSubscription();
+  }, 
+  watch: {
+    activeGames(newVal) {
+      if (newVal.length > 0) {
+        $("#favicon-site").attr("href", "/favicon-active.png");
+      } else {
+        $("#favicon-site").attr("href", "/favicon.png");
+      }
+    }
+  }
+})
 export default class Navbar extends Vue {
   password = "";
   email = "";
+  interval: number = 0;
+  hasUser = false;
 
   login() {
     $.post('/api/account/login', {email: this.email, password: this.password}).then(
@@ -109,8 +144,28 @@ export default class Navbar extends Vue {
     return this.$store.state.user;
   }
 
+  get activeGames(): string[] {
+    return this.$store.state.activeGames;
+  }
+
   get admin(): boolean {
     return this.$store.getters.admin;
+  }
+
+  async refreshActiveGames() {
+    const user = this.user;
+    this.hasUser = !!user;
+
+    if (!user) {
+      return;
+    }
+
+    try {
+      const activeGames =  await $.get(`/api/user/${user._id}/games/current-turn`);
+      this.$store.commit("activeGames", activeGames.map(game => game._id));
+    } catch (err) {
+      handleError(err);
+    }
   }
 }
 </script>
