@@ -70,8 +70,8 @@
 <script lang="ts">
 import $ from 'jquery';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IAbstractUser } from '@lib/user';
 import { handleError } from '@/utils';
+import { User } from '@/types';
 
 @Component({
   created() {
@@ -112,7 +112,7 @@ export default class Navbar extends Vue {
 
   login() {
     $.post('/api/account/login', {email: this.email, password: this.password}).then(
-      (data: {user: IAbstractUser | null, sessionID: string}) => { 
+      (data: {user: User, sessionID: string}) => { 
         this.$store.commit('updateUser', data); 
         this.hideDropdown();
       },
@@ -140,7 +140,7 @@ export default class Navbar extends Vue {
     $('#loginDropDown').trigger('click');
   }
 
-  get user(): IAbstractUser | null {
+  get user(): User {
     return this.$store.state.user;
   }
 

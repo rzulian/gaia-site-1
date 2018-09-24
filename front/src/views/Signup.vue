@@ -52,7 +52,6 @@
 <script lang="ts">
 import $ from 'jquery';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IAbstractUser } from '../../../lib/user';
 import { handleError } from '@/utils';
 
 @Component({

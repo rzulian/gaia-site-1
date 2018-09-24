@@ -18,11 +18,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IAbstractUser } from '@lib/user';
+import { User } from '@/types';
 
 @Component
 export default class Footer extends Vue {
-  get user(): IAbstractUser | null {
+  get user(): User {
     return this.$store.state.user;
   }
 }

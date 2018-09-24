@@ -1,3 +1,1 @@
-import 'jquery';
-import 'popper.js';
-import 'bootstrap';
+// All libs are included in boostrap vue?

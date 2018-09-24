@@ -32,7 +32,7 @@
 import $ from 'jquery';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { handleError } from '@/utils';
-import { IAbstractGame } from '@lib/game';
+import { Game } from '@/types';
 
 @Component<Home>({
   created() {
@@ -56,7 +56,7 @@ export default class Home extends Vue {
   loadingOpenGames = true;
   subscription: any = null;
 
-  timePerGame(game: IAbstractGame) {
+  timePerGame(game: Game) {
     switch (game.options.timePerGame) {
       case 24*3600: return "1 day";
       default: return (game.options.timePerGame / (24*3600)) + " days";
@@ -74,7 +74,5 @@ export default class Home extends Vue {
 
 
 <style lang="scss" scoped>
-  .card {
-    //background-color: gainsboro
-  }
+  
 </style>

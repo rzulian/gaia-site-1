@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { IAbstractUser } from '../../lib/user';
 import {gaiaViewer} from '@gaia-project/viewer';
+import { User } from '@/types';
 
 Vue.use(Vuex);
 
@@ -10,7 +10,7 @@ export default new Vuex.Store({
     gaiaViewer
   },
   state: {
-    user: null as IAbstractUser | null,
+    user: null as User | null,
     sessionID: null as string | null,
     userLoaded: false as boolean,
     error: null as string | null,
@@ -20,7 +20,7 @@ export default new Vuex.Store({
     activeGames: [] as string[]
   },
   mutations: {
-    updateUser: (state, data: {user: IAbstractUser, sessionID: string} | null ) => {
+    updateUser: (state, data: {user: User, sessionID: string} | null ) => {
       if (data) {
         state.user = data.user;
         state.sessionID = data.sessionID;
