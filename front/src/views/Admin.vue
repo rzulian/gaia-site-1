@@ -27,6 +27,15 @@
                 </div>
               </div>
             </form>
+            <label for="gameIdR" class="mt-3">Replay game</label>
+            <form @submit.prevent="replayGame(gameIdR)">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Game ID" id="gameIdR" v-model="gameIdR" required>
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit" >Replay</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -81,6 +90,7 @@ export default class Admin extends Vue {
   username = "";
   invitedEmail = "";
   gameId = "";
+  gameIdR = "";
   
   constructor() {
     super();
@@ -112,6 +122,13 @@ export default class Admin extends Vue {
   deleteGame(gameId: string) {
     $.ajax(`/api/game/${gameId}`, {method: "delete"}).then(
       info => handleInfo("Game deleted!"),
+      handleError
+    )
+  }
+
+  replayGame(gameId: string) {
+    $.post(`/api/game/${gameId}/replay`, {}).then(
+      info => handleInfo("Game replayed."),
       handleError
     )
   }

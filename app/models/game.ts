@@ -15,6 +15,7 @@ interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
 
   join(player: ObjectId): Promise<Game>;
   unjoin(player: ObjectId): Promise<Game>;
+  replay(): Promise<Game>;
   move(move: string, auth: string): Promise<Game>;
   setCurrentPlayer(player: ObjectId): void;
   checkMoveDeadline(): Promise<void>;
@@ -219,6 +220,36 @@ gameSchema.method("move", async function(this: Game, move: string, auth: string)
     if (engine.newTurn) {
       await game.save();
     }
+
+    return game;
+  } finally {
+    free();
+  }
+});
+
+gameSchema.method("replay", async function(this: Game) {
+  // Prevent multiple moves being executed at the same time
+  const free = await locks.lock("move-game", this._id);
+
+  try {
+    // Once inside the lock, refresh the game
+    const game = await Game.findById(this._id);
+    const gameData = game.data;
+
+    assert(game.players.length === game.options.nbPlayers, "Wait for everybody to join");
+
+    const engine = new Engine(gameData.moveHistory, gameData.options);
+
+    engine.generateAvailableCommandsIfNeeded();
+
+    assert(engine.newTurn, "Last move of the game is incomplete");
+
+    game.afterMove(engine, engine.round);
+    game.autoMove(engine);
+
+    game.data = JSON.parse(JSON.stringify(engine));
+
+    await game.save();
 
     return game;
   } finally {

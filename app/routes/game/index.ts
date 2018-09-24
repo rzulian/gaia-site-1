@@ -133,4 +133,10 @@ router.delete('/:gameId', isAdmin, async (req, res) => {
   res.sendStatus(200);
 });
 
+router.post('/:gameId/replay', isAdmin, async (req, res) => {
+  await req.game.replay();
+
+  res.sendStatus(200);
+});
+
 export default router;

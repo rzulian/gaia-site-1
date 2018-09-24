@@ -21,7 +21,7 @@ export function handleError(err: Error | JQuery.jqXHR | string) {
     const resp = err.responseJSON;
     if (resp && resp instanceof Object && resp.message) {
       store.commit('error', resp.message);
-    } else if (err.responseText) {
+    } else if (err.responseText && !err.responseText.includes('<html>')) {
       store.commit('error', err.responseText);
     } else {
       store.commit('error', 'Server-side error');
