@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-fixed-top mb-md-3 mb-1" id="navbar">
     <router-link class="navbar-brand" to="/"><span @click="navbarClick">Gaia Project</span></router-link>
-    <router-link :class="['btn', 'btn-sm', 'mr-auto', {'btn-success': activeGames.length > 0, 'btn-secondary': activeGames.length === 0}]" style="border-radius: 50%; padding: 0.1rem 0.5rem; margin-top: 0.1rem" to="/next-game" v-if="user" title="Jump to next active game">
+    <router-link :class="['btn', 'btn-sm', 'mr-auto', {'btn-success': activeGames.length > 0, 'btn-secondary': activeGames.length === 0}]"  to="/next-game" v-if="user" title="Jump to next active game" id="active-game-count">
       {{activeGames.length}}
     </router-link>
 
@@ -207,6 +207,17 @@ export default class Navbar extends Vue {
 }
 #login-dp .form-group {
   margin-bottom: 10px;
+}
+
+#active-game-count {
+  border-radius: 50%; 
+  padding: 0.1rem 0.5rem;
+}
+
+@-moz-document url-prefix() {
+  #active-game-count {
+    margin-top: 0.1rem
+  }
 }
 
 </style>
