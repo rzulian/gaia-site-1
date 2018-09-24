@@ -52,15 +52,7 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 
 @Component<Game>({
   created() {
-    $.get(`/api/game/${this.gameId}`).then(game => {
-      this.game = game;
-
-      if (this.open) {
-        $.get(`/api/game/${this.gameId}/players`).then(players => {
-          this.players = players;
-        }, handleError);
-      }
-    }, handleError);
+    this.loadGame();
 
     this.actionSubscription = (this.$store as any).subscribeAction(({type, payload}) => {
       if (type !== 'gaiaViewer/playerClick') {
@@ -71,9 +63,6 @@ import {Game as GameViewer} from '@gaia-project/viewer';
     });
   },
   computed: {
-    open() {
-      return this.game.options.nbPlayers !== this.game.players.length;
-    },
     chatParticipants() {
       if (this.open) {
         return this.players.map(pl => ({id: pl.id, name: pl.name, imageUrl: '/images/factions/icons/random.svg'}));
@@ -100,6 +89,18 @@ import {Game as GameViewer} from '@gaia-project/viewer';
       }
     }
   },
+  watch: {
+    gameId(newVal, oldVal) {
+      this.game = null;
+      this.loadGame();
+    },
+    activeGames(newVal) {
+      // Reload game when all the players have joined and the player is active
+      if (this.game && this.open && newVal.indexOf(this.gameId) !== -1) {
+        this.loadGame();
+      }
+    }
+  },
   components: {
     GameViewer,
     ChatRoom
@@ -115,9 +116,26 @@ export default class Game extends Vue {
   api = api;
   players: Array<{id: string, name: string}> = null;
   private actionSubscription: () => {} = null;
-  
-  constructor() {
-    super();
+
+  loadGame() {
+    $.get(`/api/game/${this.gameId}`).then(game => {
+      this.game = game;
+
+      if (this.open) {
+        $.get(`/api/game/${this.gameId}/players`).then(players => {
+          this.players = players;
+        }, handleError);
+      }
+    }, handleError);
+  }
+
+  get activeGames() {
+    return this.$store.state.activeGames;
+  }
+
+  get open() {
+    // Set open to false when game is active -> auto refresh
+    return this.game.options.nbPlayers !== this.game.players.length;
   }
 
   get noFactionFill() {
