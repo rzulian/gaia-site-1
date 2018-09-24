@@ -373,6 +373,7 @@ gameSchema.method('checkMoveDeadline', async function(this: Game) {
       ChatMessage.create({room: game.id, type: "system", data: {text: "Game cancelled"}});
       game.currentPlayer = undefined;
       game.active = false;
+      engine.currentPlayer = undefined;
     } else {
       game.autoMove(engine);
     }

@@ -12,7 +12,7 @@ const api: GameApi = {
     const data = await $.get(`${window.location.origin}/api/game/${gameId}/data`) as any;
     const engine = Engine.fromData(data);
 
-    const isActive = engine.players.length > 0 && engine.player(engine.playerToMove).auth === currentUserId();
+    const isActive = engine.players.length > 0 && engine.playerToMove !== undefined && engine.player(engine.playerToMove).auth === currentUserId();
     store.commit(isActive ? "addActiveGame" : "removeActiveGame", gameId);
 
     return engine;
@@ -24,7 +24,7 @@ const api: GameApi = {
     const data = await $.post(`${window.location.origin}/api/game/${gameId}/move`,  {move}) as any;
     const engine = Engine.fromData(data);
 
-    const isActive = engine.players.length > 0 && engine.player(engine.playerToMove).auth === currentUserId();
+    const isActive = engine.players.length > 0 && engine.playerToMove !== undefined && engine.player(engine.playerToMove).auth === currentUserId();
     store.commit(isActive ? "addActiveGame" : "removeActiveGame", gameId);
 
     return engine;
