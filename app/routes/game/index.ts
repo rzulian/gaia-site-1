@@ -113,6 +113,11 @@ router.post('/:gameId/join', loggedIn, async (req, res) => {
   res.json(req.game);
 });
 
+router.post('/:gameId/unjoin', loggedIn, async (req, res) => {
+  req.game = await req.game.unjoin(req.user._id);
+  res.json(req.game);
+});
+
 router.post('/:gameId/move', loggedIn, async (req, res) => {
   const {move} = req.body;
   const auth = req.user.id;

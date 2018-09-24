@@ -29,8 +29,11 @@
           <p>Waiting on {{(game.options.nbPlayers - game.players.length) | pluralize('player')}}</p>
         </div>
       </v-loading>
-      <button class="btn btn-secondary" v-if="user && game.players.includes(user._id)" disabled>You already joined</button>
+      <button class="btn btn-warning" v-if="user && game.players.includes(user._id)" @click="modalShow = true">Leave</button>
       <button class="btn btn-secondary" v-else @click="join">Join!</button>
+      <b-modal v-if="user && game.players.includes(user._id)" v-model="modalShow" size="md" @ok="unjoin" :title="'Leave ' + gameId" ok-title="Leave">
+        Are you sure you want to leave this game?
+      </b-modal>
     </div>
     <div v-else-if="game">
       <GameViewer :api="api" :gameId="gameId" :auth="user ? user._id : null" ref="viewer" :class="{'no-faction-fill': noFactionFill, 'hide-research-track-resources': false}" />
@@ -114,6 +117,7 @@ import {Game as GameViewer} from '@gaia-project/viewer';
 export default class Game extends Vue {
   game: IGame = null;
   api = api;
+  modalShow = false;
   players: Array<{id: string, name: string}> = null;
   private actionSubscription: () => {} = null;
 
@@ -157,6 +161,10 @@ export default class Game extends Vue {
     }
 
     $.post(`/api/game/${this.gameId}/join`).then(game => this.game = game, handleError);
+  }
+
+  unjoin() {
+    $.post(`/api/game/${this.gameId}/unjoin`).then(game => this.game = game, handleError);
   }
 }
 

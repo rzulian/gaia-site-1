@@ -14,6 +14,7 @@ interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
   _id: string;
 
   join(player: ObjectId): Promise<Game>;
+  unjoin(player: ObjectId): Promise<Game>;
   move(move: string, auth: string): Promise<Game>;
   setCurrentPlayer(player: ObjectId): void;
   checkMoveDeadline(): Promise<void>;
@@ -161,6 +162,27 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
     if (start) {
       ChatMessage.create({room: game.id, type: "system", data: {text: "Game started"}});
     }
+
+    return game;
+  } finally {
+    free();
+  }
+});
+
+
+gameSchema.method("unjoin", async function(this: Game, player: ObjectId) {
+  // Prevent multiple joins being executed at the same time
+  const free = await locks.lock("join-game", this._id);
+
+  try {
+    // Once inside the lock, refresh the game
+    const game = await Game.findById(this._id);
+
+    assert(game.active && game.players.length <= game.options.nbPlayers, "This game can't be joined");
+    assert(game.players.some(id => id.equals(player)), "Player is not in this game");
+
+    game.players = game.players.filter(id => !id.equals(player));
+    await game.save();
 
     return game;
   } finally {
