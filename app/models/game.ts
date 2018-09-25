@@ -240,6 +240,11 @@ gameSchema.method("replay", async function(this: Game) {
 
     const engine = new Engine(gameData.moveHistory, gameData.options);
 
+    for (let i = 0; i < gameData.players.length; i++) {
+      engine.player(i).auth = gameData.players[i].auth;
+      engine.player(i).name = gameData.players[i].name;
+    }
+
     engine.generateAvailableCommandsIfNeeded();
 
     assert(engine.newTurn, "Last move of the game is incomplete");
