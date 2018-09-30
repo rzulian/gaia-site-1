@@ -10,7 +10,6 @@ import * as session from 'express-session';
 import * as ConnectMongo from 'connect-mongo';
 import * as morgan from 'morgan';
 import * as createError from 'http-errors';
-import locks from "mongo-locks";
 
 /* Configure passport */
 import './config/passport';
@@ -49,7 +48,7 @@ app.use(session(
     saveUninitialized: false,
     store: new MongoStore({mongooseConnection: mongoose.connection}),
     cookie: {
-      maxAge: new Date(Date.now() + 120 * 3600 * 1000), // 120 days expire
+      maxAge: 120 * 24 * 3600 * 1000, // 120 days expire
       httpOnly: false
     }
   })
