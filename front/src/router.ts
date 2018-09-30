@@ -25,12 +25,10 @@ const router = new Router({
     {
       path: '/',
       component: Home,
-      meta: {loggedIn: true}
     },
     {
       path: '/about',
       component: About,
-      meta: {loggedIn: true}
     },
     {
       path: '/privacy-policy',
@@ -89,8 +87,7 @@ const router = new Router({
         } else {
           next('/account');
         }
-      },
-      meta: {loggedIn: true}
+      }
     },
     {
       path: '/reset',
@@ -99,18 +96,15 @@ const router = new Router({
     },
     {
       path: '/forgotten-password',
-      component: ForgottenPassword,
-      meta: {loggedOut: true}
+      component: ForgottenPassword
     },
     {
       path: '/game/:gameId',
-      component: Game,
-      meta: {loggedIn: true}
+      component: Game
     },
     {
       path: '/user/:userName',
-      component: User,
-      meta: {loggedIn: true}
+      component: User
     },
     {
       path: '*',
