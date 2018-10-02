@@ -30,7 +30,8 @@ const api: GameApi = {
     return engine;
   },
   async replay(moves: string[]) {
-    return new Engine(moves);
+    const advancedRules = moves && (moves.lenght < 2 || moves[1].includes('rotate'));
+    return new Engine(moves, {advancedRules, noFedCheck: true});
   }
 };
 
