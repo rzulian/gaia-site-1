@@ -24,13 +24,11 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: Home,
-      meta: {loggedIn: true}
+      component: Home
     },
     {
       path: '/about',
-      component: About,
-      meta: {loggedIn: true}
+      component: About
     },
     {
       path: '/privacy-policy',
@@ -104,13 +102,11 @@ const router = new Router({
     },
     {
       path: '/game/:gameId',
-      component: Game,
-      meta: {loggedIn: true}
+      component: Game
     },
     {
       path: '/user/:userName',
-      component: User,
-      meta: {loggedIn: true}
+      component: User
     },
     {
       path: '*',
