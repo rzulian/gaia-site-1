@@ -100,8 +100,8 @@ export default class ChatRoom extends Vue {
   transformedMessage(message: Message) : Message {
     if (message.type === 'system') {
       const date = new Date(parseInt(message._id.substring(0, 8), 16) * 1000);
-      const cv = number => ('0' + (number+1)).substr(-2);
-      message.data.meta = `${date.getFullYear()}-${cv(date.getMonth())}-${cv(date.getDate())} ${cv(date.getHours())}:${cv(date.getMinutes())}`;
+      const cv = number => ('0' + (number)).substr(-2);
+      message.data.meta = `${date.getFullYear()}-${cv(date.getMonth() + 1)}-${cv(date.getDate())} ${cv(date.getHours())}:${cv(date.getMinutes())}`;
     }
 
     if (message.type === "emoji") {
