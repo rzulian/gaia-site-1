@@ -9,9 +9,9 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="seed">Seed</label>
-          <input class="form-control" id="seed" type="text" maxlength="25" name="gameId" v-model.trim="seed" placeholder="Optional-random-seed" aria-label="Random seed"> 
-          <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
+          <label for="seed">Custom Seed</label>
+          <input class="form-control" id="seed" type="text" maxlength="25" name="gameId" v-model.trim="seed" placeholder="Random seed" aria-label="Random seed"> 
+          <small class="form-text text-muted">Optional. Games sharing the same seed will have the same map and configuration.</small>
         </div>
       </div>
 
