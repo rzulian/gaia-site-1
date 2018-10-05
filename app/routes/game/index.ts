@@ -14,6 +14,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const randomOrder = req.body.randomOrder === "true";
   const unlisted = req.body.unlisted === "true";
   const advancedRules = req.body.advancedRules === "true";
+  const balancedGeneration = req.body.balancedGeneration === "true";
   const timePerMove = +req.body.timePerMove;
   const timePerGame = +req.body.timePerGame;
 
@@ -41,11 +42,14 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.timePerMove = timePerMove;
   game.options.timePerGame = timePerGame;
   game.options.advancedRules = advancedRules;
+  game.options.balancedGeneration = balancedGeneration;
   game._id = gameId;
 
   if (join) {
     game.players.push(req.user._id);
   }
+
+  await game.preload();
 
   await game.save();
 
@@ -72,7 +76,7 @@ router.get('/closed', async (req, res) => {
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'data': {$exists: false}}).sort('-lastMove').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'open': true}).sort('-lastMove').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
 });
 
 // Metadata about the game

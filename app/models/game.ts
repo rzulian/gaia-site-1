@@ -7,12 +7,16 @@ import Engine, { Phase } from '@gaia-project/engine';
 import * as _ from 'lodash';
 import User from "./user";
 import { ChatMessage } from ".";
+import * as rp from "request-promise";
+import * as crypto from "crypto";
 
 const Schema = mongoose.Schema;
 
 interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
   _id: string;
 
+  /** To call when all the options have been set. Might do a remote call for balanced game generation **/
+  preload(): Promise<void>;
   join(player: ObjectId): Promise<Game>;
   unjoin(player: ObjectId): Promise<Game>;
   replay(): Promise<Game>;
@@ -72,6 +76,10 @@ const gameSchema = new Schema({
     type: Boolean,
     default: true
   },
+  open: {
+    type: Boolean,
+    default: true
+  },
   options: {
     randomPlayerOrder: {
       type: Boolean,
@@ -121,6 +129,41 @@ gameSchema.static("basics", () => {
   return ["players", "currentPlayer", "options.nbPlayers", "active", "creator", "data.round", "data.phase"];
 });
 
+gameSchema.method("preload", async function(this: Game) {
+  const moves = [`init ${this.options.nbPlayers} ${this._id}`];
+  const engine = new Engine([], {advancedRules: !!this.options.advancedRules});
+
+  if (this.options.balancedGeneration) {
+    const md5sum = crypto.createHash("md5");
+    md5sum.update(this._id);
+    const number = parseInt(md5sum.digest("hex").slice(-10), 16);
+    const options = {
+      method: 'POST', 
+      uri: 'http://gaia-project.hol.es', 
+      body: {seed: number, player: this.options.nbPlayers}, 
+      json: true
+    };
+
+    console.log("balanced game", this.options.nbPlayers, number);
+
+    const resp = await rp(options);
+
+    engine.options.map = {map: resp.map};
+
+    // We use different standards for sides A & B of sectors than the online generator
+    if (this.options.nbPlayers === 2) {
+      engine.options.map.map.forEach(val => val.sector = val.sector.replace(/A/, 'B'));
+    } else {
+      engine.options.map.map.forEach(val => val.sector = val.sector.replace(/B/, 'A'));
+    }
+  }
+
+  engine.loadMoves(moves);
+  engine.generateAvailableCommands();
+
+  this.data = JSON.parse(JSON.stringify(engine));
+});
+
 gameSchema.method("join", async function(this: Game, player: ObjectId) {
   // Prevent multiple joins being executed at the same time
   const free = await locks.lock("join-game", this._id);
@@ -138,14 +181,16 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
 
     // If all the players have joined, we launch the game!
     if (start) {
+      game.open = false;
+
+      // Handle legacy games which weren't generated at this point
+      if (!game.data) {
+        await game.preload();
+      }
+
       if (game.options.randomPlayerOrder) {
         game.players = _.shuffle(game.players);
       }
-
-      const engine = new Engine([`init ${game.options.nbPlayers} ${game._id}`], {advancedRules: !!game.options.advancedRules});
-      engine.generateAvailableCommands();
-
-      game.data = JSON.parse(JSON.stringify(engine));
 
       for (let i = 0; i < game.data.players.length; i++) {
         game.data.players[i].name = (await User.findById(game.players[i], "account.username")).account.username;
@@ -155,9 +200,10 @@ gameSchema.method("join", async function(this: Game, player: ObjectId) {
       // TODO: remove OR condition when migration is over
       game.remainingTime = game.players.map(pl => game.options.timePerGame || 15 * 24 * 3600);
 
-      game.setCurrentPlayer(new ObjectId(game.data.players[engine.playerToMove].auth));
+      game.setCurrentPlayer(new ObjectId(game.data.players[game.data.currentPlayer].auth));
     }
 
+    game.markModified('data');
     await game.save();
 
     if (start) {

@@ -12,6 +12,7 @@ export interface IAbstractGame<T= string> {
   options: {
     randomPlayerOrder: boolean;
     advancedRules: boolean;
+    balancedGeneration: boolean;
     nbPlayers: number;
     unlisted: boolean;
     timePerMove: number;
@@ -21,6 +22,7 @@ export interface IAbstractGame<T= string> {
   remainingTime: number[];
 
   active: boolean;
+  open: boolean;
 
   lastMove: Date;
   updatedAt: Date;

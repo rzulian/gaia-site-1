@@ -51,6 +51,12 @@
         </label>
       </div>
       <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="balancedGeneration" v-model="balancedGeneration">
+        <label class="form-check-label" for="balancedGeneration">
+          <a href="http://gaia-project.hol.es" target="_blank">Balance</a> the map for fairness
+        </label>
+      </div>
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" id="advancedRules" v-model="advancedRules">
         <label class="form-check-label" for="advancedRules">
           Last player rotates sectors before faction selection
@@ -63,7 +69,7 @@
         </label>
       </div>
       
-      <button class="btn btn-secondary pull-right" type="submit">New game</button>
+      <button class="btn btn-secondary mt-2" type="submit" :disabled="submitting">New game</button>
     </form>
   </div>
 </template>
@@ -81,15 +87,18 @@ export default class NewGame extends Vue {
   randomOrder = true;
   unlisted = false;
   advancedRules = false;
+  balancedGeneration = false;
   timePerMove = 2*3600;
   timePerGame = 5 * 24 * 3600;
+  submitting = false;
 
   createGame() {
-    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules} = this;
-    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules}).then(
+    this.submitting = true;
+    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration} = this;
+    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
-    )
+    ).then(() => this.submitting = false);
   }
 }
 
