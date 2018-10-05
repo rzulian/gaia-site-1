@@ -15,6 +15,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const unlisted = req.body.unlisted === "true";
   const advancedRules = req.body.advancedRules === "true";
   const balancedGeneration = req.body.balancedGeneration === "true";
+  const seed = req.body.seed || gameId;
   const timePerMove = +req.body.timePerMove;
   const timePerGame = +req.body.timePerGame;
 
@@ -23,6 +24,10 @@ router.post('/new-game', loggedIn, async (req , res) => {
 
   if (!/^[A-z0-9-]+$/.test(gameId)) {
     throw createError(400, "Wrong format for game id");
+  }
+
+  if (!/^[A-z0-9-]+$/.test(seed)) {
+    throw createError(400, "Wrong format for game seed");
   }
 
   if (![2, 3, 4].includes(players)) {
@@ -43,6 +48,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.timePerGame = timePerGame;
   game.options.advancedRules = advancedRules;
   game.options.balancedGeneration = balancedGeneration;
+  game.options.seed = seed;
   game._id = gameId;
 
   if (join) {

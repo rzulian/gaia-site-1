@@ -1,10 +1,18 @@
 <template>
   <div class="container">
     <form @submit.prevent="createGame">
-      <div class="form-group">
-        <label for="gameId">Game Id</label>
-        <input class="form-control" id="gameId" type="text" maxlength="25" name="gameId" v-model.trim="gameId" placeholder="Game ID" aria-label="Game ID" required> 
-        <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="gameId">Game Id</label>
+          <input class="form-control" id="gameId" type="text" maxlength="25" name="gameId" v-model.trim="gameId" placeholder="Game ID" aria-label="Game ID" required> 
+          <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="seed">Seed</label>
+          <input class="form-control" id="seed" type="text" maxlength="25" name="gameId" v-model.trim="seed" placeholder="Optional-random-seed" aria-label="Random seed"> 
+          <small class="form-text text-muted">Use only alphanumeric characters and hyphens.</small>
+        </div>
       </div>
 
       <div class="row">
@@ -53,7 +61,7 @@
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="balancedGeneration" v-model="balancedGeneration">
         <label class="form-check-label" for="balancedGeneration">
-          <a href="http://gaia-project.hol.es" target="_blank">Balance</a> the map for fairness
+          Balance the map for fairness. Credits to <a href="http://gaia-project.hol.es" target="_blank">bope</a>.
         </label>
       </div>
       <div class="form-check">
@@ -65,7 +73,7 @@
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="unlisted" v-model="unlisted">
         <label class="form-check-label" for="unlisted">
-          Unlisted (won't show in Open games). Check if you don't want strangers joining your game.
+          Unlisted. Check if you don't want strangers joining your game.
         </label>
       </div>
       
@@ -82,6 +90,7 @@ import { handleError, handleInfo } from '@/utils';
 @Component
 export default class NewGame extends Vue {
   gameId = randomId();
+  seed = undefined;
   players = 2;
   join = true;
   randomOrder = true;
@@ -94,8 +103,8 @@ export default class NewGame extends Vue {
 
   createGame() {
     this.submitting = true;
-    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration} = this;
-    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration}).then(
+    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed} = this;
+    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     ).then(() => this.submitting = false);

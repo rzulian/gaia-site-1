@@ -130,21 +130,30 @@ gameSchema.static("basics", () => {
 });
 
 gameSchema.method("preload", async function(this: Game) {
-  const moves = [`init ${this.options.nbPlayers} ${this._id}`];
+  const seed = this.options.seed || this._id;
+  const moves = [`init ${this.options.nbPlayers} ${seed}`];
   const engine = new Engine([], {advancedRules: !!this.options.advancedRules});
 
   if (this.options.balancedGeneration) {
-    const md5sum = crypto.createHash("md5");
-    md5sum.update(this._id);
-    const number = parseInt(md5sum.digest("hex").slice(-10), 16);
+    let numberSeed = 0;
+
+    // If the seed is a number, use it directly, otherwise use a number generated from its hash
+    if (''+parseInt(seed) === seed) {
+      numberSeed = parseInt(seed);
+    } else {
+      const md5sum = crypto.createHash("md5");
+      md5sum.update(seed);
+      numberSeed = (''+parseInt(seed)) === seed ? parseInt(seed) : parseInt(md5sum.digest("hex").slice(-10), 16);
+    }
+
     const options = {
       method: 'POST', 
       uri: 'http://gaia-project.hol.es', 
-      body: {seed: number, player: this.options.nbPlayers}, 
+      body: {seed: numberSeed, player: this.options.nbPlayers}, 
       json: true
     };
 
-    console.log("balanced game", this.options.nbPlayers, number);
+    console.log("balanced game", this.options.nbPlayers, numberSeed);
 
     const resp = await rp(options);
 
