@@ -2,7 +2,10 @@
   <v-loading :loading="!game">
     <div v-if="game && open" class="col-md-6 offset-md-3">
       <h1 class="mb-3">Open game</h1>
-      <p>Game <i>{{game._id}}</i>, created by <v-loading :loading="!players" class="d-inline">{{players.find(pl => pl.id === game.creator).name}}</v-loading></p>
+      <p>
+        Game <i>{{game._id}}</i>, created by <v-loading :loading="!players" class="d-inline">{{players.find(pl => pl.id === game.creator).name}}</v-loading>
+        <span v-if="game.options.seed">(seed: {{game.options.seed}})</span>
+      </p>
       
       <span>{{timePerGame}} per player, with an additional {{timePerMove}} per move</span><br>
 
@@ -16,7 +19,7 @@
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="balancedGeneration" v-model="game.options.balancedGeneration" disabled>
         <label class="form-check-label" for="balancedGeneration">
-          <a href="http://gaia-project.hol.es" target="_blank">Balance</a> the map for fairness (credits to @bope - Boris Pentecker)
+          <a href="http://gaia-project.hol.es" target="_blank">Balance</a> the map for fairness
         </label>
       </div>
       <div class="form-check">
