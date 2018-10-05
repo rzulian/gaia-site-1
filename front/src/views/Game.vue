@@ -14,6 +14,12 @@
         </label>
       </div>
       <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="balancedGeneration" v-model="game.options.balancedGeneration" disabled>
+        <label class="form-check-label" for="balancedGeneration">
+          <a href="http://gaia-project.hol.es" target="_blank">Balance</a> the map for fairness
+        </label>
+      </div>
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" id="advancedRules" v-model="game.options.advancedRules" disabled>
         <label class="form-check-label" for="advancedRules">
           Last player rotates sectors before faction selection
