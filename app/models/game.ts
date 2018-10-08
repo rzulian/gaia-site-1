@@ -9,6 +9,8 @@ import User from "./user";
 import { ChatMessage } from ".";
 import * as rp from "request-promise";
 import * as crypto from "crypto";
+import * as get from "lodash.get";
+import * as set from "lodash.set";
 
 const Schema = mongoose.Schema;
 
@@ -292,6 +294,13 @@ gameSchema.method("replay", async function(this: Game) {
     const gameData = game.data;
 
     assert(game.players.length === game.options.nbPlayers, "Wait for everybody to join");
+
+    // Old game have mirrored tiles
+    if (!get(gameData, "options.map")) {
+      set(gameData, "options.map", {mirror: true});
+    }
+
+    console.log(gameData.options, get("gameData", "options.map"));
 
     const engine = new Engine(gameData.moveHistory, gameData.options);
 
