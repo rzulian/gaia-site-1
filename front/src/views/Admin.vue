@@ -6,12 +6,13 @@
         <div class="card mt-3">
           <div class="card-body">
             <h5 class="card-title">Server info</h5>
-            <v-loading :loading="!serverInfo">
-              <div v-if="serverInfo">
-                Available space: {{ serverInfo.disk.available | filesize }} / {{ serverInfo.disk.total | filesize }} <br/>
-                Users: {{serverInfo.nbUsers}}
-              </div>
-            </v-loading>
+            <p v-if="serverInfo">
+              Available space: {{ serverInfo.disk.available | filesize }} / {{ serverInfo.disk.total | filesize }} <br/>
+              Users: {{serverInfo.nbUsers}}
+            </p>
+            <p v-else>
+              <span class="fa fa-spinner fa-spin"></span> Loading...
+            </p>
           </div>
         </div>
         <div class="card mt-3">
