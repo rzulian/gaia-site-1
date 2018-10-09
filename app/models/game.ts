@@ -91,6 +91,7 @@ const gameSchema = new Schema({
       type: Boolean,
       default: false
     },
+    balancedGeneration: Boolean,
     nbPlayers: {
       type: Number,
       default: 2,
@@ -140,18 +141,18 @@ gameSchema.method("preload", async function(this: Game) {
     let numberSeed = 0;
 
     // If the seed is a number, use it directly, otherwise use a number generated from its hash
-    if (''+parseInt(seed) === seed) {
+    if ('' + parseInt(seed) === seed) {
       numberSeed = parseInt(seed);
     } else {
       const md5sum = crypto.createHash("md5");
       md5sum.update(seed);
-      numberSeed = (''+parseInt(seed)) === seed ? parseInt(seed) : parseInt(md5sum.digest("hex").slice(-10), 16);
+      numberSeed = ('' + parseInt(seed)) === seed ? parseInt(seed) : parseInt(md5sum.digest("hex").slice(-10), 16);
     }
 
     const options = {
-      method: 'POST', 
-      uri: 'http://gaia-project.hol.es', 
-      body: {seed: numberSeed, player: this.options.nbPlayers}, 
+      method: 'POST',
+      uri: 'http://gaia-project.hol.es',
+      body: {seed: numberSeed, player: this.options.nbPlayers},
       json: true
     };
 
