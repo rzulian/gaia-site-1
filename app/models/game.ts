@@ -17,7 +17,7 @@ const Schema = mongoose.Schema;
 interface Game extends mongoose.Document, IAbstractGame<ObjectId> {
   _id: string;
 
-  /** To call when all the options have been set. Might do a remote call for balanced game generation **/
+  /** To call when all the options have been set. Might do a remote call for balanced game generation */
   preload(): Promise<void>;
   join(player: ObjectId): Promise<Game>;
   unjoin(player: ObjectId): Promise<Game>;
@@ -115,7 +115,8 @@ const gameSchema = new Schema({
 }, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
   // No need to load all game data in most cases
   if (ret.data) {
-    ret.data = _.pick(ret.data, ["round", "phase", "players.faction"]);
+    ret.data.players = ret.data.players.map(pl => _.pick(pl, "faction"));
+    ret.data = _.pick(ret.data, ["round", "phase", "players"]);
   }
   return ret;
 }} });
@@ -129,7 +130,7 @@ gameSchema.static("findWithPlayersTurn", function(this: GameModel, playerId: Obj
 });
 
 gameSchema.static("basics", () => {
-  return ["players", "currentPlayer", "options.nbPlayers", "active", "creator", "data.round", "data.phase"];
+  return ["players", "currentPlayer", "options.nbPlayers", "active", "creator", "data.round", "data.phase", "data.players.faction"];
 });
 
 gameSchema.method("preload", async function(this: Game) {

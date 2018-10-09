@@ -10,8 +10,15 @@
     <div class="row">
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
-        <ul v-if="games.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - R{{game.data.round}}, {{game.options.nbPlayers}}p</router-link>
+        <ul v-if="games.length > 0" class="list-group text-left">
+          <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item list-group-item-action active-game">
+            <img v-for="player in game.data.players" :key="player.faction" :src="`/images/factions/icons/${player.faction}.svg`" :title="player.faction" class="avatar mr-1"/>
+            <img v-for="i in [0,1,2,3].slice(game.data.players.length)" :key="i" class="invisible avatar mr-1" src="/images/factions/icons/ambas.svg"/>
+            
+            <span>
+              {{game._id}} - R{{game.data.round}}
+            </span>
+          </router-link>
         </ul>
         <p v-else>All games are finished!</p>
       </v-loading>
@@ -73,6 +80,15 @@ export default class Home extends Vue {
 </script>
 
 
-<style lang="scss" scoped>
-  
+<style lang="scss">
+  .list-group-item.active-game {
+    padding: 0.5em;
+
+    img.avatar {
+      height: 2em;
+      width: 2em;
+      border-radius: 50%;
+      vertical-align: middle;
+    }
+  }
 </style>

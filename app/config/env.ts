@@ -12,6 +12,7 @@ export default {
   port: +process.env.port || 50801,
   chatPort: +process.env.chatPort || 50802,
   dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@gaiaform.io:27017/admin',
+  nodebb: "mongodb://nodebb:NodeBBNeedsGhiHF@gaiaform.io:27017/nodebb",
   isProduction: process.env.NODE_ENV === 'production',
   threads: process.env.threads || os.cpus().length,
   /** Is the computer able to send emails? If not, let the main server send the emails */
