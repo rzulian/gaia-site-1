@@ -11,14 +11,14 @@ export default {
   sessionSecret: process.env.sessionSecret || 'Quel est donc le secret mystère du succès de Gaia Project?!',
   port: +process.env.port || 50801,
   chatPort: +process.env.chatPort || 50802,
-  dbUrl: process.env.dbUrl || 'mongodb://gaiaAdmin:This-is-GP-RZ_COYO_508_password!@gaiaform.io:27017/admin',
-  nodebb: "mongodb://nodebb:NodeBBNeedsGhiHF@gaiaform.io:27017/nodebb",
+  dbUrl: process.env.dbUrl || 'mongodb://localhost:27017/admin',
+  nodebb: "mongodb://nodebb:NodeBBPassword@localhost:27017/nodebb",
   isProduction: process.env.NODE_ENV === 'production',
   threads: process.env.threads || os.cpus().length,
   /** Is the computer able to send emails? If not, let the main server send the emails */
   automatedEmails: process.env.automatedEmails || false,
-  useMailgun: process.env.useMailgun === undefined ? true : process.env.useMailgun,
-  mailgunApiKey: process.env.mailgunApiKey || '82797ed417ebb2eb4b885009b5c7c7a3-f45b080f-014b63ae',
+  useMailgun: !!process.env.useMailgun,
+  mailgunApiKey: process.env.mailgunApiKey || 'default-mailgun-api-key',
   mailgunHost: process.env.mailgunHost || 'api.eu.mailgun.net',
   emailDomain: process.env.emailDomain || `mg-eu.${domain}`,
   newsletterDomain: process.env.newsletterDomain || `newsletter.${domain}`
