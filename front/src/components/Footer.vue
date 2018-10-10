@@ -2,11 +2,11 @@
   <footer class="footer">
     <div class="container">
       <div class="row">
-        <div class="col-auto d-none d-md-flex">
-          <span class="text-muted">We do not own the digital rights to Gaia Project</span>
-        </div>
         <div class="col-auto">
           <router-link to="/privacy-policy" class="text-muted">Privacy policy</router-link>
+        </div>
+        <div class="col-auto">
+          <a href="https://forum.gaiaform.io" target="_blank" class="text-muted">Forums</a>
         </div>
         <div class="col-auto">
           <a href="mailto:contact@gaiaform.io" class="text-muted">Contact</a>
