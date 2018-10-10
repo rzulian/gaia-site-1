@@ -1,7 +1,7 @@
 <template>
   <div class="admin container">
     <h1>Admin page</h1>
-    <div class="row container">
+    <div class="row">
       <div class="col-md-6">
         <div class="card mt-3">
           <div class="card-body">

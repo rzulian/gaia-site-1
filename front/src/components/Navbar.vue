@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-dark bg-primary navbar-expand-sm navbar-fixed-top mb-md-3 mb-1" id="navbar">
+  <nav class="navbar navbar-dark bg-primary navbar-expand navbar-fixed-top mb-md-3 mb-1" id="navbar">
     <router-link class="navbar-brand" to="/"><span @click="navbarClick">Gaia Project</span></router-link>
     <router-link :class="['btn', 'btn-sm', 'mr-auto', {'btn-success': activeGames.length > 0, 'btn-secondary': activeGames.length === 0}]"  to="/next-game" v-if="user" title="Jump to next active game" id="active-game-count">
       {{activeGames.length}}
@@ -53,14 +53,23 @@
             </div>
           </div>
         </li>
-        <li class="nav-item" v-if="user">
-          <router-link class="nav-link" to="/account">{{user.account.username || user.account.email}}</router-link>
-        </li>
         <li class="nav-item" v-if="admin">
-          <router-link class="nav-link" to="/admin">Admin</router-link>
+          <router-link class="nav-link" to="/admin" title="Admin">
+            <span class="fa fa-cogs"></span>
+            <span class="d-none d-md-inline ml-1">Admin</span>
+          </router-link>
         </li>
         <li class="nav-item" v-if="user">
-          <a class="nav-link" href="/signout" @click.prevent="signout" title="Log out"><span class="sr-only">Log out</span><span class="fa fa-sign-out"></span></a>
+          <router-link class="nav-link" to="/account" title="Account">
+            <span class="fa fa-user"></span>
+            <span class="d-none d-md-inline ml-1">{{user.account.username || user.account.email}}</span>
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="user">
+          <a class="nav-link" href="/signout" @click.prevent="signout" title="Log out">
+            <span class="fa fa-sign-out"></span>
+            <span class="d-none d-md-inline ml-1">Log out</span>
+          </a>
         </li>
       </ul>
     </div>
