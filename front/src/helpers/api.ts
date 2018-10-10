@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import { GameApi } from '@gaia-project/viewer';
-import Engine from '@gaia-project/engine';
+import Engine, { EngineOptions } from '@gaia-project/engine';
 import store from '../store';
 
 const currentUserId = () => {
@@ -29,9 +29,8 @@ const api: GameApi = {
 
     return engine;
   },
-  async replay(moves: string[]) {
-    const advancedRules = moves && (moves.length < 2 || moves[1].includes('rotate'));
-    return new Engine(moves, {advancedRules, noFedCheck: true});
+  async replay(moves: string[], options: EngineOptions) {
+    return new Engine(moves, Object.assign({}, options, {noFedCheck: true}));
   }
 };
 
