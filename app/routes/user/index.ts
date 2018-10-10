@@ -1,7 +1,7 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { User, Game } from '../../models';
-import { queryCount } from '../utils';
+import { queryCount, skipCount } from '../utils';
 
 const router = Router();
 
@@ -30,7 +30,7 @@ router.get('/infoByName/:userName', async (req, res) => {
 });
 
 router.get('/:userId/games/active', async (req , res) => {
-  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true}).limit(queryCount(req)).select(Game.basics()));
+  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: true}).skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
 });
 
 router.get('/:userId/games/current-turn', async (req , res) => {
@@ -38,7 +38,7 @@ router.get('/:userId/games/current-turn', async (req , res) => {
 });
 
 router.get('/:userId/games/closed', async (req , res) => {
-  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: false}).limit(queryCount(req)).select(Game.basics()));
+  res.json(await Game.findWithPlayer(req.foundUser._id).where({active: false}).skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
 });
 
 export default router;

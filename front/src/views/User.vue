@@ -8,10 +8,10 @@
         <p v-else>No ongoing games</p>
       </v-loading>
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingGames">
-        <h4>Finished games</h4>
+        <h4>Finished games <span class="small">({{totalFinished}})</span></h4>
         <div v-if="closedGames.length > 0">
           <GameList  :games="closedGames" class="mb-2" />
-          <b-pagination size="md" class="pull-right" :total-rows="totalFinished" v-model="currentPageFinished" :per-page="10" />
+          <b-pagination size="md" align="right" :total-rows="totalFinished" v-model="currentPageFinished" :per-page="10" />
         </div>
         <p v-else>No finished game.</p>
       </v-loading>
@@ -44,6 +44,15 @@ import GameList from '../components/GameList.vue';
   },
   components: {
     GameList
+  },
+  watch: {
+    async currentPageFinished(newVal) {
+      const closedGames = await $.get(`/api/user/${this.user._id}/games/closed?count=10&skip=${(this.currentPageFinished-1)*10}`);
+
+      if (newVal === this.currentPageFinished) {
+        this.closedGames = closedGames;
+      }
+    }
   }
 })
 export default class Account extends Vue {

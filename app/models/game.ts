@@ -478,7 +478,7 @@ gameSchema.post("save", async (game: Game) => {
       await user.updateGameNotification();
     } else if (!game.active) {
       const players = await User.find({_id: {$in: game.players}});
-      await Promise.all(players.map(pl => pl.updateGameStats()));
+      await Promise.all(players.map(pl => pl.updateGameStats().then(() => pl.save())));
     }
   } catch (err) {
     console.error(err);

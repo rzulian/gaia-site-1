@@ -1,7 +1,7 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
 import { Game, User, ChatMessage } from '../../models';
-import { loggedIn, queryCount, isAdmin } from '../utils';
+import { loggedIn, queryCount, isAdmin, skipCount } from '../utils';
 import * as _ from "lodash";
 import * as assert from "assert";
 
@@ -74,15 +74,15 @@ router.param('gameId', async (req, res, next, gameId) => {
 
 // Give last 10 active games
 router.get('/active', async (req, res) => {
-  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-lastMove').limit(queryCount(req)).select(Game.basics()));
+  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
 });
 
 router.get('/closed', async (req, res) => {
-  res.json(await Game.find({active: false}).sort('-lastMove').limit(queryCount(req)).select(Game.basics()));
+  res.json(await Game.find({active: false}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
 });
 
 router.get('/open', async (req, res) => {
-  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'open': true}).sort('-lastMove').limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
+  res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'open': true}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
 });
 
 // Metadata about the game

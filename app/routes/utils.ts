@@ -28,3 +28,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 export function queryCount(req: Request, max: number = 20) {
   return Math.max(Math.min(req.query.count || 20, max), 1);
 }
+
+export function skipCount(req: Request) {
+  return +req.query.skip || 0;
+}
