@@ -4,13 +4,13 @@
     <div class="row">
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
-        <GameList v-if="activeGames.length > 0" :games="activeGames" />
+        <GameList v-if="activeGames.length > 0" :games="activeGames" :user="user ? user._id : null" />
         <p v-else>No ongoing games</p>
       </v-loading>
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingGames">
         <h4>Finished games <span class="small">({{totalFinished}})</span></h4>
         <div v-if="closedGames.length > 0">
-          <GameList  :games="closedGames" class="mb-2" />
+          <GameList  :games="closedGames" class="mb-2" :user="user ? user._id : null" />
           <b-pagination size="md" align="right" :total-rows="totalFinished" v-model="currentPageFinished" :per-page="10" />
         </div>
         <p v-else>No finished game.</p>

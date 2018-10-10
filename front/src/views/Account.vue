@@ -5,7 +5,7 @@
       <div class="card-body">
         <h5 class="card-title">Active games</h5>
         <v-loading :loading="loadingGames">
-          <GameList v-if="activeGames.length > 0" :games="activeGames" class="mb-2" />
+          <GameList v-if="activeGames.length > 0" :games="activeGames" :user="user._id" class="mb-2" />
           <p v-else>
             No active games. <router-link to="/new-game">Launch a new game</router-link>.
           </p> 
@@ -126,17 +126,3 @@ export default class Account extends Vue {
   updateAccountDebounce = debounce(this.updateAccount, 800, {leading: true});
 }
 </script>
-
-<style lang="scss">
-  .list-group-item.current-turn {
-    background: lightgreen;
-
-    &:hover, &:focus {
-      background: darken($color: lightgreen, $amount: 5%);
-    }
-
-    &:active {
-      background: darken($color: lightgreen, $amount: 10%);
-    }
-  }
-</style>

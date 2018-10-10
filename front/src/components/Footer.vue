@@ -8,8 +8,11 @@
         <div class="col-auto">
           <router-link to="/privacy-policy" class="text-muted">Privacy policy</router-link>
         </div>
-        <div class="col-auto" v-if="user">
+        <div class="col-auto">
           <a href="mailto:contact@gaiaform.io" class="text-muted">Contact</a>
+        </div>
+        <div class="col-auto">
+          <a href="https://github.com/donkeytech" target="_blank" class="text-muted">Source</a>
         </div>
       </div>
     </div>
