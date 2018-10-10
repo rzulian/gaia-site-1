@@ -1,10 +1,8 @@
 <template>
   <div class="home text-center container">
-    <div class="card">
-      <div class="card-body">
-        <h2>An online implementation of the Gaia Project board game</h2>
-        <p>Currently invite-only. Official website <a href="https://www.zmangames.com/en/products/gaia-project/" target="_blank">here</a> (<a href="https://boardgamegeek.com/boardgame/220308/gaia-project" target="_blank">BGG</a><!--, <a href="https://images-cdn.zmangames.com/us-east-1/filer_public/ce/89/ce890bfd-227e-4249-a52a-976bc5f20d19/en_gaia_rulebook_lo.pdf" target="_blank">rules</a>-->)</p>
-      </div>
+    <div class="starter-template">
+      <h1>An online implementation of the Gaia Project board game</h1>
+      <p class="lead">Currently invite-only. Official website <a href="https://www.zmangames.com/en/products/gaia-project/" target="_blank">here</a> (<a href="https://boardgamegeek.com/boardgame/220308/gaia-project" target="_blank">BGG</a><!--, <a href="https://images-cdn.zmangames.com/us-east-1/filer_public/ce/89/ce890bfd-227e-4249-a52a-976bc5f20d19/en_gaia_rulebook_lo.pdf" target="_blank">rules</a>-->)</p>
     </div>  
     <br/>
     <div class="row mb-2">
@@ -68,5 +66,13 @@ export default class Home extends Vue {
 
 
 <style lang="scss">
-  
+  .starter-template {
+    padding: 30px 15px;
+    text-align: center;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+  }
 </style>
