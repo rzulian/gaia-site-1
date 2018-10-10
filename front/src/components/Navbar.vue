@@ -60,7 +60,7 @@
           <router-link class="nav-link" to="/admin">Admin</router-link>
         </li>
         <li class="nav-item" v-if="user">
-          <a class="nav-link" href="/signout" @click.prevent="signout">Log out</a>
+          <a class="nav-link" href="/signout" @click.prevent="signout" title="Log out"><span class="sr-only">Log out</span><span class="fa fa-sign-out"></span></a>
         </li>
       </ul>
     </div>
