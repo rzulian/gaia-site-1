@@ -9,7 +9,9 @@
       </span>
 
       <span v-if="!game.open || !game.active">
-        <img v-for="(player,i) in game.data.players" :key="i" :src="`/images/factions/icons/${player.faction || 'random'}.svg`" :title="player.faction || 'unknown'" class="avatar mr-1"/>
+        <div v-for="(player,i) in game.data.players" :key="i" :style="`background-image: url('/images/factions/icons/${player.faction || 'random'}.svg')`" :title="player.faction || 'unknown'" :class="['avatar', 'mr-1']">
+          <span class="vp">{{player.data.victoryPoints}}</span>
+        </div>
       </span>
       <span v-else>
         {{game.players.length}} / {{game.data.players.length}}
@@ -50,11 +52,26 @@ export default class GameList extends Vue {
           margin-left: 0.75em;
         }
 
-        img.avatar {
+        .avatar {
           height: 2em;
           width: 2em;
+          display: inline-block;
+          position: relative;
           border-radius: 50%;
           vertical-align: middle;
+          background-size: cover;
+
+          .vp {
+            position: absolute;
+            right: -5px;
+            bottom: -5px;
+            font-size: 0.7em;
+            border-radius: 5px;
+            color: white;
+            background-color: #838383;
+            width: 20px;
+            text-align: center;
+          }
         }
       }
     }

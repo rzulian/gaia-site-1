@@ -115,7 +115,7 @@ const gameSchema = new Schema({
 }, {timestamps: true, collation: { locale: 'en', strength: 2 }, toJSON: {transform: (doc, ret) => {
   // No need to load all game data in most cases
   if (ret.data) {
-    ret.data.players = ret.data.players.map(pl => _.pick(pl, "faction"));
+    ret.data.players = ret.data.players.map(pl => _.pick(pl, "faction", "data.victoryPoints"));
     ret.data = _.pick(ret.data, ["round", "phase", "players"]);
   }
   return ret;
@@ -130,7 +130,7 @@ gameSchema.static("findWithPlayersTurn", function(this: GameModel, playerId: Obj
 });
 
 gameSchema.static("basics", () => {
-  return ["players", "currentPlayer", "options.nbPlayers", "active", "open", "creator", "data.round", "data.phase", "data.players.faction"];
+    return ["players", "currentPlayer", "options.nbPlayers", "active", "open", "creator", "data.round", "data.phase", "data.players.faction", "data.players.data.victoryPoints"];
 });
 
 gameSchema.method("preload", async function(this: Game) {
@@ -142,12 +142,12 @@ gameSchema.method("preload", async function(this: Game) {
     let numberSeed = 0;
 
     // If the seed is a number, use it directly, otherwise use a number generated from its hash
-    if ('' + parseInt(seed) === seed) {
-      numberSeed = parseInt(seed);
+    if ('' + parseInt(seed, 10) === seed) {
+      numberSeed = parseInt(seed, 10);
     } else {
       const md5sum = crypto.createHash("md5");
       md5sum.update(seed);
-      numberSeed = ('' + parseInt(seed)) === seed ? parseInt(seed) : parseInt(md5sum.digest("hex").slice(-10), 16);
+      numberSeed = ('' + parseInt(seed, 10)) === seed ? parseInt(seed, 10) : parseInt(md5sum.digest("hex").slice(-10), 16);
     }
 
     const options = {
