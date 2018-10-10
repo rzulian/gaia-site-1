@@ -74,7 +74,6 @@ router.param('gameId', async (req, res, next, gameId) => {
 
 // Give last 10 active games
 router.get('/active', async (req, res) => {
-  console.log(Game.basics());
   res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-lastMove').limit(queryCount(req)).select(Game.basics()));
 });
 

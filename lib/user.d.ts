@@ -32,7 +32,10 @@ export interface IAbstractUser {
   };
   meta: {
     nextGameNotification: Date,
-    lastGameNotification: Date
+    lastGameNotification: Date,
+    games?: {
+      finished: number
+    }
   };
   authority: string;
 }

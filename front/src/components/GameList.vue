@@ -1,6 +1,6 @@
 <template>
   <ul class="list-group text-left game-list">
-    <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'active-game': !game.open}]">
+    <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'active-game': !game.open || !game.active}]">
       
       <span class="mr-auto game-name">
         {{game._id}} 
@@ -8,7 +8,7 @@
           <span v-if="game.active && game.open" class="small">({{timePerGame(game)}})</span>
       </span>
 
-      <span v-if="!game.open">
+      <span v-if="!game.open || !game.active">
         <img v-for="(player,i) in game.data.players" :key="i" :src="`/images/factions/icons/${player.faction || 'random'}.svg`" :title="player.faction || 'unknown'" class="avatar mr-1"/>
       </span>
       <span v-else>

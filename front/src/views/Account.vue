@@ -5,7 +5,7 @@
       <div class="card-body">
         <h5 class="card-title">Active games</h5>
         <v-loading :loading="loadingGames">
-          <GameList v-if="activeGames.length > 0" :games="activeGames" />
+          <GameList v-if="activeGames.length > 0" :games="activeGames" class="mb-2" />
           <p v-else>
             No active games. <router-link to="/new-game">Launch a new game</router-link>.
           </p> 

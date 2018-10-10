@@ -17,6 +17,7 @@ interface User extends IAbstractUser, mongoose.Document {
   generateHash(password: string): Promise<string>;
   validPassword(password: string): Promise<boolean>;
   resetPassword(password: string): Promise<any>;
+  updateGameStats(): Promise<void>;
   email(): string;
   // Filtered user for public consumption
   publicInfo(): User;
@@ -81,7 +82,10 @@ const userSchema = new Schema({
   },
   meta: {
     nextGameNotification: Date,
-    lastGameNotification: Date
+    lastGameNotification: Date,
+    games: {
+      finished: Number
+    }
   },
   authority: String,
 }, { toJSON: {transform: (doc, ret) => {
@@ -136,7 +140,7 @@ userSchema.method('getLink', function(this: User) {
 });
 
 userSchema.method('publicInfo', function(this: User) {
-  return _.pick(this, ["_id", "account.username"]);
+  return _.pick(this, ["_id", "account.username", "meta.games"]);
 });
 
 userSchema.method('generateResetLink', function(this: User) {
@@ -347,6 +351,10 @@ userSchema.method('notifyLastIp', function(this: User, ip: string) {
     this.security.lastIp = ip;
     this.update({ "security.lastIp": ip }).exec();
   }
+});
+
+userSchema.method('updateGameStats', async function(this: User) {
+  this.meta.games.finished = await Game.findWithPlayer(this._id).where({active: false}).count();
 });
 
 userSchema.method('isAdmin', function(this: User) {

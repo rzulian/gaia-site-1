@@ -1,9 +1,9 @@
 import locks from "mongo-locks";
 import * as mongoose from 'mongoose';
 import * as assert from 'assert';
-import { ObjectId } from 'bson';
+import { ObjectId, ObjectID } from 'bson';
 import { IAbstractGame } from 'lib/game';
-import Engine, { Phase } from '@gaia-project/engine';
+import Engine, { Phase, Player } from '@gaia-project/engine';
 import * as _ from 'lodash';
 import User from "./user";
 import { ChatMessage } from ".";
@@ -130,7 +130,7 @@ gameSchema.static("findWithPlayersTurn", function(this: GameModel, playerId: Obj
 });
 
 gameSchema.static("basics", () => {
-  return ["players", "currentPlayer", "options.nbPlayers", "active", "creator", "data.round", "data.phase", "data.players.faction"];
+  return ["players", "currentPlayer", "options.nbPlayers", "active", "open", "creator", "data.round", "data.phase", "data.players.faction"];
 });
 
 gameSchema.method("preload", async function(this: Game) {
@@ -328,7 +328,7 @@ gameSchema.method("replay", async function(this: Game) {
   }
 });
 
-gameSchema.method('afterMove', function(this: Game, engine: Engine, oldRound: number) {
+gameSchema.method('afterMove', async function(this: Game, engine: Engine, oldRound: number) {
   if (engine.phase === Phase.EndGame) {
     this.active = false;
     this.setCurrentPlayer(null);
@@ -476,6 +476,9 @@ gameSchema.post("save", async (game: Game) => {
       const user = await User.findById(game.currentPlayer);
 
       await user.updateGameNotification();
+    } else if (!game.active) {
+      const players = await User.find({_id: {$in: game.players}});
+      await Promise.all(players.map(pl => pl.updateGameStats()));
     }
   } catch (err) {
     console.error(err);

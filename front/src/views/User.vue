@@ -9,7 +9,10 @@
       </v-loading>
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingGames">
         <h4>Finished games</h4>
-        <GameList v-if="closedGames.length > 0" :games="closedGames"/>
+        <div v-if="closedGames.length > 0">
+          <GameList  :games="closedGames" class="mb-2" />
+          <b-pagination size="md" class="pull-right" :total-rows="totalFinished" v-model="currentPageFinished" :per-page="10" />
+        </div>
         <p v-else>No finished game.</p>
       </v-loading>
     </div>
@@ -30,8 +33,10 @@ import GameList from '../components/GameList.vue';
 
       this.user = await $.get(`/api/user/infoByName/${encodeURIComponent(name)}`);
 
-      this.activeGames = await $.get(`/api/user/${this.user._id}/games/active`);
-      this.closedGames = await $.get(`/api/user/${this.user._id}/games/closed`);
+      [this.activeGames, this.closedGames] = await Promise.all([
+        $.get(`/api/user/${this.user._id}/games/active?count=10`), 
+        $.get(`/api/user/${this.user._id}/games/closed?count=10&skip=${(this.currentPageFinished-1)*10}`)
+      ]);
       this.loadingGames = false;
     } catch (err) {
       handleError(err);
@@ -45,6 +50,11 @@ export default class Account extends Vue {
   user: IUser = null;
   activeGames: any[] = [];
   closedGames: any[] = [];
+  currentPageFinished = 1;
+  
+  get totalFinished() {
+    return this.user ? this.user.meta.games.finished : 0;
+  }
   
   loadingGames = true;
 }
