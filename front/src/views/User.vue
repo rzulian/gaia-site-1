@@ -4,18 +4,12 @@
     <div class="row">
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
-        <ul v-if="activeGames.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in activeGames" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'current-turn': user._id === game.currentPlayer}]">
-            {{game._id}} - <span v-if="game.data">R{{game.data.round}}</span><span v-else>{{game.players.length}}/{{game.options.nbPlayers}} players</span>
-          </router-link>
-        </ul>
+        <GameList v-if="activeGames.length > 0" :games="activeGames" />
         <p v-else>No ongoing games</p>
       </v-loading>
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingGames">
         <h4>Finished games</h4>
-        <ul v-if="closedGames.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in closedGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p</router-link>
-        </ul>
+        <GameList v-if="closedGames.length > 0" :games="closedGames"/>
         <p v-else>No finished game.</p>
       </v-loading>
     </div>
@@ -27,6 +21,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { IUser } from '@lib/user';
 import { handleError } from '@/utils';
 import $ from "jquery";
+import GameList from '../components/GameList.vue';
 
 @Component<Account>({
   async created() {
@@ -41,6 +36,9 @@ import $ from "jquery";
     } catch (err) {
       handleError(err);
     }
+  },
+  components: {
+    GameList
   }
 })
 export default class Account extends Vue {

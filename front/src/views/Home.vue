@@ -10,23 +10,12 @@
     <div class="row">
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
-        <ul v-if="games.length > 0" class="list-group text-left">
-          <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" class="list-group-item list-group-item-action active-game">
-            <img v-for="player in game.data.players" :key="player.faction" :src="`/images/factions/icons/${player.faction}.svg`" :title="player.faction" class="avatar mr-1"/>
-            <img v-for="i in [0,1,2,3].slice(game.data.players.length)" :key="i" class="invisible avatar mr-1" src="/images/factions/icons/ambas.svg"/>
-            
-            <span>
-              {{game._id}} - R{{game.data.round}}
-            </span>
-          </router-link>
-        </ul>
+        <GameList :games="games" v-if="games.length > 0" />
         <p v-else>All games are finished!</p>
       </v-loading>
       <v-loading class="col-md-6 mt-3 mt-md-0" :loading="loadingOpenGames">
         <h4>Open games</h4>
-        <ul v-if="openGames.length > 0" class="list-group">
-          <router-link :to="`/game/${game._id}`" v-for="game in openGames" :key="game._id" class="list-group-item list-group-item-action">{{game._id}} - {{game.options.nbPlayers}}p <span class="small"> ({{timePerGame(game)}})</span></router-link>
-        </ul>
+        <GameList :games="openGames" v-if="openGames.length > 0" />
         <p v-else>No open game. Why not create a new one?</p>
       </v-loading>
     </div>
@@ -40,6 +29,7 @@ import $ from 'jquery';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { handleError } from '@/utils';
 import { Game } from '@/types';
+import GameList from '../components/GameList.vue';
 
 @Component<Home>({
   created() {
@@ -54,6 +44,9 @@ import { Game } from '@/types';
   },
   destroyed() {
     this.subscription();
+  },
+  components: {
+    GameList
   }
 })
 export default class Home extends Vue {
@@ -62,13 +55,6 @@ export default class Home extends Vue {
   loadingGames = true;
   loadingOpenGames = true;
   subscription: any = null;
-
-  timePerGame(game: Game) {
-    switch (game.options.timePerGame) {
-      case 24*3600: return "1 day";
-      default: return (game.options.timePerGame / (24*3600)) + " days";
-    }
-  }
 
   loadGames() {
     this.loadingGames = this.loadingOpenGames = true;
@@ -81,14 +67,5 @@ export default class Home extends Vue {
 
 
 <style lang="scss">
-  .list-group-item.active-game {
-    padding: 0.5em;
-
-    img.avatar {
-      height: 2em;
-      width: 2em;
-      border-radius: 50%;
-      vertical-align: middle;
-    }
-  }
+  
 </style>
