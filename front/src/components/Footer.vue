@@ -3,9 +3,6 @@
     <div class="container">
       <div class="row">
         <div class="col-auto">
-          <router-link to="/privacy-policy" class="text-muted">Privacy policy</router-link>
-        </div>
-        <div class="col-auto">
           <a href="https://forum.gaiaform.io" target="_blank" class="text-muted">Forums</a>
         </div>
         <div class="col-auto">
@@ -13,6 +10,9 @@
         </div>
         <div class="col-auto">
           <a href="https://github.com/donkeytech" target="_blank" class="text-muted">Source</a>
+        </div>
+        <div class="col-auto">
+          <router-link to="/privacy-policy" class="text-muted">Privacy policy</router-link>
         </div>
       </div>
     </div>

@@ -3,16 +3,15 @@
     <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'active-game': !game.open || !game.active, 'current-turn': game.currentPlayer && game.currentPlayer === user}]">
       
       <span class="mr-auto game-name">
-        {{game._id}} 
-          <span v-if="game.active && !game.open" class="small">(R{{game.data.round}})</span>
+        {{game._id}}&nbsp;<span v-if="game.active && !game.open" class="small">(R{{game.data.round}})</span>
           <span v-if="game.active && game.open" class="small">({{timePerGame(game)}})</span>
       </span>
 
-      <span v-if="!game.open || !game.active">
-        <div v-for="(player,i) in game.data.players" :key="i" :style="`background-image: url('/images/factions/icons/${player.faction || 'random'}.svg')`" :title="player.faction || 'unknown'" :class="['avatar', 'mr-1']">
+      <div class="row no-gutters factions" v-if="!game.open || !game.active">
+        <div v-for="(player,i) in game.data.players" :key="i" :style="`background-image: url('/images/factions/icons/${player.faction || 'random'}.svg')`" :title="player.faction || 'unknown'" class="avatar mr-1">
           <span :class="['vp', {'current': user && game.players[i] === user}]">{{player.data.victoryPoints}}</span>
         </div>
-      </span>
+      </div>
       <span v-else>
         {{game.players.length}} / {{game.data.players.length}}
       </span>
@@ -43,6 +42,9 @@ export default class GameList extends Vue {
 </script>
 
 <style lang="scss">
+
+// @import "../stylesheets/main.scss";
+
 .list-group.game-list {
   .list-group-item {
     display: flex;
@@ -64,7 +66,12 @@ export default class GameList extends Vue {
 
       .game-name {
         align-self: center;
-        margin-left: 0.75em;
+        margin-left: 0.25em;
+      }
+
+      .factions {
+        // On mobile, if multiple lines, I want items to be aligned to the right
+        justify-content: flex-end;
       }
 
       .avatar {
