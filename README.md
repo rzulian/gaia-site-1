@@ -46,6 +46,24 @@ You also need to setup nginx, and maybe remove the /etc/nginx/sites-enabled/defa
 Most of the configurable environment variables are shown in `app/config/env.ts`. You just need to create a `.env` file at the root of the project
 with the changed environement variables.
 
+For example:
+
+```bash
+#.env file
+NODE_ENV=production
+inviteOnly=true
+automatedEmails=true
+sessionSecret=customSessionSecret
+domain=my-domain.com
+```
+
 For client changes, you need to create **another** `.env` file in the front folder. Client environment variables:
 
 - VUE_APP_inviteOnly : Make the UI only allow new accounts from invitations
+
+For examples:
+
+```bash
+#front/.env file
+VUE_APP_inviteOnly=true
+```
