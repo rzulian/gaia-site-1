@@ -5,7 +5,7 @@ import { User } from '@/types';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     gaiaViewer
   },
@@ -31,7 +31,18 @@ export default new Vuex.Store({
       }
       state.userLoaded = true;
     },
-    error: (state, error: string) => { state.error = error; state.errorIssued = new Date(); },
+    /** Clear error if it has been here too long */
+    autoClearError(state) {
+      if (state.error && (Date.now() - state.errorIssued.getTime()) > 40 * 1000) {
+        state.error = state.errorIssued = null;
+      }
+    },
+    error: (state, error: string) => {
+      state.error = error;
+      state.errorIssued = new Date();
+
+      setTimeout(() => store.commit('autoClearError'), 45 * 1000);
+    },
     info: (state, info: string) => {
       state.info = info; state.infoIssued = new Date();
       state.error = state.errorIssued = null;
@@ -61,3 +72,5 @@ export default new Vuex.Store({
     staleInfo: state => state.infoIssued && (Date.now() - state.infoIssued.getTime()) > 1000,
   }
 });
+
+export default store;
