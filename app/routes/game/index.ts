@@ -74,7 +74,8 @@ router.param('gameId', async (req, res, next, gameId) => {
 
 // Give last 10 active games
 router.get('/active', async (req, res) => {
-  res.json(await Game.find({"active": true, "data.round": {$gte: 1}}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
+  console.log(skipCount(req), queryCount(req));
+  res.json(await Game.find({active: true, open: false}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics()));
 });
 
 router.get('/closed', async (req, res) => {
@@ -83,6 +84,22 @@ router.get('/closed', async (req, res) => {
 
 router.get('/open', async (req, res) => {
   res.json(await Game.find({'active': true, 'options.unlisted': {$ne: true}, 'open': true}).sort('-lastMove').skip(skipCount(req)).limit(queryCount(req)).select(Game.basics().concat(["options.unlisted", "options.timePerMove", "options.timePerGame"])));
+});
+
+router.get('/stats', async (req, res) => {
+  const [active, open, total, finished] = await Promise.all([
+    Game.count({active: true, open: false}),
+    Game.count({"active": true, "open": true, 'options.unlisted': {$ne: true}}),
+    Game.count({}),
+    Game.count({active: false})
+  ]);
+
+  res.json({
+    active,
+    open,
+    total,
+    finished
+  });
 });
 
 // Metadata about the game

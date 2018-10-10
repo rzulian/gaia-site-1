@@ -7,7 +7,7 @@
       </div>
     </div>  
     <br/>
-    <div class="row">
+    <div class="row mb-2">
       <v-loading class="col-md-6" :loading="loadingGames">
         <h4>Active games</h4>
         <GameList :games="games" v-if="games.length > 0" />
@@ -19,6 +19,7 @@
         <p v-else>No open game. Why not create a new one?</p>
       </v-loading>
     </div>
+    <div class="text-center"><router-link to="/games">See all the games</router-link></div>
     <br/>
     <router-link class="btn btn-lg btn-secondary" to="/new-game">New Game</router-link>
   </div>
