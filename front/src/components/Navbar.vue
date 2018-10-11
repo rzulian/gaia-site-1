@@ -16,7 +16,7 @@
         </li>
       </ul>-->
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" v-if="!user"><span class="navbar-text">Have an account ?</span></li>
+        <li class="nav-item d-none d-sm-inline" v-if="!user"><span class="navbar-text">Have an account ?</span></li>
         <li class="nav-item dropdown" v-if="!user">
           <a href="/login" class="nav-link navbar-text dropdown-toggle" data-toggle="dropdown" id="loginDropDown">Login</a>
           <div id="login-dp" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-menu">
