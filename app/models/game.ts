@@ -161,13 +161,13 @@ gameSchema.method("preload", async function(this: Game) {
 
     const resp = await rp(options);
 
-    engine.options.map = {map: resp.map};
+    engine.options.map = {sectors: resp.map};
 
     // We use different standards for sides A & B of sectors than the online generator
     if (this.options.nbPlayers === 2) {
-      engine.options.map.map.forEach(val => val.sector = val.sector.replace(/A/, 'B'));
+      engine.options.map.sectors.forEach(val => val.sector = val.sector.replace(/A/, 'B'));
     } else {
-      engine.options.map.map.forEach(val => val.sector = val.sector.replace(/B/, 'A'));
+      engine.options.map.sectors.forEach(val => val.sector = val.sector.replace(/B/, 'A'));
     }
   }
 
