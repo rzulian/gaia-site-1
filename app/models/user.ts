@@ -64,7 +64,8 @@ const userSchema = new Schema({
       }
     },
     game: {
-      noFactionFill: Boolean
+      noFactionFill: Boolean,
+      soundNotification: Boolean
     }
   },
   security: {

@@ -8,13 +8,16 @@ export interface IAbstractUser {
     mailing: {
       newsletter: boolean,
       game: {
-        /** Delay before sending a notification, in seconds */
+        /** Delay before sending a mail notification, in seconds */
         delay: number,
+        /** Are email notifications enabled? */
         activated: boolean
       } 
     },
     game: {
-      noFactionFill: boolean
+      noFactionFill: boolean,
+      /** Are sound notifications enabled? */
+      soundNotification: boolean
     }
   };
   security: {

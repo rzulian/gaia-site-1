@@ -56,6 +56,10 @@
             <input type="checkbox" name="noFactionFill" id="noFactionFill" class="form-check-input" v-model="noFactionFill" @change="updateAccountDebounce">
             <label class="form-check-label form-text" for="noFactionFill">Planets keep their original color when being occupied</label>
           </div>
+          <div class="form-check">
+            <input type="checkbox" name="soundNotification" id="soundNotification" class="form-check-input" v-model="soundNotification" @change="updateAccountDebounce">
+            <label class="form-check-label form-text" for="soundNotification">Play a sound when it's your turn in one of your games</label>
+          </div>
         </form>
       </div>
     </div>
@@ -85,6 +89,7 @@ export default class Account extends Vue {
   newsletter: boolean = false;
   loadingGames = true;
   noFactionFill :boolean = false;
+  soundNotification: boolean = false;
   gameNotification: boolean = false;
   gameNotificationDelay: number = 30*60;
 
@@ -93,9 +98,10 @@ export default class Account extends Vue {
 
     this.email = this.user.account.email;
     this.noFactionFill = !!get(this, 'user.settings.game.noFactionFill');
+    this.soundNotification = !!get(this, 'user.settings.game.soundNotification');
     this.newsletter = !!get(this, 'user.settings.mailing.newsletter');
     this.gameNotification = !!get(this, 'user.settings.mailing.game.activated');
-    this.gameNotificationDelay = get(this, 'user.settings.mailing.game.delay') || 30*60;
+    this.gameNotificationDelay = get(this, 'user.settings.mailing.game.delay', 30*60);
     this.updateAccount.bind(this);
   }
 
@@ -114,7 +120,8 @@ export default class Account extends Vue {
           }
         },
         game: {
-          noFactionFill: this.noFactionFill
+          noFactionFill: this.noFactionFill,
+          soundNotification: this.soundNotification
         }
       }
     }).then(
