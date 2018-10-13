@@ -105,10 +105,12 @@ import { User } from '@/types';
   }, 
   watch: {
     activeGames(newVal) {
-      if (newVal.length > 0 && $("#favicon-site").attr("href") !==  "/favicon-active.png") {
-        $("#favicon-site").attr("href", "/favicon-active.png");
-        if (this.user.settings.game.soundNotification) {
-          (document.querySelector("#sound-notification") as HTMLAudioElement).play();
+      if (newVal.length > 0) {
+        if ($("#favicon-site").attr("href") !== "/favicon-active.png") {
+          $("#favicon-site").attr("href", "/favicon-active.png");
+          if (this.user.settings.game.soundNotification && this.firstRefresh) {
+            (document.querySelector("#sound-notification") as HTMLAudioElement).play();
+          }
         }
       } else {
         $("#favicon-site").attr("href", "/favicon.png");
@@ -121,6 +123,7 @@ export default class Navbar extends Vue {
   email = "";
   interval: number = 0;
   hasUser = false;
+  firstRefresh = false;
 
   login() {
     $.post('/api/account/login', {email: this.email, password: this.password}).then(
@@ -169,12 +172,15 @@ export default class Navbar extends Vue {
     this.hasUser = !!user;
 
     if (!user) {
+      this.firstRefresh = false;
       return;
     }
 
     try {
       const activeGames =  await $.get(`/api/user/${user._id}/games/current-turn`);
       this.$store.commit("activeGames", activeGames.map(game => game._id));
+      setTimeout(() => this.firstRefresh = true);
+      // console.log("setting first refresh to true");
     } catch (err) {
       handleError(err);
     }
