@@ -104,8 +104,8 @@ import { User } from '@/types';
     this.mutationSubscription();
   }, 
   watch: {
-    activeGames(newVal, oldVal) {
-      if (newVal.length > 0 && oldVal.length === 0) {
+    activeGames(newVal) {
+      if (newVal.length > 0 && $("#favicon-site").attr("href") !==  "/favicon-active.png") {
         $("#favicon-site").attr("href", "/favicon-active.png");
         if (this.user.settings.game.soundNotification) {
           (document.querySelector("#sound-notification") as HTMLAudioElement).play();
