@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="col-auto">
-          <a href="https://forum.gaiaform.io" target="_blank" class="text-muted">Forums</a>
+          <a href="https://forum.gaiaform.io" target="_blank" class="text-muted">Forum</a>
         </div>
         <div class="col-auto">
           <a href="mailto:contact@gaiaform.io" class="text-muted">Contact</a>

@@ -1,6 +1,8 @@
 <template>
   <div class="container text-justify">
-    <h2>Spaceship Expansion Rules</h2>
+    <h2>Spaceship Expansion Rules <small>v1.0</small></h2>
+    <p>Designed by <i>JamesWolfPacker</i> based off of his Terra Mystica Ship Expansion. <a href="https://forum.gaiaform.io/topic/2/feedback-on-interplanetary-spaceships">Feedback thread</a><br />
+    Experimental implementation by coyotte508 and zuli</p>
     <div v-html="content">
 
     </div>

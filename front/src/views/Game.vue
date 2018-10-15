@@ -9,7 +9,12 @@
       
       <span>{{timePerGame}} per player, with an additional {{timePerMove}} per move</span><br>
 
-      
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="spaceShips" v-model="game.options.spaceShips" disabled>
+        <label class="form-check-label" for="spaceShips">
+          <a target="_blank" href="/rules/spaceship">Spaceships Expansion</a>
+        </label>
+      </div>
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="random-player-order" v-model="game.options.randomPlayerOrder" disabled>
         <label class="form-check-label" for="random-player-order">

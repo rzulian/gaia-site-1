@@ -18,6 +18,7 @@ export interface IAbstractGame<T= string> {
     timePerMove: number;
     timePerGame: number;
     seed: string;
+    spaceShips: boolean;
   };
 
   remainingTime: number[];

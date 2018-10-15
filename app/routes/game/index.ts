@@ -15,6 +15,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   const unlisted = req.body.unlisted === "true";
   const advancedRules = req.body.advancedRules === "true";
   const balancedGeneration = req.body.balancedGeneration === "true";
+  const spaceShips = req.body.spaceShips === "true";
   const seed = req.body.seed || gameId;
   const timePerMove = +req.body.timePerMove;
   const timePerGame = +req.body.timePerGame;
@@ -48,6 +49,7 @@ router.post('/new-game', loggedIn, async (req , res) => {
   game.options.timePerGame = timePerGame;
   game.options.advancedRules = advancedRules;
   game.options.balancedGeneration = balancedGeneration;
+  game.options.spaceShips = spaceShips;
   game.options.seed = seed;
   game._id = gameId;
 

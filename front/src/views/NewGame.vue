@@ -47,6 +47,12 @@
         </div>
       </div>
       <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="spaceShips" v-model="spaceShips">
+        <label class="form-check-label" for="spaceShips">
+          <a target="_blank" href="/rules/spaceship">Spaceships Expansion</a>
+        </label>
+      </div>
+      <div class="form-check">
         <input class="form-check-input" type="checkbox" id="join" v-model="join">
         <label class="form-check-label" for="join">
           Automatically join this game
@@ -97,14 +103,15 @@ export default class NewGame extends Vue {
   unlisted = false;
   advancedRules = false;
   balancedGeneration = false;
+  spaceShips = false;
   timePerMove = 2*3600;
   timePerGame = 5 * 24 * 3600;
   submitting = false;
 
   createGame() {
     this.submitting = true;
-    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed} = this;
-    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed}).then(
+    const {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed, spaceShips} = this;
+    $.post('/api/game/new-game', {join, gameId, players, randomOrder, unlisted, timePerMove, timePerGame, advancedRules, balancedGeneration, seed, spaceShips}).then(
       () => this.$router.push('/game/' + this.gameId),
       err => handleError(err)
     ).then(() => this.submitting = false);

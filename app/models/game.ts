@@ -108,6 +108,10 @@ const gameSchema = new Schema({
       type: Number,
       default: 15 * 24 * 3600,
       enum: [24 * 3600, 3 * 24 * 3600, 5 * 24 * 3600, 15 * 24 * 3600]
+    },
+    spaceShips: {
+      type: Boolean,
+      default: false
     }
   },
   // TODO: If another array is added, change players to {_id: playerId, remainingTime: number, ...}
@@ -136,7 +140,7 @@ gameSchema.static("basics", () => {
 gameSchema.method("preload", async function(this: Game) {
   const seed = this.options.seed || this._id;
   const moves = [`init ${this.options.nbPlayers} ${seed}`];
-  const engine = new Engine([], {advancedRules: !!this.options.advancedRules});
+  const engine = new Engine([], {advancedRules: !!this.options.advancedRules, spaceShips: !!this.options.spaceShips});
 
   if (this.options.balancedGeneration) {
     let numberSeed = 0;
