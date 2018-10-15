@@ -11,7 +11,6 @@ import Admin from './views/Admin.vue';
 import NewGame from './views/NewGame.vue';
 import Games from './views/Games.vue';
 import Game from './views/Game.vue';
-import Rules from './views/Rules.vue';
 import ResetPassword from './views/ResetPassword.vue';
 import ForgottenPassword from './views/ForgottenPassword.vue';
 import PrivacyPolicy from './views/PrivacyPolicy.vue';
@@ -120,7 +119,7 @@ const router = new Router({
     },
     {
       path: '/rules/:rules',
-      component: Rules
+      component: loadView('Rules')
     },
     {
       path: '*',
