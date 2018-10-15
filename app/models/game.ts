@@ -134,7 +134,7 @@ gameSchema.static("findWithPlayersTurn", function(this: GameModel, playerId: Obj
 });
 
 gameSchema.static("basics", () => {
-    return ["players", "currentPlayer", "options.nbPlayers", "options.timePerGame", "active", "open", "creator", "data.round", "data.phase", "data.players.faction", "data.players.data.victoryPoints"];
+    return ["players", "currentPlayer", "options.nbPlayers", "options.timePerGame", "options.spaceShips", "active", "open", "creator", "data.round", "data.phase", "data.players.faction", "data.players.data.victoryPoints"];
 });
 
 gameSchema.method("preload", async function(this: Game) {

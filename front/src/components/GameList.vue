@@ -3,7 +3,7 @@
     <router-link :to="`/game/${game._id}`" v-for="game in games" :key="game._id" :class="['list-group-item', 'list-group-item-action', {'active-game': !game.open || !game.active, 'current-turn': game.currentPlayer && game.currentPlayer === user}]">
       
       <span class="mr-auto game-name">
-        {{game._id}}&nbsp;<span v-if="game.active && !game.open" class="small">(R{{game.data.round}})</span>
+        <span :class="['fa', 'mr-1', game.options.spaceShips ? 'fa-rocket': 'fa-globe']"></span>{{game._id}}&nbsp;<span v-if="game.active && !game.open" class="small">(R{{game.data.round}})</span>
           <span v-if="game.active && game.open" class="small">({{timePerGame(game)}})</span>
       </span>
 
