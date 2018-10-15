@@ -246,7 +246,13 @@ gameSchema.method("unjoin", async function(this: Game, player: ObjectId) {
     assert(game.players.some(id => id.equals(player)), "Player is not in this game");
 
     game.players = game.players.filter(id => !id.equals(player));
-    await game.save();
+
+    // Remove game if the creator leaves and there are 0
+    if (player.equals(game.creator) && game.players.length === 0) {
+      await game.remove();
+    } else {
+      await game.save();
+    }
 
     return game;
   } finally {
