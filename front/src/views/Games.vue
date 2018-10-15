@@ -1,6 +1,6 @@
 <template>
   <v-loading div class="container">
-    <div class="row">
+    <div class="row no-gutters">
       <h1 class="col-auto">Games</h1>
       <ul class="nav nav-pills mt-2 col-auto" id="pills-tab" role="tablist">
         <li class="nav-item">
@@ -33,14 +33,16 @@
         </div>
       </div>
       <div class="tab-pane fade" id="open" role="tabpanel" aria-labelledby="open-tab">
-        <v-loading class="col-md-6 offset-md-3 mt-2" :loading="loadingOpenGames">
-          <h4>Open games <span class="small">({{stats.open}})</span></h4>
-          <div v-if="openGames.length > 0">
-            <GameList  :games="openGames" class="mb-2" />
-            <b-pagination size="md" align="right" :total-rows="stats.open" v-model="currentPageOpen" :per-page="10" />
-          </div>
-          <p v-else>No ongoing games</p>
-        </v-loading>
+        <div class="row">
+          <v-loading class="col-md-6 mt-2" :loading="loadingOpenGames">
+            <h4>Open games <span class="small">({{stats.open}})</span></h4>
+            <div v-if="openGames.length > 0">
+              <GameList  :games="openGames" class="mb-2" />
+              <b-pagination size="md" align="right" :total-rows="stats.open" v-model="currentPageOpen" :per-page="10" />
+            </div>
+            <p v-else>No ongoing games</p>
+          </v-loading>
+        </div>
       </div>
     </div>
   </v-loading>
