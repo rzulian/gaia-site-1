@@ -178,7 +178,7 @@ export default class Game extends Vue {
   }
 
   unjoin() {
-    $.post(`/api/game/${this.gameId}/unjoin`).then(game => this.game = game, handleError);
+    $.post(`/api/game/${this.gameId}/unjoin`).then(() => this.$router.push('/'), handleError);
   }
 }
 
