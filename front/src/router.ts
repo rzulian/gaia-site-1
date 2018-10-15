@@ -11,6 +11,7 @@ import Admin from './views/Admin.vue';
 import NewGame from './views/NewGame.vue';
 import Games from './views/Games.vue';
 import Game from './views/Game.vue';
+import Rules from './views/Rules.vue';
 import ResetPassword from './views/ResetPassword.vue';
 import ForgottenPassword from './views/ForgottenPassword.vue';
 import PrivacyPolicy from './views/PrivacyPolicy.vue';
@@ -19,6 +20,10 @@ import store from './store';
 import { handleError, handleInfo } from '@/utils';
 
 Vue.use(Router);
+
+function loadView(view) {
+  return () => import(/* webpackChunkName: "view-[request]" */ `@/views/${view}.vue`);
+}
 
 const router = new Router({
   mode: 'history',
@@ -112,6 +117,10 @@ const router = new Router({
     {
       path: '/user/:userName',
       component: User
+    },
+    {
+      path: '/rules/:rules',
+      component: Rules
     },
     {
       path: '*',
