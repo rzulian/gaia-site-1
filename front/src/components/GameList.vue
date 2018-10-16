@@ -8,8 +8,8 @@
       </span>
 
       <div class="row no-gutters factions" v-if="!game.open || !game.active">
-        <div v-for="(player,i) in game.data.players" :key="i" :style="`background-image: url('/images/factions/icons/${player.faction || 'random'}.svg')`" :title="player.faction || 'unknown'" class="avatar mr-1">
-          <span :class="['vp', {'current': user && game.players[i] === user}]">{{player.data.victoryPoints}}</span>
+        <div v-for="(player,i) in game.data.players" :key="i" :style="`background-image: url('/images/factions/icons/${player.faction || 'random'}.svg')`" :title="player.faction || 'unknown'" :class="['avatar', 'mr-1', {'current': user && game.players[i] === user}]">
+          <span class="vp">{{player.data.victoryPoints}}</span>
         </div>
       </div>
       <span v-else>
@@ -93,8 +93,12 @@ export default class GameList extends Vue {
           background-color: #838383;
           width: 20px;
           text-align: center;
+        }
 
-          &.current {
+        &.current {
+          border: 1px solid #333;
+          
+          .vp {
             background-color: #6673bc;
           }
         }
