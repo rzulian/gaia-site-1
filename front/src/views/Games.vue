@@ -2,7 +2,7 @@
   <v-loading div class="container">
     <div class="row no-gutters">
       <h1 class="col-auto">Games</h1>
-      <ul class="nav nav-pills mt-2 col-auto" id="pills-tab" role="tablist">
+      <ul class="nav nav-pills ml-2 mt-2 col-auto" id="pills-tab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="started-tab" data-toggle="pill" href="#started" role="tab" aria-controls="started" aria-selected="true">Started</a>
         </li>
