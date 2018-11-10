@@ -1,5 +1,9 @@
 # Gaia-project
 
+## MongoDB
+
+The site needs a mongodb backend running. It can be local or remote. See the 'environment' section in this README on how to configure environment variables. By default it uses a local mongodb database running on port 27017 with no authentication.
+
 ## Node configuration
 
 Use a recent version of node.
@@ -43,8 +47,7 @@ You also need to setup nginx, and maybe remove the /etc/nginx/sites-enabled/defa
 
 ## Environment
 
-Most of the configurable environment variables are shown in `app/config/env.ts`. You just need to create a `.env` file at the root of the project
-with the changed environement variables.
+Most of the configurable environment variables are shown in `app/config/env.ts`. You just need to create a `.env` file at the root of the project with the changed environement variables.
 
 For example:
 
