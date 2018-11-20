@@ -31,6 +31,12 @@ const api: GameApi = {
   },
   async replay(moves: string[], options: EngineOptions) {
     return new Engine(moves, Object.assign({}, options, {noFedCheck: true}));
+  },
+  async saveNotes(gameId: string, notes: string) {
+    await $.post(`${window.location.origin}/api/game/${gameId}/notes`, {notes});
+  },
+  async getNotes(gameId: string) {
+    return await $.get(`${window.location.origin}/api/game/${gameId}/notes`);
   }
 };
 

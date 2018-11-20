@@ -1,6 +1,6 @@
 import * as createError from 'http-errors';
 import Router from 'express-promise-router';
-import { Game, User, ChatMessage } from '../../models';
+import { Game, User, ChatMessage, RoomMetaData } from '../../models';
 import { loggedIn, queryCount, isAdmin, skipCount } from '../utils';
 import * as _ from "lodash";
 import * as assert from "assert";
@@ -154,6 +154,26 @@ router.post('/:gameId/move', loggedIn, async (req, res) => {
   const game = await req.game.move(move, auth);
 
   res.json(_.assign(game.data, {lastUpdated: game.updatedAt, nextMoveDeadline: game.nextMoveDeadline}));
+});
+
+router.post('/:roomId/notes', loggedIn, async (req, res) => {
+  await RoomMetaData.findOneAndUpdate({room: req.params.roomId, user: req.user._id}, {notes: req.body.notes}, {runValidators: true, upsert: true});
+  res.sendStatus(200);
+});
+
+router.get('/:roomId/notes', async (req, res) => {
+  if (!req.user) {
+    res.json('');
+    return;
+  }
+
+  const metaData = await RoomMetaData.findOne({room: req.params.roomId, user: req.user._id}).lean(true);
+
+  if (!metaData) {
+    res.json('');
+    return;
+  }
+  res.json(metaData.notes);
 });
 
 router.delete('/:gameId', isAdmin, async (req, res) => {
