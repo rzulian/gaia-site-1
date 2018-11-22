@@ -123,10 +123,10 @@ export default class ChatRoom extends Vue {
     messages = messages.filter(msg => !this.messageList.some(otherMsg => otherMsg._id === msg._id));
     messages = messages.map(msg => this.transformedMessage(msg));
 
-    this.updateNewMessages();
-
     // Limit the number of messages shown
     this.messageList = [...this.messageList, ...messages].slice(0, 200);
+
+    this.updateNewMessages();
   }
 
   updateNewMessages() {
