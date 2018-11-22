@@ -89,7 +89,7 @@ This is the thematically based on how many goods the faction can create and sell
 - Level 2: Two spaceships income. The move action moves two spaceships at current range + 1.
 - Level 3: Two spaceships income. The move action moves two spaceships at current range + 2.
 - Level 4: Three spaceships income. The move action moves three spaceships at current range + 2. Advance on the navigation or intelligence research track by one level.
-- Level 5: Three spaceships income. The move action moves three spaceships at current range + 3. Gain a special federation token with no vp that gives a 4th ship: Advanced Spaceship.
+- Level 5: Three spaceships income. The move action moves four spaceships at current range + 3. Gain a special federation token with no vp that gives a 4th ship: Advanced Spaceship that is placed immediately.
 
 ### Standard and Advanced Tech Tiles
 
