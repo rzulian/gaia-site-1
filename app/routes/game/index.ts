@@ -4,6 +4,7 @@ import { Game, User, ChatMessage, RoomMetaData } from '../../models';
 import { loggedIn, queryCount, isAdmin, skipCount } from '../utils';
 import * as _ from "lodash";
 import * as assert from "assert";
+import { RoomMetaDataDocument } from '../../models/roommetadata';
 
 const router = Router();
 
@@ -174,6 +175,21 @@ router.get('/:roomId/notes', async (req, res) => {
     return;
   }
   res.json(metaData.notes);
+});
+
+router.get('/:roomId/chat/lastRead', loggedIn, async (req, res) => {
+  const metaData: RoomMetaDataDocument = await RoomMetaData.findOne({room: req.params.roomId, user: req.user._id}).lean(true);
+
+  if (!metaData || !metaData.lastChatMessageViewed) {
+    res.json(0);
+    return;
+  }
+  res.json(new Date(metaData.lastChatMessageViewed).getTime());
+});
+
+router.post('/:roomId/chat/lastRead', loggedIn, async (req, res) => {
+  await RoomMetaData.findOneAndUpdate({room: req.params.roomId, user: req.user._id}, {lastChatMessageViewed: new Date(+req.body.lastRead)}, {upsert: true});
+  res.sendStatus(200);
 });
 
 router.delete('/:gameId', isAdmin, async (req, res) => {

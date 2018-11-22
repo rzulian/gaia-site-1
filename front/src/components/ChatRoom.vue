@@ -20,11 +20,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { handleError, handleInfo } from '@/utils';
 import $ from 'jquery';
-import { setTimeout } from 'timers';
+import debounce from 'lodash.debounce';
 
 @Component<ChatRoom>({
   created() {
     this.connect();
+    this.loadLastRead();
 
     this.mutationSubscription = (this.$store as any).subscribe(({type, payload}) => {
       if (type === 'updateUser') {
@@ -65,6 +66,13 @@ import { setTimeout } from 'timers';
     this.clearWs(this.ws);
     // Unsubscribe
     this.mutationSubscription();
+  },
+  watch: {
+    lastRead(newDate: Date, oldDate) {
+      if (newDate.getTime() > 0) {
+
+      }
+    }
   }
 })
 export default class ChatRoom extends Vue {
@@ -73,6 +81,8 @@ export default class ChatRoom extends Vue {
 
   @Prop()
   me: string;
+
+  lastRead: Date = new Date(0);
 
   @Prop({default: () => []})
   participants: Array<{id: string, name: string, imageUrl: string}>;
@@ -83,18 +93,49 @@ export default class ChatRoom extends Vue {
 
   replaceMessages (messages: Message[]) {
     this.messageList = messages.map(msg => this.transformedMessage(msg));
-    this.newMessagesCount = 0;
+    this.updateNewMessages();
   }
+
+  async loadLastRead() {
+    const get = await $.get(`/api/game/${this.room}/chat/lastRead`);
+    this.lastRead = new Date(get);
+    this.updateNewMessages();
+  }
+
+  updateLastRead(newVal: Date) {
+    if (this.lastRead.getTime() === newVal.getTime()) {
+      return;
+    }
+    this.lastRead = newVal;
+    this.updateNewMessages();
+
+    this.updateLastReadDebounce();
+  }
+
+  postLastRead() {
+    console.log(this.lastRead);
+    $.post(`/api/game/${this.room}/chat/lastRead`, {lastRead: this.lastRead.getTime()});
+  }
+  updateLastReadDebounce = debounce(() => this.postLastRead(), 2000, {leading: true});
 
   newMessages (messages: Message[]) {
     // Only NEW messages
     messages = messages.filter(msg => !this.messageList.some(otherMsg => otherMsg._id === msg._id));
     messages = messages.map(msg => this.transformedMessage(msg));
 
-    this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + messages.length;
+    this.updateNewMessages();
 
     // Limit the number of messages shown
     this.messageList = [...this.messageList, ...messages].slice(0, 200);
+  }
+
+  updateNewMessages() {
+    if (this.isChatOpen) {
+      this.newMessagesCount = 0;
+      this.updateLastRead(new Date());
+    } else {
+      this.newMessagesCount = this.messageList.filter(msg => new Date(parseInt(msg._id.substring(0, 8), 16) * 1000) > this.lastRead).length;
+    }
   }
 
   transformedMessage(message: Message) : Message {
@@ -167,12 +208,12 @@ export default class ChatRoom extends Vue {
   }
   
   openChat () {
-    this.isChatOpen = true
-    this.newMessagesCount = 0
+    this.isChatOpen = true;
+    this.updateLastRead(new Date());
   }
   
   closeChat () {
-    this.isChatOpen = false
+    this.isChatOpen = false;
   }
 
   /*** Private variables ***/
