@@ -10,6 +10,7 @@ const store = new Vuex.Store({
     gaiaViewer
   },
   state: {
+    updateAvailable: false as boolean,
     user: null as User | null,
     sessionID: null as string | null,
     userLoaded: false as boolean,
@@ -30,6 +31,9 @@ const store = new Vuex.Store({
         state.activeGames = [];
       }
       state.userLoaded = true;
+    },
+    updateAvailable: (state) => {
+      state.updateAvailable = true;
     },
     /** Clear error if it has been here too long */
     autoClearError(state) {

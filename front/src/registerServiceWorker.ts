@@ -1,9 +1,10 @@
 /* tslint:disable:no-console */
 
 import { register } from 'register-service-worker';
+import store from './store';
 
 // Disabled - install @vue/cli-plugin-pwa to enable
-if (process.env.NODE_ENV === 'production' && 0) {
+if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
       console.log(
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'production' && 0) {
     },
     updated() {
       console.log('New content is available; please refresh.');
+      store.commit("updateAvailable");
     },
     offline() {
       console.log('No internet connection found. App is running in offline mode.');

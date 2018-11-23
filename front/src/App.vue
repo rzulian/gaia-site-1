@@ -11,6 +11,9 @@
       <source src="/audio/notification.mp3" type="audio/mpeg">
       <source src="/audio/notification.ogg" type="audio/ogg">
     </audio>
+    <b-modal v-if="$store.state.updateAvailable" v-model="modalShow" size="md" @ok="refresh" title="Update available" ok-title="Refresh">
+      An update to the application is available. Refresh to get the changes.
+    </b-modal>
   </div>
 </template>
 
@@ -28,7 +31,11 @@ import Footer from '@/components/Footer.vue';
   },
 })
 export default class App extends Vue {
+  modalShow = true;
 
+  refresh() {
+    location.reload(true);
+  }
 }
 </script>
 
