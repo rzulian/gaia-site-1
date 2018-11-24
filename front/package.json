@@ -1,10 +1,10 @@
 {
   "name": "front",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --port 8612",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build && node clean-index.js",
     "build-dev": "vue-cli-service build --mode development",
     "watch": "nodemon -w src -e ts,vue --exec npm run build-dev",
     "test": "vue-cli-service test",
