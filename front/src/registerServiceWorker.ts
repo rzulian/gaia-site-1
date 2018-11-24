@@ -4,6 +4,8 @@ import { register } from 'register-service-worker';
 import store from './store';
 
 // Disabled - install @vue/cli-plugin-pwa to enable
+// Also, on android / chrome it seems there is a continuous refresh bug
+// where the refresh prompt does NOT go away
 if (process.env.NODE_ENV === 'production' && 0) {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
