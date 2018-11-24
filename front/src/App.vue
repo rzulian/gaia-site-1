@@ -34,7 +34,8 @@ export default class App extends Vue {
   modalShow = true;
 
   refresh() {
-    location.reload();
+    // Force reload is NECESSARY
+    location.reload(true);
   }
 }
 </script>
