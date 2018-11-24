@@ -4,7 +4,7 @@ import { register } from 'register-service-worker';
 import store from './store';
 
 // Disabled - install @vue/cli-plugin-pwa to enable
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && 0) {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
       console.log(

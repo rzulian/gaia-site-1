@@ -38,7 +38,6 @@
     "@types/mocha": "^2.2.46",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-typescript": "^3.0.1",
-    "@vue/cli-plugin-pwa": "^3.1.2",
     "@vue/cli-service": "^3.0.1",
     "chai": "^4.1.2",
     "node-sass": "^4.7.2",
