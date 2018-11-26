@@ -164,21 +164,21 @@ router.post('/:roomId/notes', loggedIn, async (req, res) => {
 
 router.get('/:roomId/notes', async (req, res) => {
   if (!req.user) {
-    res.send('""');
+    res.json('');
     return;
   }
 
   const metaData = await RoomMetaData.findOne({room: req.params.roomId, user: req.user._id}).lean(true);
 
   if (!metaData) {
-    res.send('""');
+    res.json('');
     return;
   }
 
   if (metaData.notes) {
     res.json(metaData.notes);
   } else {
-    res.send('""');
+    res.json('');
   }
 });
 

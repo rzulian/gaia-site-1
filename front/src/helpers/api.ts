@@ -36,7 +36,13 @@ const api: GameApi = {
     await $.post(`${window.location.origin}/api/game/${gameId}/notes`, {notes});
   },
   async getNotes(gameId: string) {
-    return await $.get(`${window.location.origin}/api/game/${gameId}/notes`);
+    try {
+      return await $.get(`${window.location.origin}/api/game/${gameId}/notes`);
+    } catch (err) {
+      // It's silly but if the notes are empty then you get an err with status 200, might as well
+      // just ignore the error
+      return '';
+    }
   }
 };
 
