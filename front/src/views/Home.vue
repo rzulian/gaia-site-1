@@ -56,7 +56,8 @@ export default class Home extends Vue {
   subscription: any = null;
 
   loadGames() {
-    this.loadingGames = this.loadingOpenGames = true;
+    this.loadingGames = true;
+    this.loadingOpenGames = true;
 
     $.get('/api/game/active?count=5').then(games => this.games = games, handleError).always(() => this.loadingGames = false);
     $.get('/api/game/open?count=5').then(games => this.openGames = games, handleError).always(() => this.loadingOpenGames = false);
