@@ -9,7 +9,8 @@
     "watch": "nodemon -w src -e ts,vue --exec npm run build-dev",
     "test": "vue-cli-service test",
     "e2e": "vue-cli-service e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "up-viewer": "yarn upgrade @gaia-project/viewer && yarn build"
   },
   "dependencies": {
     "@gaia-project/viewer": "^3.3.0",
