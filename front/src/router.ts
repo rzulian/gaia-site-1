@@ -154,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
 
 function guard(to: Route, next: (location?: string | Location) => void): void {
   if (to.meta.loggedOut && store.state.user) {
-    next(to.query.redirect || '/account');
+    next(to.query.redirect as string || '/account');
   } else if (to.meta.loggedIn && !store.state.user) {
     next({path: '/login', query: {redirect: to.fullPath}});
   } else if (to.meta.admin && !store.getters.admin) {

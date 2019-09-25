@@ -7,7 +7,7 @@
           <div class="card-body">
             <h5 class="card-title">Server info</h5>
             <p v-if="serverInfo">
-              Available space: {{ serverInfo.disk.available | filesize }} / {{ serverInfo.disk.total | filesize }} <br/>
+              Available space: {{ serverInfo.disk.free | filesize }} / {{ serverInfo.disk.size | filesize }} <br/>
               Users: {{serverInfo.nbUsers}}
             </p>
             <p v-else>
@@ -101,7 +101,7 @@ export default class Admin extends Vue {
   loadServerInfo() {
     $.get('/api/admin/serverinfo').then(
       info => this.serverInfo = info,
-      err => handleError(err)
+      handleError
     )
   }
 

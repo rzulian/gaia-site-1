@@ -7,15 +7,15 @@
   "license": "private",
   "private": true,
   "dependencies": {
-    "@gaia-project/engine": "^3.2.0",
+    "@gaia-project/engine": "^3.3.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "check-disk-space": "^2.1.0",
     "compression": "^1.7.2",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "delay": "^3.1.0",
-    "diskusage": "^0.2.4",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "express-promise-router": "^3.0.2",
@@ -31,6 +31,7 @@
     "randomstring": "^1.1.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
+    "saslprep": "^1.0.3",
     "sendmail": "^1.4.1",
     "validator": "^9.4.1",
     "ws": "^6.0.0"
@@ -61,7 +62,7 @@
     "@types/ws": "^6.0.0",
     "nodemon": "^1.18.3",
     "ts-node": "^5.0.1",
-    "typescript": "^2.8.1"
+    "typescript": "^3.6.3"
   },
   "scripts": {
     "start": "ts-node server.ts",

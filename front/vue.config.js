@@ -9,5 +9,14 @@ module.exports = {
     themeColor: '#16508f',
     // msTileColor: '#000000',
     name: "GaiaForm.io"
-  }
+  },
+
+  // For development with vue hot reloading, contact correct backend
+  devServer: {
+    proxy: 'http://localhost:50801/',
+    allowedHosts: [
+      'gaia.local',
+      'localhost:8612'
+    ],
+  },
 }

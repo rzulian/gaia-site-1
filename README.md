@@ -17,6 +17,8 @@ npm install --global --production windows-build-tools
 
 ## Nginx configuration
 
+**Note:** nginx may not be necessary anymore in development, if you don't care about websockets / chat.
+
 In the project's directory:
 
 ```bash
@@ -36,14 +38,14 @@ It is recommended to open the main project folder & the front folder into two di
 
 ## Front-end
 
-There is a dedicated front folder, which is an independent module. You need to run npm install there too!
+There is a dedicated front folder, which is an independent module. You need to run `yarn install` there too!
 
 ## Testing locally
 
 You will need to create a `.env` file in the project folder, in which you specify a custom domain like localhost. You can use
 another domain, but you need to add it to /etc/hosts as a local domain.
 
-You also need to setup nginx, and maybe remove the /etc/nginx/sites-enabled/default!
+You **may** also need to setup nginx / remove the /etc/nginx/sites-enabled/default!
 
 ## Environment
 

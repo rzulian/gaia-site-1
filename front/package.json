@@ -13,7 +13,7 @@
     "up-viewer": "yarn upgrade @gaia-project/viewer && yarn build"
   },
   "dependencies": {
-    "@gaia-project/viewer": "^3.3.0",
+    "@gaia-project/viewer": "^3.3.12",
     "@gaia-project/vue-beautiful-chat": "^2.0.3",
     "bootstrap-vue": "^2.0.0-rc.11",
     "font-awesome": "^4.7.0",
@@ -44,7 +44,7 @@
     "node-sass": "^4.7.2",
     "nodemon": "^1.17.3",
     "sass-loader": "^6.0.6",
-    "typescript": "^3.0.3",
+    "typescript": "^3.6.3",
     "vue-template-compiler": "^2.5.17"
   },
   "browserslist": [
