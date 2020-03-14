@@ -206,7 +206,7 @@ userSchema.method('sendConfirmationEmail', function(this: User) {
     html: `
     <p>Hello, we're delighted to have a new Gaia Project player among us!</p>
     <p>To finish your registration and confirm your account with us at ${env.domain},
-     click <a href='http://${env.domain}/confirm?key=${this.confirmKey()}&user=${this.email()}'>here</a>.</p>
+     click <a href='http://${env.domain}/confirm?key=${this.confirmKey()}&email=${this.email()}'>here</a>.</p>
 
     <p>If you didn't create an account with us, ignore this email.</p>`,
   });
